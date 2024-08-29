@@ -20,10 +20,10 @@
   
   <p>Os biotérios são essenciais para a pesquisa científica, especialmente em áreas como medicina, biologia e farmacologia. No entanto, a gestão de biotérios pode enfrentar diversos desafios, tais como: </p>
 
-  <p>- **Controle inadequado dos animais**: dificuldade em monitorar a saúde, alimentação e condições gerais dos animais.</p>
-  <p>- **Agendamento ineficiente**: falta de um sistema centralizado para agendar experimentos, resultando em conflitos de horários e uso inadequado dos recursos.</p>
-  <p>- **Cumprimento de normas éticas e legais**: a necessidade de atender rigorosos padrões éticos e regulamentações que garantam o bem-estar animal e a conformidade legal.</p>
-  <p>- **Rastreamento e documentação**: dificuldade em manter registros precisos e acessíveis sobre o histórico dos animais, experimentos e movimentações.</p>
+  <p> <b>-Controle inadequado dos animais:</b> dificuldade em monitorar a saúde, alimentação e condições gerais dos animais.</p>
+  <p> <b>-Agendamento ineficiente:</b> falta de um sistema centralizado para agendar experimentos, resultando em conflitos de horários e uso inadequado dos recursos.</p>
+  <p> <b>-Cumprimento de normas éticas e legais:</b> a necessidade de atender rigorosos padrões éticos e regulamentações que garantam o bem-estar animal e a conformidade legal.</p>
+  <p> <b>-Rastreamento e documentação:</b> dificuldade em manter registros precisos e acessíveis sobre o histórico dos animais, experimentos e movimentações.</p>
 
   <p>Esses problemas não apenas impactam a eficiência dos biotérios, mas também podem comprometer a qualidade e a integridade da pesquisa científica.</p>
   
@@ -32,20 +32,20 @@
   
   <p>Na tentiva de solucionar esse problema de agendamento criamos o <a href="https://github.com/marcosdosea/BiotLab" >BiotLab</a>. </p>
   
-  <p>O **BiotLab** é uma plataforma desenvolvida para facilitar a gestão de biotérios de maneira eficiente e ética. Com o BiotLab, laboratórios e centros de pesquisa podem:</p>
-  <p>- **Gerenciar o cadastro e controle de animais**: incluindo informações detalhadas sobre saúde, alimentação e histórico.</p>
-  <p>- **Facilitar o agendamento de experimentos**: com um sistema intuitivo para agendar atividades laboratoriais, evitando conflitos e melhorando a organização.</p>
-  <p>- **Emitir relatórios e documentos**: de maneira rápida e precisa, atendendo às exigências éticas e legais.</p>
-  <p>- **Monitorar o bem-estar dos animais**: com funcionalidades para registrar e acompanhar a saúde e as condições dos animais.</p>
-  <p>- **Gerenciar equipes e usuários**: definindo permissões e acessos conforme as funções dos profissionais.</p>
+  <p> A BiotLab é uma plataforma desenvolvida para facilitar a gestão de biotérios de maneira eficiente e ética. Com o BiotLab, laboratórios e centros de pesquisa podem:</p>
+  <p> <b>-Gerenciar o cadastro e controle de animais:</b> incluindo informações detalhadas sobre saúde, alimentação e histórico.</p>
+  <p> <b>-Facilitar o agendamento de experimentos:</b> com um sistema intuitivo para agendar atividades laboratoriais, evitando conflitos e melhorando a organização.</p>
+  <p> <b>-Emitir relatórios e documentos:</b> de maneira rápida e precisa, atendendo às exigências éticas e legais.</p>
+  <p> <b>-Monitorar o bem-estar dos animais:</b> com funcionalidades para registrar e acompanhar a saúde e as condições dos animais.</p>
+  <p> <b>-Gerenciar equipes e usuários:</b> definindo permissões e acessos conforme as funções dos profissionais.</p>
 
   <h2 id="publico">3. Público Alvo :dart:</h2>
   
   <p>O BiotLab é direcionado para:
 
-  <p>- **Centros de pesquisa e universidades**: que necessitam de um gerenciamento eficiente dos biotérios para apoiar suas atividades científicas.</p>
-  <p>- **Laboratórios de pesquisa farmacêutica e biomédica**: onde o controle preciso e ético dos experimentos com animais é fundamental.</p>
-  <p>- **Instituições de saúde e organizações governamentais**: que precisam manter padrões rigorosos de bem-estar animal e conformidade legal.</p>
+  <p> <b>-Centros de pesquisa e universidades:</b> que necessitam de um gerenciamento eficiente dos biotérios para apoiar suas atividades científicas.</p>
+  <p> <b>-Laboratórios de pesquisa farmacêutica e biomédica:</b> onde o controle preciso e ético dos experimentos com animais é fundamental.</p>
+  <p> <b>-Instituições de saúde e organizações governamentais:</b> que precisam manter padrões rigorosos de bem-estar animal e conformidade legal.</p>
   
   <h2 id="linksuteis">4. Links Úteis :link:</h2>
 

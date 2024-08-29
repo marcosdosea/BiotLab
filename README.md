@@ -84,6 +84,7 @@
           <p>Desenvolvedor</p>
         </sub>
       </a>
+     </tr>
     </td>
     <td align="center" >
       <a href="https://github.com/NadsonTelesMendonca" target="_blank">
@@ -94,7 +95,6 @@
         </sub>
       </a>
     </td>
-  </tr>
   <td align="center" >
       <a href="https://github.com/Reismysterr" target="_blank">
         <img style="border-radius:100px;" src="https://avatars.githubusercontent.com/u/85704215?v=4" target="_blank"  width="100px;" alt="Foto de Icaro Gabriel no GitHub"/><br>
@@ -104,7 +104,6 @@
         </sub>
       </a>
     </td>
-  </tr>
   <td align="center" >
       <a href="https://github.com/XIanTavares" target="_blank">
         <img style="border-radius:100px;" src="https://avatars.githubusercontent.com/u/63467519?v=4" target="_blank"  width="100px;" alt="Foto de Ian Tavares no GitHub"/><br>

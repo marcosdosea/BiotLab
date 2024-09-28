@@ -1,0 +1,26 @@
+﻿@model Models.HarenViewModel
+
+<h1>Editar Haren</h1>
+
+<form asp-action="Edit" asp-route-id="@Model.Id">
+    <div class="form-group">
+        <label asp-for="NumeroMacho" class="control-label"></label>
+        <input asp-for="NumeroMacho" class="form-control" />
+        <span asp-validation-for="NumeroMacho" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="NumeroFemea" class="control-label"></label>
+        <input asp-for="NumeroFemea" class="form-control" />
+        <span asp-validation-for="NumeroFemea" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Status" class="control-label"></label>
+        <input asp-for="Status" class="form-control" />
+        <span asp-validation-for="Status" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Salvar" class="btn btn-primary" />
+    </div>
+</form>
+
+<a asp-action="Index">Voltar à lista</a>

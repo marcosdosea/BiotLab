@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35208.52
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiotLabWeb", "BiotLabWeb\BiotLabWeb.csproj", "{21437F08-EF28-490A-A470-7E422979D5E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BiotLabWeb", "BiotLabWeb\BiotLabWeb.csproj", "{21437F08-EF28-490A-A470-7E422979D5E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "core", "core\core.csproj", "{509A1AD3-C04C-4216-8994-867D686C4291}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "core", "core\core.csproj", "{509A1AD3-C04C-4216-8994-867D686C4291}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{197E62EC-3754-4A82-8A67-1E500B63788B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{509A1AD3-C04C-4216-8994-867D686C4291}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{509A1AD3-C04C-4216-8994-867D686C4291}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{509A1AD3-C04C-4216-8994-867D686C4291}.Release|Any CPU.Build.0 = Release|Any CPU
+		{197E62EC-3754-4A82-8A67-1E500B63788B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{197E62EC-3754-4A82-8A67-1E500B63788B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{197E62EC-3754-4A82-8A67-1E500B63788B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{197E62EC-3754-4A82-8A67-1E500B63788B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

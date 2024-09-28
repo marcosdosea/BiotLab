@@ -1,3 +1,8 @@
+using core;
+using core.Service;
+using Microsoft.EntityFrameworkCore;
+using Service;
+
 namespace BiotLabWeb
 {
     public class Program
@@ -8,9 +13,14 @@ namespace BiotLabWeb
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContext<BiotLabContext>(options =>
+            {
+                options.UseMySQL(builder.Configuration.GetConnectionString("BiotLabConnection"));
+            });
 
+            builder.Services.AddTransient<IGaiolaService, GaiolaService>();
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             var app = builder.Build();
-
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {

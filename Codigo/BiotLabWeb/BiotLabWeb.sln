@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BiotLabWeb", "BiotLabWeb\Bi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "core", "core\core.csproj", "{509A1AD3-C04C-4216-8994-867D686C4291}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{1E6F9D3B-DB1A-4908-A8C4-67DD1F667FCD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{1E6F9D3B-DB1A-4908-A8C4-67DD1F667FCD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

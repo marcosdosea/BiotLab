@@ -32,5 +32,5 @@ public partial class Gaiola
 
     public virtual ICollection<Povoargaiola> Povoargaiolas { get; set; } = new List<Povoargaiola>();
 
-    public virtual ICollection<Haren> Harens { get; set; } = new List<Haren>();
+    public virtual ICollection<Harem> Harens { get; set; } = new List<Harem>();
 }

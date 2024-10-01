@@ -23,13 +23,13 @@ public partial class Povoargaiola
 
     public int GaiolaId { get; set; }
 
-    public int HarenId { get; set; }
+    public int HaremId { get; set; }
 
     public int PesquisadorId { get; set; }
 
     public virtual Gaiola Gaiola { get; set; } = null!;
 
-    public virtual Haren Haren { get; set; } = null!;
+    public virtual Harem Harem { get; set; } = null!;
 
     public virtual Pesquisador Pesquisador { get; set; } = null!;
 }

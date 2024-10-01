@@ -1,0 +1,21 @@
+﻿@model BiotLabWeb.Models.HaremViewModel
+
+<h1>Detalhes do Harem</h1>
+
+<div>
+    <h4>Harem</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">ID</dt>
+        <dd class="col-sm-10">@Model.Id</dd>
+        <dt class="col-sm-2">Número Macho</dt>
+        <dd class="col-sm-10">@Model.NumeroMacho</dd>
+        <dt class="col-sm-2">Número Fêmea</dt>
+        <dd class="col-sm-10">@Model.NumeroFemea</dd>
+        <dt class="col-sm-2">Status</dt>
+        <dd class="col-sm-10">@Model.Status</dd>
+    </dl>
+</div>
+
+<a asp-action="Edit" asp-route-id="@Model.Id">Editar</a> |
+<a asp-action="Index">Voltar à lista</a>

@@ -29,7 +29,7 @@ public partial class BiotLabContext : DbContext
 
     public virtual DbSet<Gaiola> Gaiolas { get; set; }
 
-    public virtual DbSet<Haren> Harens { get; set; }
+    public virtual DbSet<Harem> Harens { get; set; }
 
     public virtual DbSet<Instituicao> Instituicaos { get; set; }
 
@@ -269,7 +269,7 @@ public partial class BiotLabContext : DbContext
                 .HasConstraintName("fk_gaiola_experimento1");
         });
 
-        modelBuilder.Entity<Haren>(entity =>
+        modelBuilder.Entity<Harem>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
@@ -285,22 +285,22 @@ public partial class BiotLabContext : DbContext
 
             entity.HasMany(d => d.Gaiolas).WithMany(p => p.Harens)
                 .UsingEntity<Dictionary<string, object>>(
-                    "Harengaiola",
+                    "Haremgaiola",
                     r => r.HasOne<Gaiola>().WithMany()
                         .HasForeignKey("GaiolaId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_haren_has_gaiola_gaiola1"),
-                    l => l.HasOne<Haren>().WithMany()
-                        .HasForeignKey("HarenId")
+                        .HasConstraintName("fk_harem_has_gaiola_gaiola1"),
+                    l => l.HasOne<Harem>().WithMany()
+                        .HasForeignKey("HaremId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_haren_has_gaiola_haren1"),
+                        .HasConstraintName("fk_harem_has_gaiola_harem1"),
                     j =>
                     {
-                        j.HasKey("HarenId", "GaiolaId").HasName("PRIMARY");
-                        j.ToTable("harengaiola");
-                        j.HasIndex(new[] { "GaiolaId" }, "fk_haren_has_gaiola_gaiola1_idx");
-                        j.HasIndex(new[] { "HarenId" }, "fk_haren_has_gaiola_haren1_idx");
-                        j.IndexerProperty<int>("HarenId").HasColumnName("haren_id");
+                        j.HasKey("HaremId", "GaiolaId").HasName("PRIMARY");
+                        j.ToTable("haremgaiola");
+                        j.HasIndex(new[] { "GaiolaId" }, "fk_harem_has_gaiola_gaiola1_idx");
+                        j.HasIndex(new[] { "HaremId" }, "fk_harem_has_gaiola_harem1_idx");
+                        j.IndexerProperty<int>("HaremId").HasColumnName("harem_id");
                         j.IndexerProperty<int>("GaiolaId").HasColumnName("gaiola_id");
                     });
         });
@@ -407,7 +407,7 @@ public partial class BiotLabContext : DbContext
 
             entity.HasIndex(e => e.GaiolaId, "fk_povoarGaiola_gaiola1_idx");
 
-            entity.HasIndex(e => e.HarenId, "fk_povoarGaiola_haren1_idx");
+            entity.HasIndex(e => e.HaremId, "fk_povoarGaiola_harem1_idx");
 
             entity.HasIndex(e => e.PesquisadorId, "fk_povoarGaiola_pesquisador1_idx");
 
@@ -423,7 +423,7 @@ public partial class BiotLabContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("estadoGaiola");
             entity.Property(e => e.GaiolaId).HasColumnName("gaiola_id");
-            entity.Property(e => e.HarenId).HasColumnName("haren_id");
+            entity.Property(e => e.HaremId).HasColumnName("harem_id");
             entity.Property(e => e.PesoMedio).HasColumnName("pesoMedio");
             entity.Property(e => e.PesquisadorId).HasColumnName("pesquisador_id");
             entity.Property(e => e.QuantdadeRatos).HasColumnName("quantdadeRatos");
@@ -436,10 +436,10 @@ public partial class BiotLabContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("fk_povoarGaiola_gaiola1");
 
-            entity.HasOne(d => d.Haren).WithMany(p => p.Povoargaiolas)
-                .HasForeignKey(d => d.HarenId)
+            entity.HasOne(d => d.Harem).WithMany(p => p.Povoargaiolas)
+                .HasForeignKey(d => d.HaremId)
                 .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("fk_povoarGaiola_haren1");
+                .HasConstraintName("fk_povoarGaiola_harem1");
 
             entity.HasOne(d => d.Pesquisador).WithMany(p => p.Povoargaiolas)
                 .HasForeignKey(d => d.PesquisadorId)

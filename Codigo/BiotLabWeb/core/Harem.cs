@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace core;
 
-public partial class Haren
+public partial class Harem
 {
     public int Id { get; set; }
 

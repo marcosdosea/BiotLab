@@ -7,12 +7,12 @@ namespace Core.DTO
     {
         public uint Id { get; set; }
 
-        public required string Nome { get; set; }
+        public string Nome { get; set; } = null!;
 
-        public required string Cnpj { get; set; }
+        public string Cnpj { get; set; } = null!;
 
-        public required string Cep { get; set; }
+        public string Cep { get; set; } = null!;
 
-        public required string Estado { get; set; }
+        public string Estado { get; set; } = null!;
     }
 }

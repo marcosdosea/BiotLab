@@ -9,6 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BiotLabWeb", "BiotLabWeb\Bi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{A5B21ABE-3ADE-4437-9D41-2DF94E222088}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceTests", "ServiceTests\ServiceTests.csproj", "{745F61A3-656E-4799-BE78-8FB0EFE38F95}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A5B21ABE-3ADE-4437-9D41-2DF94E222088} = {A5B21ABE-3ADE-4437-9D41-2DF94E222088}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +32,10 @@ Global
 		{A5B21ABE-3ADE-4437-9D41-2DF94E222088}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5B21ABE-3ADE-4437-9D41-2DF94E222088}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5B21ABE-3ADE-4437-9D41-2DF94E222088}.Release|Any CPU.Build.0 = Release|Any CPU
+		{745F61A3-656E-4799-BE78-8FB0EFE38F95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{745F61A3-656E-4799-BE78-8FB0EFE38F95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{745F61A3-656E-4799-BE78-8FB0EFE38F95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{745F61A3-656E-4799-BE78-8FB0EFE38F95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,30 @@
+﻿@model BiotLabWeb.Models.HaremViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Detalhes do Harem</h1>
+
+<div>
+    <h4>HaremViewModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Id)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Id)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.NumeroMacho)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.NumeroMacho)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.NumeroFemea)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.NumeroFemea)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Status)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Status)</dd>
+    </dl>
+</div>
+
+<div>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.Id }) |
+    <a asp-action="Index">Voltar para Lista</a>
+</div>

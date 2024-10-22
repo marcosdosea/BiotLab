@@ -21,6 +21,7 @@ namespace BiotLabWeb
             builder.Services.AddTransient<IGaiolaService, GaiolaService>();
             builder.Services.AddTransient<IInstituicaoService, InstituicaoService>();
             builder.Services.AddTransient<IHaremService, HaremService>();
+            builder.Services.AddTransient<IExperimentoService, ExperimentoService>();
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             var app = builder.Build();
             // Configure the HTTP request pipeline.

@@ -8,7 +8,7 @@ namespace BiotLabWeb.Mapper
     {
         public EntradaanestesicoProfile()
         {
-            CreateMap<Entradaanestesico, EntradaanestesicoViewModel>()
+            CreateMap<Entradaanestesico, EntradaanestesicoViewModel>();
                
         }
     }

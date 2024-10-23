@@ -1,0 +1,60 @@
+﻿@model BiotLabWeb.Models.GaiolaharemViewModel
+
+@{
+    ViewData["Title"] = "Detalhes da Gaiola e Harem";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div>
+    <h4>Gaiola e Harem</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdGaiola)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdGaiola)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NomeGaiola)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NomeGaiola)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdHarem)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdHarem)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NomeHarem)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NomeHarem)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DataPovoamento)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DataPovoamento, new { @class = "form-control" })
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NomePesquisador)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NomePesquisador)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-idGaiola="@Model.IdGaiola" asp-route-idHarem="@Model.IdHarem" class="btn btn-primary">Editar</a>
+    <a asp-action="Index" class="btn btn-secondary">Voltar para a Lista</a>
+</div>

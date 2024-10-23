@@ -20,8 +20,8 @@ namespace BiotLabWeb.Controllers
         // GET: AnestesicoController
         public ActionResult Index()
         {
-            var anestesicos = anestesicoService.GetAll();
-            var vm = mapper.Map<IEnumerable<AnestesicoViewModel>>(anestesicos);
+            var anestesico = anestesicoService.GetAll();
+            var vm = mapper.Map<IEnumerable<AnestesicoViewModel>>(anestesico);
             return View(vm);
         }
 

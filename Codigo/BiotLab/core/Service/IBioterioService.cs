@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Core;
+using System.Dynamic;
 
 namespace Core.Service
 {
-    internal interface IBioterioService
+    public interface IBioterioService
     {
+        public uint Create(Bioterio bioterio);
+        public void Update(Bioterio bioterio);
+        public void Delete(uint id);
+        public Bioterio? Get(uint id);
+        public IEnumerable<Bioterio> GetAll();
+        /*IEnumerable<Bioterio> GetByNome(string nome);*/
+        public Bioterio get(uint id);
+
+
     }
 }

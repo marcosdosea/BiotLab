@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Core;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Service
 {
-    internal class Class1
+    public interface IGaiolaharemService
     {
+        void Create(Gaiolaharem gaiolaharem);
+        void Update(Gaiolaharem gaiolaharem);
+        void Delete(uint idGaiola, uint idHarem);
+        IEnumerable<Gaiolaharem> GetAll();
+        Gaiolaharem Get(uint idGaiola, uint idHarem);
     }
 }

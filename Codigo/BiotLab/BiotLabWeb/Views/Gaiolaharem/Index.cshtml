@@ -1,0 +1,43 @@
+﻿@model IEnumerable<BiotLabWeb.Models.GaiolaharemViewModel>
+
+@{
+    ViewData["Title"] = "Lista de Gaiolas e Harems";
+}
+
+<h2>Gaiolas e Harems</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Adicionar Novo</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.IdGaiola)</th>
+            <th>@Html.DisplayNameFor(model => model.NomeGaiola)</th>
+            <th>@Html.DisplayNameFor(model => model.IdHarem)</th>
+            <th>@Html.DisplayNameFor(model => model.NomeHarem)</th>
+            <th>@Html.DisplayNameFor(model => model.DataPovoamento)</th>
+            <th>@Html.DisplayNameFor(model => model.NomePesquisador)</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.IdGaiola</td>
+                <td>@item.NomeGaiola</td>
+                <td>@item.IdHarem</td>
+                <td>@item.NomeHarem</td>
+                <td>@item.DataPovoamento.ToString("dd/MM/yyyy")</td>
+                <td>@item.NomePesquisador</td>
+                <td>
+                    <a asp-action="Details" asp-route-idGaiola="@item.IdGaiola" asp-route-idHarem="@item.IdHarem">Detalhes</a> |
+                    <a asp-action="Edit" asp-route-idGaiola="@item.IdGaiola" asp-route-idHarem="@item.IdHarem">Editar</a> |
+                    <a asp-action="Delete" asp-route-idGaiola="@item.IdGaiola" asp-route-idHarem="@item.IdHarem">Excluir</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

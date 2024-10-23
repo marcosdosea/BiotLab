@@ -1,0 +1,46 @@
+﻿@model BiotLabWeb.Models.GaiolaharemViewModel
+
+@{
+    ViewData["Title"] = "Editar Gaiola e Harem";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h4>Gaiola e Harem</h4>
+<hr />
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="IdGaiola" />
+    <input type="hidden" asp-for="IdHarem" />
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.IdGaiola)
+        @Html.DropDownListFor(model => model.IdGaiola, ViewBag.Gaiolas as IEnumerable<SelectListItem>, "-- Selecione uma Gaiola --", new { @class = "form-control", @disabled = "disabled" })
+        @Html.ValidationMessageFor(model => model.IdGaiola, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.IdHarem)
+        @Html.DropDownListFor(model => model.IdHarem, ViewBag.Harems as IEnumerable<SelectListItem>, "-- Selecione um Harem --", new { @class = "form-control", @disabled = "disabled" })
+        @Html.ValidationMessageFor(model => model.IdHarem, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.DataPovoamento)
+        @Html.EditorFor(model => model.DataPovoamento, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+        @Html.ValidationMessageFor(model => model.DataPovoamento, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.IdPesquisador)
+        @Html.DropDownListFor(model => model.IdPesquisador, ViewBag.Pesquisadores as IEnumerable<SelectListItem>, "-- Selecione um Pesquisador --", new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.IdPesquisador, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Salvar" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>

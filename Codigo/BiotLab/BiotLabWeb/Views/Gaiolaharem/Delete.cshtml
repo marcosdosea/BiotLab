@@ -1,0 +1,60 @@
+﻿@model BiotLabWeb.Models.GaiolaharemViewModel
+
+@{
+    ViewData["Title"] = "Excluir Gaiola e Harem";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>Você tem certeza que deseja excluir este registro?</h3>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.IdGaiola)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.IdGaiola)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.NomeGaiola)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.NomeGaiola)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.IdHarem)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.IdHarem)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.NomeHarem)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.NomeHarem)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.DataPovoamento)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.DataPovoamento, new { @class = "form-control" })
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.NomePesquisador)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.NomePesquisador)
+    </dd>
+</dl>
+
+<form asp-action="Delete">
+    @* Como estamos lidando com chave composta, precisamos incluir os IDs no formulário *@
+    <input type="hidden" asp-for="IdGaiola" />
+    <input type="hidden" asp-for="IdHarem" />
+
+    <div class="form-group">
+        <input type="submit" value="Excluir" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+    </div>
+</form>

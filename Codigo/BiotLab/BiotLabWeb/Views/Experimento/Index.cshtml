@@ -1,0 +1,61 @@
+﻿@model IEnumerable<BiotLabWeb.Models.InstituicaoViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Cepa)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().DataInicio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().DataFim)
+            </th>
+            <th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.First().Id)
+                </td>
+                <td>
+                    @Html.DisplayNameFor(model => model.First().Nome)
+                </td>
+                <td>
+                    @Html.DisplayNameFor(model => model.First().Cepa)
+                </td>
+                <td>
+                    @Html.DisplayNameFor(model => model.First().DataInicio)
+                </td>
+                <td>
+                    @Html.DisplayNameFor(model => model.First().DataFim)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

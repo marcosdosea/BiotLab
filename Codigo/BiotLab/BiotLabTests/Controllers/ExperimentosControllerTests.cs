@@ -111,7 +111,7 @@ namespace BiotLabWeb.Controllers.Tests
         // Métodos auxiliares
         private ExperimentoViewModel GetNewExperimento()
         {
-            return new IExperimentoViewModel
+            return new ExperimentoViewModel
             {
                 Id = 4,
                 Nome = "Experimento Novo",

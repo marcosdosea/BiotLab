@@ -12,5 +12,13 @@ namespace Core.DTO
         public string DataInicio { get; set; } = null!;
 
         public string DataFim { get; set; } = null!;
+
+        public string IdPesquisador { get; set; } = null!;
+
+        public string Gaiolas { get; set; } = null!;
+
+        public string IdPesquisadorNavigation { get; set; } = null!;
+
+        public string Usoanestesicos { get; set; } = null!;
     }
 }

@@ -20,7 +20,7 @@ namespace BiotLabWeb.Controllers
         // GET: ExperimentoController
         public ActionResult Index()
         {
-            var instituicao = experimentoService.GetAll();
+            var experimento = experimentoService.GetAll();
             var vm = mapper.Map<IEnumerable<ExperimentoViewModel>>(experimento);
             return View(vm);
         }
@@ -60,7 +60,7 @@ namespace BiotLabWeb.Controllers
         public ActionResult Edit(uint id)
         {
             var experimento = experimentoService.Get(id);
-            var vm = mapper.Map<InstituicaoViewModel>(experimento);
+            var vm = mapper.Map<ExperimentoViewModel>(experimento);
             return View(vm);
         }
 

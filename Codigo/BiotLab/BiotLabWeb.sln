@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceTests", "ServiceTest
 		{A5B21ABE-3ADE-4437-9D41-2DF94E222088} = {A5B21ABE-3ADE-4437-9D41-2DF94E222088}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BiotLabWebTests", "BiotLabTests\BiotLabWebTests.csproj", "{ED8C5151-456F-45C4-8D29-3C8A7E04F530}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiotLabWebTests", "BiotLabTests\BiotLabWebTests.csproj", "{ED8C5151-456F-45C4-8D29-3C8A7E04F530}"
 	ProjectSection(ProjectDependencies) = postProject
 		{85BA28C9-1043-48EE-AA9A-AFBA540FC414} = {85BA28C9-1043-48EE-AA9A-AFBA540FC414}
 	EndProjectSection

@@ -12,13 +12,13 @@ namespace BiotLabWeb.Controllers
     public class EntradaanestesicoController : Controller
     {
         private readonly IEntradaanestesicoService entradaAnestesicoService;
-        private readonly IAnestesicoService anestesicoService;
+        private readonly IAnestesicosService anestesicoService;
         private readonly IEntradumService entradumService;
         private readonly IMapper mapper;
 
         public EntradaanestesicoController(
             IEntradaanestesicoService entradaAnestesicoService,
-            IAnestesicoService anestesicoService,
+            IAnestesicosService anestesicoService,
             IEntradumService entradumService,
             IMapper mapper)
         {

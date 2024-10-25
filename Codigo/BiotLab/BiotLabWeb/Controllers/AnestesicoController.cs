@@ -8,10 +8,10 @@ namespace BiotLabWeb.Controllers
 {
     public class AnestesicoController : Controller
     {
-        private readonly IAnestesicoService anestesicoService;
+        private readonly IAnestesicosService anestesicoService;
         private readonly IMapper mapper;
 
-        public AnestesicoController(IAnestesicoService anestesicoService, IMapper mapper)
+        public AnestesicoController(IAnestesicosService anestesicoService, IMapper mapper)
         {
             this.anestesicoService = anestesicoService;
             this.mapper = mapper;

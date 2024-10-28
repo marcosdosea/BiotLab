@@ -1,6 +1,15 @@
-﻿namespace BiotLabWeb.Mapper
+﻿using AutoMapper;
+using BiotLabWeb.Models;
+using Core;
+
+namespace BiotLabWeb.Mapper
+
 {
-    public class Class
+    public class BioterioProfile : Profile
     {
+        public BioterioProfile()
+        {
+            CreateMap<Bioterio, BioterioViewModel>().ReverseMap();
+        }
     }
 }

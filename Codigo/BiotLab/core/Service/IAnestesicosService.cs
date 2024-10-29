@@ -14,5 +14,7 @@ namespace Core.Service
         public void Delete(uint id);
         public bool Validar(uint id);
         public Anestesico? Buscar(uint id);
+        IEnumerable <Anestesico> GetAll();
+        public uint Create (Anestesico anestesico);
     }
 }

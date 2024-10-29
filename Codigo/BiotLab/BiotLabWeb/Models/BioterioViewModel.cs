@@ -1,23 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+
 namespace BiotLabWeb.Models
-{
-    public class InstituicaoViewModel
+{ 
+    public class BioterioViewModel
     {
-        [Display(Name = "Código da Instituição")]
-        [Required(ErrorMessage = "O código da instituição é obrigatório")]
+        [Display(Name = "Código do Bioterio")]
+        [Required(ErrorMessage = "O código do bioterio é obrigatório")]
         [Key]
         public uint Id { get; set; }
 
-        [Display(Name = "Nome da Instituição")]
-        [Required(ErrorMessage = "O nome da instituição é obrigatório")]
-        [StringLength(50, ErrorMessage = "O nome deve ter no máximo 100 caracteres")]
+        [Display(Name = "Nome do Bioterio")]
+        [Required(ErrorMessage = "O nome do bioterio é obrigatório")]
+        [StringLength(50, ErrorMessage = "O nome deve ter no máximo 50 caracteres")]
         public string Nome { get; set; } = null!;
-
-        [Display(Name = "CNPJ")]
-        [Required(ErrorMessage = "O CNPJ é obrigatório")]
-        [RegularExpression(@"\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}", ErrorMessage = "Formato de CNPJ inválido")]
-        public string Cnpj { get; set; } = null!;
 
         [Display(Name = "CEP")]
         [Required(ErrorMessage = "O CEP é obrigatório")]
@@ -62,10 +58,5 @@ namespace BiotLabWeb.Models
         [Required(ErrorMessage = "O email é obrigatório")]
         [EmailAddress(ErrorMessage = "Formato de email inválido")]
         public string Email { get; set; } = null!;
-        public string Cepa { get; set; } = null!;
-        public DateTime DataInicio { get; set; }
-        public DateTime DataFim { get; set; }
-
     }
-
 }

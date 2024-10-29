@@ -22,6 +22,11 @@ namespace Service
            return Context.Anestesicos.Find(id);
         }
 
+        public uint Create(Anestesico anestesico)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Delete(uint id)
         {
             var anestesico = Context.Anestesicos.Find(id);
@@ -32,6 +37,11 @@ namespace Service
             }
         }
 
+        public object GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
         public void Update(Anestesico anestesico)
         {
             Context.Update(anestesico);
@@ -39,6 +49,11 @@ namespace Service
         }
 
         public bool Validar(uint id)
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerable<Anestesico> IAnestesicosService.GetAll()
         {
             throw new NotImplementedException();
         }

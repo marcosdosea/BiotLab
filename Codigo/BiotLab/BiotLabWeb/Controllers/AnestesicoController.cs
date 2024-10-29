@@ -8,10 +8,10 @@ namespace BiotLabWeb.Controllers
 {
     public class AnestesicoController : Controller
     {
-        private readonly IAnestesicoService anestesicoService;
+        private readonly IAnestesicosService anestesicoService;
         private readonly IMapper mapper;
 
-        public AnestesicoController(IAnestesicoService anestesicoService, IMapper mapper)
+        public AnestesicoController(IAnestesicosService anestesicoService, IMapper mapper)
         {
             this.anestesicoService = anestesicoService;
             this.mapper = mapper;
@@ -28,7 +28,7 @@ namespace BiotLabWeb.Controllers
         // GET: AnestesicoController/Details/5
         public ActionResult Details(uint id)
         {
-            var anestesico = anestesicoService.Get(id);
+            var anestesico = anestesicoService.Buscar(id);
             var vm = mapper.Map<AnestesicoViewModel>(anestesico);
             return View(vm);
         }
@@ -59,7 +59,7 @@ namespace BiotLabWeb.Controllers
         // GET: AnestesicoController/Edit/5
         public ActionResult Edit(uint id)
         {
-            var anestesico = anestesicoService.Get(id);
+            var anestesico = anestesicoService.Buscar(id);
             var vm = mapper.Map<AnestesicoViewModel>(anestesico);
             return View(vm);
         }
@@ -84,7 +84,7 @@ namespace BiotLabWeb.Controllers
         // GET: AnestesicoController/Delete/5
         public ActionResult Delete(uint id)
         {
-            var anestesico = anestesicoService.Get(id);
+            var anestesico = anestesicoService.Buscar(id);
             var vm = mapper.Map<AnestesicoViewModel>(anestesico);
             return View(vm);
         }

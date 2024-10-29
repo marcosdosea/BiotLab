@@ -4,14 +4,14 @@ namespace BiotLabWeb.Models
 {
     public class FornecedorViewModel
     {
-        [Display(Name = "Código da Instituição")]
-        [Required(ErrorMessage = "O código da instituição é obrigatório")]
+        [Display(Name = "Código do Fornecedor")]
+        [Required(ErrorMessage = "O código do fornecedor é obrigatório")]
         [Key]
         public uint Id { get; set; }
 
-        [Display(Name = "Nome da Instituição")]
-        [Required(ErrorMessage = "O nome da instituição é obrigatório")]
-        [StringLength(50, ErrorMessage = "O nome deve ter no máximo 100 caracteres")]
+        [Display(Name = "Nome do Fornecedor")]
+        [Required(ErrorMessage = "O nome do fornecedor é obrigatório")]
+        [StringLength(50, ErrorMessage = "O nome deve ter no máximo 50 caracteres")]
         public string Nome { get; set; } = null!;
 
         [Display(Name = "CNPJ")]
@@ -25,7 +25,7 @@ namespace BiotLabWeb.Models
         public string Cep { get; set; } = null!;
 
         [Display(Name = "Rua")]
-        [StringLength(100, ErrorMessage = "O nome da rua deve ter no máximo 100 caracteres")]
+        [StringLength(50, ErrorMessage = "O nome da rua deve ter no máximo 50 caracteres")]
         public string? Rua { get; set; }
 
         [Display(Name = "Bairro")]
@@ -37,11 +37,11 @@ namespace BiotLabWeb.Models
         public string? Cidade { get; set; }
 
         [Display(Name = "Número")]
-        [StringLength(10, ErrorMessage = "O número deve ter no máximo 10 caracteres")]
+        [StringLength(20, ErrorMessage = "O número deve ter no máximo 20 caracteres")]
         public string? Numero { get; set; }
 
         [Display(Name = "Complemento")]
-        [StringLength(100, ErrorMessage = "O complemento deve ter no máximo 100 caracteres")]
+        [StringLength(50, ErrorMessage = "O complemento deve ter no máximo 50 caracteres")]
         public string? Complemento { get; set; }
 
         [Display(Name = "Estado")]
@@ -62,5 +62,10 @@ namespace BiotLabWeb.Models
         [Required(ErrorMessage = "O email é obrigatório")]
         [EmailAddress(ErrorMessage = "Formato de email inválido")]
         public string Email { get; set; } = null!;
+
+        [Display(Name = "Código da Instituição")]
+        [Required(ErrorMessage = "O código da instituição é obrigatório")]
+        public uint IdInstituicao { get; set; }
+
     }
 }

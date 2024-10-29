@@ -11,7 +11,7 @@ namespace BiotLabWeb.Controllers
 {
     public class GaiolaharemController : Controller
     {
-        private readonly IGaiolaharemService gaiolaharemService;
+        private readonly IGaiolaharemService GaiolaharemService;
         private readonly IGaiolaService gaiolaService;
         private readonly IHaremService haremService;
         private readonly IPesquisadorService pesquisadorService;
@@ -24,7 +24,7 @@ namespace BiotLabWeb.Controllers
             IPesquisadorService pesquisadorService,
             IMapper mapper)
         {
-            this.gaiolaharemService = gaiolaharemService;
+            this.GaiolaharemService = gaiolaharemService;
             this.gaiolaService = gaiolaService;
             this.haremService = haremService;
             this.pesquisadorService = pesquisadorService;
@@ -34,7 +34,7 @@ namespace BiotLabWeb.Controllers
         // GET: Gaiolaharem
         public ActionResult Index()
         {
-            var gaiolaharems = gaiolaharemService.GetAll();
+            var gaiolaharems = BiotLabWeb.GaiolaharemService.GetAll();
             var vm = mapper.Map<IEnumerable<GaiolaharemViewModel>>(gaiolaharems);
             return View(vm);
         }
@@ -42,7 +42,7 @@ namespace BiotLabWeb.Controllers
         // GET: Gaiolaharem/Details/5/10
         public ActionResult Details(uint idGaiola, uint idHarem)
         {
-            var gaiolaharem = gaiolaharemService.Get(idGaiola, idHarem);
+            var gaiolaharem = BiotLabWeb.GaiolaharemService.Get(idGaiola, idHarem);
             if (gaiolaharem == null)
                 return NotFound();
 
@@ -69,7 +69,7 @@ namespace BiotLabWeb.Controllers
                 if (ModelState.IsValid)
                 {
                     var gaiolaharemDomain = mapper.Map<Gaiolaharem>(gaiolaharem);
-                    gaiolaharemService.Create(gaiolaharemDomain);
+                    GaiolaharemService.Create(gaiolaharemDomain);
                     return RedirectToAction(nameof(Index));
                 }
                 ViewBag.Gaiolas = GetGaiolaSelectList();
@@ -89,7 +89,7 @@ namespace BiotLabWeb.Controllers
         // GET: Gaiolaharem/Edit/5/10
         public ActionResult Edit(uint idGaiola, uint idHarem)
         {
-            var gaiolaharem = gaiolaharemService.Get(idGaiola, idHarem);
+            var gaiolaharem = GaiolaharemService.Get(idGaiola, idHarem);
             if (gaiolaharem == null)
                 return NotFound();
 
@@ -110,7 +110,7 @@ namespace BiotLabWeb.Controllers
                 if (ModelState.IsValid)
                 {
                     var gaiolaharemDomain = mapper.Map<Gaiolaharem>(gaiolaharem);
-                    gaiolaharemService.Update(gaiolaharemDomain);
+                    GaiolaharemService.Update(gaiolaharemDomain);
                     return RedirectToAction(nameof(Index));
                 }
                 ViewBag.Gaiolas = GetGaiolaSelectList();
@@ -130,7 +130,7 @@ namespace BiotLabWeb.Controllers
         // GET: Gaiolaharem/Delete/5/10
         public ActionResult Delete(uint idGaiola, uint idHarem)
         {
-            var gaiolaharem = gaiolaharemService.Get(idGaiola, idHarem);
+            var gaiolaharem = GaiolaharemService.Get(idGaiola, idHarem);
             if (gaiolaharem == null)
                 return NotFound();
 
@@ -145,7 +145,7 @@ namespace BiotLabWeb.Controllers
         {
             try
             {
-                gaiolaharemService.Delete(idGaiola, idHarem);
+                GaiolaharemService.Delete(idGaiola, idHarem);
                 return RedirectToAction(nameof(Index));
             }
             catch

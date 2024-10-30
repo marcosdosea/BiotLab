@@ -1,0 +1,36 @@
+﻿@model BiotLabWeb.Models.EntradaanestesicoViewModel
+
+@{
+    ViewData["Title"] = "Excluir Entrada de Anestésico";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>Você tem certeza que deseja excluir esta entrada?</h3>
+<div>
+    <h4>Entrada de Anestésico</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>@Html.DisplayNameFor(model => model.DataEntrada)</dt>
+        <dd>@Model.DataEntrada.ToString? ('dd/MM/yyyy')</dd>
+
+
+        <dt>@Html.DisplayNameFor(model => model.NomeAnestesico)</dt>
+        <dd>@Model.NomeAnestesico</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Quantidade)</dt>
+        <dd>@Model.Quantidade</dd>
+
+      
+    </dl>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.IdAnestesico)
+    <div class="form-actions no-color">
+        <input type="submit" value="Excluir" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </div>
+}

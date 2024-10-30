@@ -1,0 +1,28 @@
+﻿@model BiotLabWeb.Models.EntradaanestesicoViewModel
+
+@{
+    ViewData["Title"] = "Detalhes da Entrada de Anestésico";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div>
+    <h4>Entrada de Anestésico</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>@Html.DisplayNameFor(model => model.DataEntrada)</dt>
+        <dd>@Model.DataEntrada.ToString? ('dd/MM/yyyy')</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.NomeAnestesico)</dt>
+        <dd>@Model.NomeAnestesico</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Quantidade)</dt>
+        <dd>@Model.Quantidade</dd>
+
+        
+</div>
+
+<p>
+    <a asp-action="Edit" asp-route-id="@Model.IdAnestesico" class="btn btn-primary">Editar</a>
+    <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+</p>

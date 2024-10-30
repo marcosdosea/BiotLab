@@ -1,0 +1,39 @@
+﻿@model IEnumerable<BiotLabWeb.Models.EntradaanestesicoViewModel>
+
+@{
+    ViewData["Title"] = "Lista de Entradas de Anestésicos";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Adicionar Nova Entrada</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.DataEntrada)</th>
+            <th>@Html.DisplayNameFor(model => model.NomeAnestesico)</th>
+            <th>@Html.DisplayNameFor(model => model.Quantidade)</th>
+           
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.DataEntrada.ToString? ('dd/MM/yyyy')</td>
+                <td>@item.NomeAnestesico</td>
+                <td>@item.Quantidade</td>
+          
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.IdAnestesico" class="btn btn-info btn-sm">Detalhes</a>
+                    <a asp-action="Edit" asp-route-id="@item.IdAnestesico" class="btn btn-warning btn-sm">Editar</a>
+                    <a asp-action="Delete" asp-route-id="@item.IdAnestesico" class="btn btn-danger btn-sm">Excluir</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

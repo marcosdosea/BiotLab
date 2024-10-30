@@ -17,21 +17,6 @@ namespace BiotLabWeb.Controllers
             this.mapper = mapper;
         }
 
-        // GET: ObituarioController
-        public ActionResult Index()
-        {
-            var obituario = obituarioService.GetAll();
-            var vm = mapper.Map<IEnumerable<ObituarioViewModel>>(obituario);
-            return View(vm);
-        }
-
-        // GET: ObtuarioController/Details/5
-        public ActionResult Details(uint id)
-        {
-            var obituario = obituarioService.Get(id);
-            var vm = mapper.Map<ObituarioViewModel>(obituario);
-            return View(vm);
-        }
 
         // GET: ObituarioController/Create
         public ActionResult Create()
@@ -56,35 +41,10 @@ namespace BiotLabWeb.Controllers
             }
         }
 
-        // GET: ObituarioController/Edit/5
-        public ActionResult Edit(uint id)
-        {
-            var obituario = obituarioService.Get(id);
-            var vm = mapper.Map<ObituarioViewModel>(obituario);
-            return View(vm);
-        }
-
-        // POST: ObituarioController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, ObituarioViewModel obituario)
-        {
-            try
-            {
-                var obituarioDB = mapper.Map<Obituario>(obituario);
-                obituarioService.Update(obituarioDB);
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
         // GET: ObituarioController/Delete/5
         public ActionResult Delete(uint id)
         {
-            var obituario = obituarioService.Get(id);
+            var obituario = obituarioService.Buscar(id);
             var vm = mapper.Map<ObituarioViewModel>(obituario);
             return View(vm);
         }

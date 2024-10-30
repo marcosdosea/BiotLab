@@ -19,8 +19,8 @@ namespace BiotLabWeb.Controllers
         // GET: InstituicaoController
         public ActionResult Index()
         {
-            var instituicao = instituicaoService.GetAll();
-            var vm = mapper.Map<IEnumerable<InstituicaoViewModel>>(instituicao);
+            var instituicao = instituicaoService.GetAll().ToList();
+            var vm = mapper.Map<List<InstituicaoViewModel>>(instituicao);
             return View(vm);
         }
 

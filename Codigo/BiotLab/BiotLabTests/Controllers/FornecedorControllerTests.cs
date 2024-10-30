@@ -63,7 +63,7 @@ namespace BiotLabWeb.Controllers.Tests
             Assert.IsInstanceOfType(viewResult.ViewData.Model, typeof(FornecedorViewModel));
 
             var fornecedorModel = (FornecedorViewModel)viewResult.ViewData.Model;
-            Assert.AreEqual("fornecedor 1", fornecedorModel.Nome);
+            Assert.AreEqual("Fornecedor 1", fornecedorModel.Nome);
         }
 
         [TestMethod()]

@@ -35,8 +35,8 @@ namespace Service.Tests
 
             var harems = new List<Harem>
             {
-                new Harem { Id = 1, Nome = "Harem Alpha" },
-                new Harem { Id = 2, Nome = "Harem Beta" }
+                new Harem { Id = 1, CodigoInterno = "Harem Alpha" },
+                new Harem { Id = 2, CodigoInterno = "Harem Beta" }
             };
 
             var pesquisadores = new List<Pesquisador>

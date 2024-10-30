@@ -8,8 +8,9 @@ namespace Core.Service
 {
     public interface IObituarioService
     {
-        public void Delete(uint id);
-        public uint Create(Obituario obituario);
-        public Obituario? Buscar(uint id);
+        void Delete(uint id);
+        uint Create(Obituario obituario);
+        Obituario? Buscar(uint id);
+        IEnumerable<Obituario> GetAll(); 
     }
 }

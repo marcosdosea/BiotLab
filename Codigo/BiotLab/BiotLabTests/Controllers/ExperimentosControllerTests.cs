@@ -5,6 +5,8 @@ using BiotLabWeb.Mapper;
 using Core;
 using Microsoft.AspNetCore.Mvc;
 using BiotLabWeb.Models;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 
 namespace BiotLabWeb.Controllers.Tests
 {
@@ -114,13 +116,13 @@ namespace BiotLabWeb.Controllers.Tests
             return new ExperimentoViewModel
             {
                 Id = 4,
-                Nome = "Experimento Novo",
-                Cnpj = "1234567890001",
-                Cep = "12345-678",
-                Cidade = "Cidade Nova",
-                Estado = "Estado",
-                Telefone1 = "12345678",
-                Email = "email@Aluno.com"
+                Nome = "Novo Experimento",
+                DataInicio = DateTime.Now.ToString("dd.MM.yyyy"), // Formato esperado
+                DataFim = DateTime.Now.AddDays(5).ToString("dd.MM.yyyy"), // Formato esperado
+                Cepa = "Cepa C",
+                IdPesquisadorNavigation = "3", // Como string, se necessário, ou ajuste conforme seu modelo
+                Usoanestesicos = "Anestesico A",
+                Gaiolas = "5"
             };
         }
 
@@ -128,14 +130,12 @@ namespace BiotLabWeb.Controllers.Tests
         {
             return new Experimento
             {
-                Id = 1,
-                Nome = "Experimento 1",
-                Cnpj = "9876543210001",
-                Cep = "12345-678",
-                Cidade = "Cidade A",
-                Estado = "Estado A",
-                Telefone1 = "12345678",
-                Email = "Aluno1@email.com"
+                Id = 5,
+                DataInicio = DateTime.Now,
+                DataFim = DateTime.Now.AddDays(5),
+                Cepa = "Cepa C",
+                IdPesquisador = 3, // Ajustado para uint
+                // Gaiolas e Usoanestesicos não são preenchidos aqui, pois são collections
             };
         }
 
@@ -145,12 +145,12 @@ namespace BiotLabWeb.Controllers.Tests
             {
                 Id = 1,
                 Nome = "Experimento 1",
-                Cnpj = "9876543210001",
-                Cep = "12345-678",
-                Cidade = "Cidade A",
-                Estado = "Estado A",
-                Telefone1 = "12345678",
-                Email = "Aluno1@email.com"
+                DataInicio = DateTime.Now.ToString("dd.MM.yyyy"), // Formato esperado
+                DataFim = DateTime.Now.AddDays(5).ToString("dd.MM.yyyy"), // Formato esperado
+                Cepa = "Cepa A",
+                IdPesquisadorNavigation = "3", // Ajuste conforme seu modelo
+                Usoanestesicos = "Anestesico A",
+                Gaiolas = "2"
             };
         }
 
@@ -161,35 +161,26 @@ namespace BiotLabWeb.Controllers.Tests
                 new Experimento
                 {
                     Id = 1,
-                    Nome = "Experimento 1",
-                    Cnpj = "9876543210001",
-                    Cep = "12345-678",
-                    Cidade = "Cidade A",
-                    Estado = "Estado A",
-                    Telefone1 = "12345678",
-                    Email = "Aluno1@email.com"
+                    DataInicio = DateTime.Now,
+                    DataFim = DateTime.Now.AddDays(5),
+                    Cepa = "Cepa A",
+                    IdPesquisador = 3, // Ajustado para uint
                 },
                 new Experimento
                 {
                     Id = 2,
-                    Nome = "Experimento 2",
-                    Cnpj = "1234567890002",
-                    Cep = "23456-789",
-                    Cidade = "Cidade B",
-                    Estado = "Estado B",
-                    Telefone1 = "87654321",
-                    Email = "Aluno2@email.com"
+                    DataInicio = DateTime.Now,
+                    DataFim = DateTime.Now.AddDays(5),
+                    Cepa = "Cepa B",
+                    IdPesquisador = 3, // Ajustado para uint
                 },
                 new Experimento
                 {
                     Id = 3,
-                    Nome = "Experimento 3",
-                    Cnpj = "1234567890003",
-                    Cep = "34567-890",
-                    Cidade = "Cidade C",
-                    Estado = "Estado C",
-                    Telefone1 = "12349876",
-                    Email = "Aluno3@email.com"
+                    DataInicio = DateTime.Now,
+                    DataFim = DateTime.Now.AddDays(5),
+                    Cepa = "Cepa C",
+                    IdPesquisador = 3, // Ajustado para uint
                 }
             };
         }

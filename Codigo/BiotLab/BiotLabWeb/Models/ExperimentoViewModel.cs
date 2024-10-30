@@ -11,7 +11,7 @@ namespace BiotLabWeb.Models
 
         [Display(Name = "Nome do Pesquisador")]
         [Required(ErrorMessage = "O nome do Pesquisador é obrigatório")]
-        [StringLength(50, ErrorMessage = "O nome deve ter no máximo 100 caracteres")]
+        [StringLength(50, ErrorMessage = "O nome deve ter no máximo 50 caracteres")]
         public string Nome { get; set; } = null!;
 
         [Display(Name = "DataInicio")]
@@ -25,7 +25,7 @@ namespace BiotLabWeb.Models
         public string DataFim { get; set; } = null!;
 
         [Display(Name = "Cepa")]
-        [StringLength(100, ErrorMessage = "O nome da Cepa deve ter no máximo 100 caracteres")]
+        [StringLength(50, ErrorMessage = "O nome da Cepa deve ter no máximo 50 caracteres")]
         public string? Cepa { get; set; }
 
         [Display(Name = "Gaiolas")]

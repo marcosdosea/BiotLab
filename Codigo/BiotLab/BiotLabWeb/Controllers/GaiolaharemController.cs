@@ -27,7 +27,6 @@ namespace BiotLabWeb.Controllers
             this.gaiolaharemService = gaiolaharemService;
             this.gaiolaService = gaiolaService;
             this.haremService = haremService;
-            this.pesquisadorService = pesquisadorService;
             this.mapper = mapper;
         }
 
@@ -161,7 +160,7 @@ namespace BiotLabWeb.Controllers
             var selectList = gaiolas.Select(g => new SelectListItem
             {
                 Value = g.Id.ToString(),
-                Text = g.Nome
+                Text = g.Etiqueta
             });
             return selectList;
         }
@@ -172,7 +171,7 @@ namespace BiotLabWeb.Controllers
             var selectList = harems.Select(h => new SelectListItem
             {
                 Value = h.Id.ToString(),
-                Text = h.Nome
+                Text = h.CodigoInterno
             });
             return selectList;
         }
@@ -188,4 +187,5 @@ namespace BiotLabWeb.Controllers
             return selectList;
         }
     }
+
 }

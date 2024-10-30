@@ -1,10 +1,7 @@
 ﻿using Core.Service;
 using Core;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service
 {
@@ -37,6 +34,11 @@ namespace Service
                 context.Obituarios.Remove(obituario);
                 context.SaveChanges();
             }
+        }
+
+        public IEnumerable<Obituario> GetAll() 
+        {
+            return context.Obituarios.ToList();
         }
     }
 }

@@ -22,7 +22,7 @@ namespace BiotLabWeb.Controllers.Tests
         {
             // Arrange
             var mockService = new Mock<IEntradaanestesicoService>();
-            var mockAnestesicoService = new Mock<IAnestesicoService>();
+            var mockAnestesicoService = new Mock<IAnestesicosService>();
             var mockEntradumService = new Mock<IEntradumService>();
 
             IMapper mapper = new MapperConfiguration(cfg =>

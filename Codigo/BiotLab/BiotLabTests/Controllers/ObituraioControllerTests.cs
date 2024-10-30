@@ -1,174 +1,89 @@
-﻿using BiotLabWeb.Controllers;
+﻿using AutoMapper;
 using BiotLabWeb.Models;
-using Microsoft.AspNetCore.Mvc;
-using Core.Service;
 using Core;
+using Core.Service;
+using Microsoft.AspNetCore.Mvc;
+using Service;
 
-namespace BiotLabWeb.Tests.Controllers
+namespace BiotLabWeb.Controllers
 {
-    // Implementação fictícia de IObituarioService
-    public class MockObituarioService : IObituarioService
+    public class ObituarioController : Controller
     {
-        private readonly List<Obituario> _obituarios = new();
+        private readonly IObituarioService obituarioService;
+        private readonly IMapper mapper;
 
-        public uint Create(Obituario obituario)
+        public ObituarioController(IObituarioService obituarioService, IMapper mapper)
         {
-            obituario.Id = (uint)(_obituarios.Count + 1); // Simula auto incremento
-            _obituarios.Add(obituario);
-            return obituario.Id;
+            this.obituarioService = obituarioService;
+            this.mapper = mapper;
         }
 
-        public Obituario? Buscar(uint id)
+        // GET: ObituarioController/Create
+        public ActionResult Create()
         {
-            return _obituarios.FirstOrDefault(o => o.Id == id);
+            return View();
         }
 
-        public void Delete(uint id)
+        // POST: ObituarioController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(ObituarioViewModel obituario)
         {
-            var obituario = _obituarios.FirstOrDefault(o => o.Id == id);
-            if (obituario != null)
+            try
             {
-                _obituarios.Remove(obituario);
+                var obituarioDB = mapper.Map<Obituario>(obituario);
+                obituarioService.Create(obituarioDB);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
             }
         }
 
-        public IEnumerable<Obituario> GetAll() => _obituarios;
-    }
-
-    public class ObituarioControllerTests
-    {
-        private readonly ObituarioController _controller;
-        private readonly MockObituarioService _obituarioService;
-
-        public ObituarioControllerTests()
+        // GET: ObituarioController/Index
+        public ActionResult Index()
         {
-            _obituarioService = new MockObituarioService();
-            _controller = new ObituarioController(_obituarioService, null!); // Passando null para o mapper
+            var obituarios = obituarioService.GetAll();
+            var viewModel = mapper.Map<IEnumerable<ObituarioViewModel>>(obituarios);
+            return View(viewModel);
         }
 
-        public void Create_ValidObituario_ReturnsRedirectToIndex()
+        // GET: ObituarioController/Details/5
+        public ActionResult Details(uint id)
         {
-            // Arrange
-            var viewModel = new ObituarioViewModel
+            var obituario = obituarioService.Buscar(id);
+            if (obituario == null)
             {
-                IdPesquisador = "1",
-                Data = "01.000.000/2024-01",
-                IdGaiola = "12345-678"
-            };
-
-            // Act
-            var result = _controller.Create(viewModel) as RedirectToActionResult;
-
-            // Assert
-            if (result == null || result.ActionName != "Index")
-            {
-                throw new Exception("Teste falhou: o resultado não é um redirecionamento para Index.");
+                return NotFound();
             }
+
+            var vm = mapper.Map<ObituarioViewModel>(obituario);
+            return View(vm);
         }
 
-        public void Create_InvalidObituario_ReturnsView()
+        // GET: ObituarioController/Delete/5
+        public ActionResult Delete(uint id)
         {
-            // Arrange
-            var viewModel = new ObituarioViewModel
-            {
-                IdPesquisador = string.Empty, // Inválido
-                Data = "data_invalida",
-                IdGaiola = "123"
-            };
-
-            // Act
-            var result = _controller.Create(viewModel) as ViewResult;
-
-            // Assert
-            if (result == null || result.ViewName != "Create" || _controller.ModelState.IsValid)
-            {
-                throw new Exception("Teste falhou: o resultado não é a View Create ou o ModelState é válido.");
-            }
+            var obituario = obituarioService.Buscar(id);
+            var vm = mapper.Map<ObituarioViewModel>(obituario);
+            return View(vm);
         }
 
-        public void Index_ReturnsViewWithObituarios()
+        // POST: ObituarioController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(uint id, ObituarioViewModel obituario)
         {
-            // Arrange
-            _obituarioService.Create(new Obituario
+            try
             {
-                IdPesquisador = 1,
-                Data = DateTime.Now,
-                IdGaiola = 101
-            });
-
-            // Act
-            var result = _controller.Index() as ViewResult;
-
-            // Assert
-            if (result == null || result.Model == null)
-            {
-                throw new Exception("Teste falhou: o resultado é nulo.");
+                obituarioService.Delete(id);
+                return RedirectToAction(nameof(Index));
             }
-
-            var model = result.Model as IEnumerable<ObituarioViewModel>;
-            if (model == null || !model.Any())
+            catch
             {
-                throw new Exception("Teste falhou: o modelo está vazio.");
+                return View();
             }
-        }
-
-        public void Details_ValidId_ReturnsViewWithObituario()
-        {
-            // Arrange
-            var obituario = new Obituario
-            {
-                IdPesquisador = 1,
-                Data = DateTime.Now,
-                IdGaiola = 101
-            };
-            uint id = _obituarioService.Create(obituario);
-
-            // Act
-            var result = _controller.Details(id) as ViewResult;
-
-            // Assert
-            if (result == null)
-            {
-                throw new Exception("Teste falhou: o resultado é nulo.");
-            }
-
-            var model = result.Model as ObituarioViewModel;
-            if (model == null || model.Id != id)
-            {
-                throw new Exception("Teste falhou: o modelo não corresponde ao ID esperado.");
-            }
-        }
-
-        public void Delete_ValidId_RemovesObituario()
-        {
-            // Arrange
-            var obituario = new Obituario
-            {
-                IdPesquisador = 1,
-                Data = DateTime.Now,
-                IdGaiola = 101
-            };
-            uint id = _obituarioService.Create(obituario);
-
-            // Act
-            _controller.Delete(id);
-
-            // Assert
-            var deletedObituario = _obituarioService.Buscar(id);
-            if (deletedObituario != null)
-            {
-                throw new Exception("Teste falhou: o obituário não foi removido.");
-            }
-        }
-
-        // Método para executar todos os testes
-        public void RunAllTests()
-        {
-            Create_ValidObituario_ReturnsRedirectToIndex();
-            Create_InvalidObituario_ReturnsView();
-            Index_ReturnsViewWithObituarios();
-            Details_ValidId_ReturnsViewWithObituario();
-            Delete_ValidId_RemovesObituario();
         }
     }
 }

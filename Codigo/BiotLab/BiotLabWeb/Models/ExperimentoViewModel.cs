@@ -1,6 +1,4 @@
-﻿using Core;
-using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BiotLabWeb.Models
 {
@@ -30,6 +28,10 @@ namespace BiotLabWeb.Models
         [StringLength(50, ErrorMessage = "O nome da Cepa deve ter no máximo 50 caracteres")]
         public string? Cepa { get; set; }
 
+        [Display(Name = "Gaiolas")]
+        [StringLength(50, ErrorMessage = "O numero das Gaiolas devem ter no máximo 50 caracteres")]
+        public string? Gaiolas { get; set; }
+
         [Display(Name = "Id Pesquisador Navigation")]
         [StringLength(50, ErrorMessage = "O Id Pesquisador Navigation deve ter no máximo 50 caracteres")]
         public string? IdPesquisadorNavigation { get; set; }
@@ -37,10 +39,5 @@ namespace BiotLabWeb.Models
         [Display(Name = "Anestesico Usado")]
         [StringLength(10, ErrorMessage = "O nome do Anestesico deve ter no máximo 10 caracteres")]
         public string? Usoanestesicos { get; set; }
-
-        [Display(Name = "Gaiolas")]
-        [StringLength(50, ErrorMessage = "O número das Gaiolas deve ter no máximo 50 caracteres")]
-        public string? Gaiolas { get; set; } 
-
     }
 }

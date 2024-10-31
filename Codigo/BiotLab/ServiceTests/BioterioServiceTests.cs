@@ -77,7 +77,7 @@ namespace Service.Tests
             // Assert
             Assert.AreEqual(3, bioterioService.GetAll().Count());
             var bioterio = bioterioService.Get(createdId);
-            Assert.AreEqual("Instituição 3", bioterio.Nome);
+            Assert.AreEqual("Bioterio 3", bioterio.Nome);
             Assert.AreEqual("Cidade C", bioterio.Cidade);
         }
 
@@ -85,22 +85,22 @@ namespace Service.Tests
             public void DeleteTest()
             {
                 // Act
-                bioterioService.Delete(2);
+                bioterioService.Delete(1);
                 // Assert
-                Assert.AreEqual(2, bioterioService.GetAll().Count());
-                var autor = bioterioService.Get(2);
-                Assert.AreEqual(null, autor);
+                Assert.AreEqual(1, bioterioService.GetAll().Count());
+                var bioterio = bioterioService.Get(1);
+                Assert.AreEqual(null, bioterio);
             }
 
             [TestMethod()]
             public void UpdateTest()
             {
                 //Act 
-                var bioterio = bioterioService.Get(3);
+                var bioterio = bioterioService.Get(2);
                 bioterio.Nome = "Bioterio Alterado";
                 bioterioService.Update(bioterio);
                 //Assert
-                bioterio = bioterioService.Get(3);
+                bioterio = bioterioService.Get(2);
                 Assert.IsNotNull(bioterio);
                 Assert.AreEqual("Bioterio Alterado", bioterio.Nome);
             }
@@ -121,9 +121,9 @@ namespace Service.Tests
                 // Assert
                 Assert.IsInstanceOfType(listaBioterios, typeof(IEnumerable<Bioterio>));
                 Assert.IsNotNull(listaBioterios);
-                Assert.AreEqual(3, listaBioterios.Count());
+                Assert.AreEqual(2, listaBioterios.Count());
                 Assert.AreEqual((uint)1, listaBioterios.First().Id);
-                Assert.AreEqual("Machado de Assis", listaBioterios.First().Nome);
+                Assert.AreEqual("Bioterio 1", listaBioterios.First().Nome);
             }
 
         }

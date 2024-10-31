@@ -14,7 +14,7 @@ namespace BiotLabWeb.Controllers
         private readonly IGaiolaharemService gaiolaharemService;
         private readonly IGaiolaService gaiolaService;
         private readonly IHaremService haremService;
-        private readonly IPesquisadorService pesquisadorService;
+        private readonly IPesquisadorService pesquisadorService; // Certifique-se de declarar o campo
         private readonly IMapper mapper;
 
         public GaiolaharemController(
@@ -27,8 +27,10 @@ namespace BiotLabWeb.Controllers
             this.gaiolaharemService = gaiolaharemService;
             this.gaiolaService = gaiolaService;
             this.haremService = haremService;
+            this.pesquisadorService = pesquisadorService; // Atribuição adicionada
             this.mapper = mapper;
         }
+
 
         // GET: Gaiolaharem
         public ActionResult Index()

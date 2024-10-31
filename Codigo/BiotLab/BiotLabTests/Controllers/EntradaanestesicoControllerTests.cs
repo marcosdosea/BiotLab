@@ -42,9 +42,9 @@ namespace BiotLabWeb.Controllers.Tests
 
             // Configurando os serviços auxiliares para preencher os dropdowns
             mockAnestesicoService.Setup(service => service.GetAll())
-                .Returns((Delegate)GetTestAnestesicos());
+                .Returns(GetTestAnestesicos());
             mockEntradumService.Setup(service => service.GetAll())
-                .Returns((Delegate)GetTestEntradas());
+                .Returns(GetTestEntradas());
 
             controller = new EntradaanestesicoController(
                 mockService.Object,

@@ -16,6 +16,11 @@ namespace BiotLabWeb.Tests.Controllers
     public class GaiolaharemControllerTests
     {
         private static GaiolaharemController controller;
+        private Mock<IGaiolaharemService> mockGaiolaharemService;
+        private Mock<IGaiolaService> mockGaiolaService;
+        private Mock<IHaremService> mockHaremService;
+        private Mock<IPesquisadorService> mockPesquisadorService;
+        private IMapper mapper;
 
         [TestInitialize]
         public void Initialize()
@@ -32,13 +37,13 @@ namespace BiotLabWeb.Tests.Controllers
                     .ForMember(dest => dest.IdHaremNavigation, opt => opt.Ignore())
                     .ForMember(dest => dest.IdPesquisadorNavigation, opt => opt.Ignore());
             });
-            IMapper mapper = config.CreateMapper();
+            mapper = config.CreateMapper();
 
             // Mock dos serviços
-            var mockGaiolaharemService = new Mock<IGaiolaharemService>();
-            var mockGaiolaService = new Mock<IGaiolaService>();
-            var mockHaremService = new Mock<IHaremService>();
-            var mockPesquisadorService = new Mock<IPesquisadorService>();
+            mockGaiolaharemService = new Mock<IGaiolaharemService>();
+            mockGaiolaService = new Mock<IGaiolaService>();
+            mockHaremService = new Mock<IHaremService>();
+            mockPesquisadorService = new Mock<IPesquisadorService>();
 
             // Configuração dos mocks
             mockGaiolaharemService.Setup(service => service.GetAll())
@@ -102,12 +107,17 @@ namespace BiotLabWeb.Tests.Controllers
             mockService.Setup(service => service.Get(It.IsAny<uint>(), It.IsAny<uint>()))
                 .Returns((Gaiolaharem)null);
 
+            // Usar mocks vazios para os outros serviços
+            var mockGaiolaService = new Mock<IGaiolaService>();
+            var mockHaremService = new Mock<IHaremService>();
+            var mockPesquisadorService = new Mock<IPesquisadorService>();
+
             var controller = new GaiolaharemController(
                 mockService.Object,
-                null,
-                null,
-                null,
-                null);
+                mockGaiolaService.Object,
+                mockHaremService.Object,
+                mockPesquisadorService.Object,
+                mapper);
 
             // Act
             var result = controller.Details(999, 999);
@@ -223,7 +233,12 @@ namespace BiotLabWeb.Tests.Controllers
                 IdPesquisadorNavigation = new Pesquisador
                 {
                     Id = 1,
-                    Nome = "Dr. Silva"
+                    Nome = "Dr. Silva",
+                    Cpf = "12345678901",
+                    Cep = "12345678",
+                    Estado = "SP",
+                    Telefone1 = "11999999999",
+                    Email = "dr.silva@example.com"
                 }
             };
         }
@@ -251,7 +266,12 @@ namespace BiotLabWeb.Tests.Controllers
                     IdPesquisadorNavigation = new Pesquisador
                     {
                         Id = 1,
-                        Nome = "Dr. Silva"
+                        Nome = "Dr. Silva",
+                        Cpf = "12345678901",
+                        Cep = "12345678",
+                        Estado = "SP",
+                        Telefone1 = "11999999999",
+                        Email = "dr.silva@example.com"
                     }
                 },
                 new Gaiolaharem
@@ -273,7 +293,12 @@ namespace BiotLabWeb.Tests.Controllers
                     IdPesquisadorNavigation = new Pesquisador
                     {
                         Id = 2,
-                        Nome = "Dr. Souza"
+                        Nome = "Dr. Souza",
+                        Cpf = "09876543210",
+                        Cep = "87654321",
+                        Estado = "RJ",
+                        Telefone1 = "21988888888",
+                        Email = "dr.souza@example.com"
                     }
                 }
             };
@@ -325,9 +350,36 @@ namespace BiotLabWeb.Tests.Controllers
         {
             return new List<Pesquisador>
             {
-                new Pesquisador { Id = 1, Nome = "Dr. Silva" },
-                new Pesquisador { Id = 2, Nome = "Dr. Souza" },
-                new Pesquisador { Id = 3, Nome = "Dr. Oliveira" }
+                new Pesquisador
+                {
+                    Id = 1,
+                    Nome = "Dr. Silva",
+                    Cpf = "12345678901",
+                    Cep = "12345678",
+                    Estado = "SP",
+                    Telefone1 = "11999999999",
+                    Email = "dr.silva@example.com"
+                },
+                new Pesquisador
+                {
+                    Id = 2,
+                    Nome = "Dr. Souza",
+                    Cpf = "09876543210",
+                    Cep = "87654321",
+                    Estado = "RJ",
+                    Telefone1 = "21988888888",
+                    Email = "dr.souza@example.com"
+                },
+                new Pesquisador
+                {
+                    Id = 3,
+                    Nome = "Dr. Oliveira",
+                    Cpf = "11223344556",
+                    Cep = "11223344",
+                    Estado = "MG",
+                    Telefone1 = "31977777777",
+                    Email = "dr.oliveira@example.com"
+                }
             };
         }
     }

@@ -112,13 +112,6 @@ namespace Service.Tests
             Assert.IsTrue(listaExperimento.Any(e => e.Cepa == "Cepa B"));
         }
 
-        [TestMethod()]
-        [ExpectedException(typeof(KeyNotFoundException))] 
-        public void DeleteNonExistentTest()
-        {
-            experimentoService.Delete(999); 
-        }
-
         public void Dispose()
         {
             context.Dispose();

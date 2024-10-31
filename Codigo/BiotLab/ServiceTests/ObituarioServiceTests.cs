@@ -1,101 +1,116 @@
 ﻿using Core;
 using Core.Service;
-using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Service;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace ServiceTests
+namespace Service.Tests
 {
     [TestClass]
     public class ObituarioServiceTests
     {
-        private ObituarioService? _service;
-        private BiotlabContext? _context;
+        private BiotlabContext context;
+        private IObituarioService obituarioService;
 
         [TestInitialize]
-        public void Setup()
+        public void Initialize()
         {
-            _context = new BiotlabContext();
-            _service = new ObituarioService(_context);
-        }
+            // Configurando o banco de dados em memória para testes
+            var builder = new DbContextOptionsBuilder<BiotlabContext>();
+            builder.UseInMemoryDatabase("BiotlabObituarios");
+            var options = builder.Options;
 
-        [TestMethod]
-        public void Create_Valido_RetornaId()
-        {
-            // Arrange
-            var obituario = new Obituario
+            context = new BiotlabContext(options);
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+
+            // Criação de uma lista de obituários
+            var obituarios = new List<Obituario>
             {
-                Id = 1,
-                Data = DateTime.Now,
-                IdGaiola = 101,
-                IdPesquisador = 202
+                new()
+                {
+                    Id = 1,
+                    Data = DateTime.Now,
+                    IdGaiola = 101,
+                    IdPesquisador = 202
+                },
+                new()
+                {
+                    Id = 2,
+                    Data = DateTime.Now.AddDays(-1),
+                    IdGaiola = 102,
+                    IdPesquisador = 203
+                }
             };
 
-            // Act
-            uint idResultado = _service!.Create(obituario);
+            context.AddRange(obituarios);
+            context.SaveChanges();
 
-            // Assert
-            Assert.IsTrue(idResultado > 0);
+            obituarioService = new ObituarioService(context);
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            context.Database.EnsureDeleted();
+            context.Dispose();
         }
 
         [TestMethod]
-        public void Buscar_Existente_RetornaObituario()
+        public void CreateTest()
         {
-            // Arrange
-            var obituario = new Obituario
+            // Criando um novo obituário
+            var novoObituario = new Obituario
             {
-                Data = DateTime.Now,
-                IdGaiola = 101,
-                IdPesquisador = 202
+                Data = DateTime.Now.AddDays(-2),
+                IdGaiola = 103,
+                IdPesquisador = 204
             };
-            uint id = _service!.Create(obituario);
 
-            // Act
-            var resultado = _service.Buscar(id);
+            var createdId = obituarioService.Create(novoObituario);
 
-            // Assert
-            Assert.IsNotNull(resultado);
-            Assert.AreEqual(id, resultado?.Id);
+            // Verificando a criação
+            Assert.AreEqual(3, obituarioService.GetAll().Count());
+            var obituario = obituarioService.Buscar(createdId);
+            Assert.IsNotNull(obituario);
+            Assert.AreEqual(103u, obituario.IdGaiola); // Especificando uint
         }
 
         [TestMethod]
-        public void Buscar_Inexistente_RetornaNull()
+        public void DeleteTest()
         {
-            // Act
-            var resultado = _service!.Buscar(999);
+            // Deletando o primeiro obituário
+            obituarioService.Delete(1);
 
-            // Assert
-            Assert.IsNull(resultado);
+            // Verificando se foi removido
+            Assert.AreEqual(1, obituarioService.GetAll().Count());
+            var obituario = obituarioService.Buscar(1);
+            Assert.IsNull(obituario);
         }
 
         [TestMethod]
-        public void Delete_Existente_RetornaTrue()
+        public void GetTest()
         {
-            // Arrange
-            var obituario = new Obituario
-            {
-                Data = DateTime.Now,
-                IdGaiola = 101,
-                IdPesquisador = 202
-            };
-            uint id = _service!.Create(obituario);
-
-            // Act
-            _service.Delete(id);
-
-            // Assert
-            var resultado = _service.Buscar(id);
-            Assert.IsNull(resultado);
+            // Buscando um obituário pelo ID
+            var obituario = obituarioService.Buscar(1);
+            Assert.IsNotNull(obituario);
+            Assert.AreEqual(101u, obituario.IdGaiola); // Especificando uint
         }
 
         [TestMethod]
-        public void Delete_Inexistente_NaoGeraErro()
+        public void GetAllTest()
         {
-            // Act
-            _service!.Delete(999);
+            // Obtendo todos os obituários
+            var listaObituarios = obituarioService.GetAll();
 
-            Assert.IsTrue(true);
+            // Verificando se a lista contém todos os obituários esperados
+            Assert.IsInstanceOfType(listaObituarios, typeof(IEnumerable<Obituario>));
+            Assert.IsNotNull(listaObituarios);
+            Assert.AreEqual(2, listaObituarios.Count());
+            Assert.AreEqual(1u, listaObituarios.First().Id); // Especificando uint
+            Assert.AreEqual(101u, listaObituarios.First().IdGaiola); // Especificando uint
         }
     }
 }

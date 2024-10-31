@@ -1,8 +1,30 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="~/css/Index.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1 class="display-4">BiotLab</h1>
+        </div>
+        <form>
+            <label for="usuario">Usuário</label>
+            <input type="text" id="usuario" name="usuario">
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha">
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>

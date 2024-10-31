@@ -4,105 +4,103 @@ using Core;
 using Core.Service;
 using Microsoft.AspNetCore.Mvc;
 using Service;
+
 namespace BiotLabWeb.Controllers
 {
     public class ExperimentoController : Controller
     {
-        private readonly IExperimentoService experimentoService;
-        private readonly IMapper mapper;
+        private readonly IExperimentoService _experimentoService;
+        private readonly IMapper _mapper;
 
         public ExperimentoController(IExperimentoService experimentoService, IMapper mapper)
         {
-            this.experimentoService = experimentoService;
-            this.mapper = mapper;
+            _experimentoService = experimentoService;
+            _mapper = mapper;
         }
 
-        // GET: ExperimentoController
-        public ActionResult Index()
+        public IActionResult Index()
         {
-            var experimento = experimentoService.GetAll();
-            var vm = mapper.Map<IEnumerable<ExperimentoViewModel>>(experimento);
-            return View(vm);
+            var experimentos = _experimentoService.GetAll();
+            var model = _mapper.Map<List<ExperimentoViewModel>>(experimentos);
+            return View(model);
         }
 
-        // GET: ExperimentoController/Details/5
-        public ActionResult Details(uint id)
+        public IActionResult Details(uint id)
         {
-            var experimento = experimentoService.Get(id);
-            var vm = mapper.Map<ExperimentoViewModel>(experimento);
-            return View(vm);
+            var experimento = _experimentoService.Get(id);
+            if (experimento == null)
+            {
+                return NotFound();
+            }
+
+            var model = _mapper.Map<ExperimentoViewModel>(experimento);
+            return View(model);
         }
 
-        // GET: ExperimentoController/Create
-        public ActionResult Create()
+        [HttpGet]
+        public IActionResult Create()
         {
-            return View();
+            return View(new ExperimentoViewModel());
         }
 
-        // POST: ExperimentoController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(ExperimentoViewModel experimento)
+        public IActionResult Create(ExperimentoViewModel model)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                var experimentoDB = mapper.Map<Experimento>(experimento);
-                experimentoService.Create(experimentoDB);
-                return RedirectToAction(nameof(Index));
+                return View(model);
             }
-            catch
-            {
-                return View();
-            }
+
+            var experimento = _mapper.Map<Experimento>(model);
+            _experimentoService.Create(experimento);
+            return RedirectToAction("Index");
         }
 
-        // GET: ExperimentoController/Edit/5
-        public ActionResult Edit(uint id)
+
+        [HttpGet]
+        public IActionResult Edit(uint id)
         {
-            var experimento = experimentoService.Get(id);
-            var vm = mapper.Map<ExperimentoViewModel>(experimento);
-            return View(vm);
+            var experimento = _experimentoService.Get(id);
+            if (experimento == null)
+            {
+                return NotFound();
+            }
+
+            var model = _mapper.Map<ExperimentoViewModel>(experimento);
+            return View(model);
         }
 
-        // POST: ExperimentoController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, ExperimentoViewModel experimento)
+        public IActionResult Edit(uint id, ExperimentoViewModel model)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                var experimentoDB = mapper.Map<Experimento>(experimento);
-                experimentoService.Update(experimentoDB);
-                return RedirectToAction(nameof(Index));
+                return View(model);
             }
-            catch
-            {
-                return View();
-            }
+
+            var experimento = _mapper.Map<Experimento>(model);
+            _experimentoService.Update(experimento);
+            return RedirectToAction("Index");
         }
 
-        // GET: ExperimentoController/Delete/5
-        public ActionResult Delete(uint id)
+        [HttpGet]
+        public IActionResult Delete(uint id)
         {
-            var experimento = experimentoService.Get(id);
-            var vm = mapper.Map<ExperimentoViewModel>(experimento);
-            return View(vm);
+            var experimento = _experimentoService.Get(id);
+            if (experimento == null)
+            {
+                return NotFound();
+            }
+
+            var model = _mapper.Map<ExperimentoViewModel>(experimento);
+            return View(model);
         }
 
-        // POST: ExperimentoController/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(uint id, ExperimentoViewModel experimento)
+        public IActionResult Delete(uint id, ExperimentoViewModel model)
         {
-            try
-            {
-                experimentoService.Delete(id);
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _experimentoService.Delete(id);
+            return RedirectToAction("Index");
         }
     }
 }

@@ -32,10 +32,11 @@ namespace BiotLabWeb.Models
         [Display(Name = "Nome do Pesquisador")]
         public string? NomePesquisador { get; set; }
 
-        [Display(Name = "Código Interno da Gaiola")]
+        [Display(Name = "Codigo Interno Gaiola")]
         public string? CodigoInternoGaiola { get; set; }
 
-        [Display(Name = "Código Interno do Harem")]
+        [Display(Name = "Codigo Interno Harem")]
         public string? CodigoInternoHarem { get; set; }
+
     }
 }

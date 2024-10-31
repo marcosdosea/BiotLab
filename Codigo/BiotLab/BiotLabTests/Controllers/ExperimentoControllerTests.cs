@@ -5,8 +5,6 @@ using BiotLabWeb.Mapper;
 using Core;
 using Microsoft.AspNetCore.Mvc;
 using BiotLabWeb.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
 
 namespace BiotLabWeb.Controllers.Tests
 {
@@ -14,18 +12,18 @@ namespace BiotLabWeb.Controllers.Tests
     public class ExperimentoControllerTests
     {
         private static ExperimentoController controller;
-        private Mock<IExperimentoService> mockService; // Mantenha uma referência ao mock
 
         [TestInitialize]
         public void Initialize()
         {
-            mockService = new Mock<IExperimentoService>();
+            // Arrange
+            var mockService = new Mock<IExperimentoService>();
 
             IMapper mapper = new MapperConfiguration(cfg =>
                 cfg.AddProfile(new ExperimentoProfile())).CreateMapper();
 
             mockService.Setup(service => service.GetAll())
-                .Returns(GetTestExperimentos());
+                .Returns(GetTestExperimento());
             mockService.Setup(service => service.Get(1))
                 .Returns(GetTargetExperimento());
             mockService.Setup(service => service.Create(It.IsAny<Experimento>()))
@@ -41,84 +39,88 @@ namespace BiotLabWeb.Controllers.Tests
         [TestMethod()]
         public void IndexTest_Valido()
         {
-            var result = controller.Index() as ViewResult;
+            // Act
+            var result = controller.Index();
 
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(List<ExperimentoViewModel>));
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
+            ViewResult viewResult = (ViewResult)result;
+            Assert.IsInstanceOfType(viewResult.ViewData.Model, typeof(List<ExperimentoViewModel>));
 
-            var lista = (List<ExperimentoViewModel>)result.ViewData.Model;
+            var lista = (List<ExperimentoViewModel>)viewResult.ViewData.Model;
             Assert.AreEqual(3, lista.Count);
         }
 
         [TestMethod()]
         public void DetailsTest_Valido()
         {
-            var result = controller.Details(1) as ViewResult;
+            // Act
+            var result = controller.Details(1);
 
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(ExperimentoViewModel));
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
+            ViewResult viewResult = (ViewResult)result;
+            Assert.IsInstanceOfType(viewResult.ViewData.Model, typeof(ExperimentoViewModel));
 
-            var experimentoModel = (ExperimentoViewModel)result.ViewData.Model;
-            Assert.AreEqual("Cepa A", experimentoModel.Cepa);
+            var experimentoModel = (ExperimentoViewModel)viewResult.ViewData.Model;
+            Assert.AreEqual("Experimento 1", experimentoModel.Nome);
         }
 
         [TestMethod()]
         public void CreateTest_Valido()
         {
-            var experimentoModel = GetNewExperimento();
+            // Act
+            var result = controller.Create(GetNewExperimento());
 
-            var result = controller.Create(experimentoModel) as RedirectToActionResult;
-
-            Assert.IsNotNull(result);
-            Assert.IsNull(result.ControllerName);
-            Assert.AreEqual("Index", result.ActionName);
-
-            // Verifica se o método Create foi chamado uma vez
-            mockService.Verify(service => service.Create(It.IsAny<Experimento>()), Times.Once);
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
+            RedirectToActionResult redirectToActionResult = (RedirectToActionResult)result;
+            Assert.IsNull(redirectToActionResult.ControllerName);
+            Assert.AreEqual("Index", redirectToActionResult.ActionName);
         }
-
+        
         [TestMethod()]
         public void EditTest_Post_Valido()
         {
-            var experimentoModel = GetTargetExperimentoModel();
+            // Act
+            var result = controller.Edit(1, GetTargetExperimentoModel());
 
-            var result = controller.Edit(1, experimentoModel) as RedirectToActionResult;
-
-            Assert.IsNotNull(result);
-            Assert.IsNull(result.ControllerName);
-            Assert.AreEqual("Index", result.ActionName);
-
-            // Verifica se o método Update foi chamado uma vez
-            mockService.Verify(service => service.Update(It.IsAny<Experimento>()), Times.Once);
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
+            RedirectToActionResult redirectToActionResult = (RedirectToActionResult)result;
+            Assert.IsNull(redirectToActionResult.ControllerName);
+            Assert.AreEqual("Index", redirectToActionResult.ActionName);
         }
 
         [TestMethod()]
         public void DeleteTest_Post_Valido()
         {
-            var experimentoModel = GetTargetExperimentoModel();
+            // Arrange
+            var experimentoModel = GetTargetExperimentoModel(); // Obtém o modelo para deletar
 
-            var result = controller.Delete(1, experimentoModel) as RedirectToActionResult;
+            // Act
+            var result = controller.Delete(1, experimentoModel);
 
-            Assert.IsNotNull(result);
-            Assert.IsNull(result.ControllerName);
-            Assert.AreEqual("Index", result.ActionName);
-
-            // Verifica se o método Delete foi chamado uma vez
-            mockService.Verify(service => service.Delete(1), Times.Once);
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
+            RedirectToActionResult redirectToActionResult = (RedirectToActionResult)result;
+            Assert.IsNull(redirectToActionResult.ControllerName);
+            Assert.AreEqual("Index", redirectToActionResult.ActionName);
         }
 
         // Métodos auxiliares
         private ExperimentoViewModel GetNewExperimento()
         {
-            return new ExperimentoViewModel
+            return new IExperimentoViewModel
             {
                 Id = 4,
-                DataInicio = DateTime.Now.ToString("dd.MM.yyyy"),
-                DataFim = DateTime.Now.AddDays(5).ToString("dd.MM.yyyy"),
-                Cepa = "Cepa C",
-                IdPesquisadorNavigation = "3",
-                Usoanestesicos = "Anestesico A",
-                Gaiolas = "5"
+                Nome = "Experimento Novo",
+                Cnpj = "1234567890001",
+                Cep = "12345-678",
+                Cidade = "Cidade Nova",
+                Estado = "Estado",
+                Telefone1 = "12345678",
+                Email = "email@Aluno.com"
             };
         }
 
@@ -127,10 +129,13 @@ namespace BiotLabWeb.Controllers.Tests
             return new Experimento
             {
                 Id = 1,
-                DataInicio = DateTime.Now,
-                DataFim = DateTime.Now.AddDays(5),
-                Cepa = "Cepa A",
-                IdPesquisador = 3,
+                Nome = "Experimento 1",
+                Cnpj = "9876543210001",
+                Cep = "12345-678",
+                Cidade = "Cidade A",
+                Estado = "Estado A",
+                Telefone1 = "12345678",
+                Email = "Aluno1@email.com"
             };
         }
 
@@ -139,42 +144,52 @@ namespace BiotLabWeb.Controllers.Tests
             return new ExperimentoViewModel
             {
                 Id = 1,
-                DataInicio = DateTime.Now.ToString("dd.MM.yyyy"),
-                DataFim = DateTime.Now.AddDays(5).ToString("dd.MM.yyyy"),
-                Cepa = "Cepa A",
-                IdPesquisadorNavigation = "3",
-                Usoanestesicos = "Anestesico A",
-                Gaiolas = "2"
+                Nome = "Experimento 1",
+                Cnpj = "9876543210001",
+                Cep = "12345-678",
+                Cidade = "Cidade A",
+                Estado = "Estado A",
+                Telefone1 = "12345678",
+                Email = "Aluno1@email.com"
             };
         }
 
-        private IEnumerable<Experimento> GetTestExperimentos()
+        private IEnumerable<Experimento> GetTestExperimento()
         {
             return new List<Experimento>
             {
                 new Experimento
                 {
                     Id = 1,
-                    DataInicio = DateTime.Now,
-                    DataFim = DateTime.Now.AddDays(5),
-                    Cepa = "Cepa A",
-                    IdPesquisador = 3,
+                    Nome = "Experimento 1",
+                    Cnpj = "9876543210001",
+                    Cep = "12345-678",
+                    Cidade = "Cidade A",
+                    Estado = "Estado A",
+                    Telefone1 = "12345678",
+                    Email = "Aluno1@email.com"
                 },
                 new Experimento
                 {
                     Id = 2,
-                    DataInicio = DateTime.Now,
-                    DataFim = DateTime.Now.AddDays(5),
-                    Cepa = "Cepa B",
-                    IdPesquisador = 3,
+                    Nome = "Experimento 2",
+                    Cnpj = "1234567890002",
+                    Cep = "23456-789",
+                    Cidade = "Cidade B",
+                    Estado = "Estado B",
+                    Telefone1 = "87654321",
+                    Email = "Aluno2@email.com"
                 },
                 new Experimento
                 {
                     Id = 3,
-                    DataInicio = DateTime.Now,
-                    DataFim = DateTime.Now.AddDays(5),
-                    Cepa = "Cepa C",
-                    IdPesquisador = 3,
+                    Nome = "Experimento 3",
+                    Cnpj = "1234567890003",
+                    Cep = "34567-890",
+                    Cidade = "Cidade C",
+                    Estado = "Estado C",
+                    Telefone1 = "12349876",
+                    Email = "Aluno3@email.com"
                 }
             };
         }

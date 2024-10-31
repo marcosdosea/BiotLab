@@ -28,7 +28,7 @@ namespace Service.Tests
                 new()
                 {
                     Id = 1,
-                    Nome = "Instituição 1",
+                    Nome = "Fornecedor 1",
                     Cnpj = "12345678901234",
                     Cep = "12345-678",
                     Rua = "Rua A",
@@ -41,7 +41,7 @@ namespace Service.Tests
                 new()
                 {
                     Id = 2,
-                    Nome = "Instituição 2",
+                    Nome = "Fornecedor 2",
                     Cnpj = "23456789012345",
                     Cep = "23456-789",
                     Rua = "Rua B",
@@ -66,7 +66,7 @@ namespace Service.Tests
             var novoFornecedor = new Fornecedor
             {
                 Id = 3,
-                Nome = "Instituição 3",
+                Nome = "Fornecedor 3",
                 Cnpj = "34567890123456",
                 Cep = "34567-890",
                 Rua = "Rua C",

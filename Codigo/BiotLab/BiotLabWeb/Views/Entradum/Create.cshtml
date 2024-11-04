@@ -1,0 +1,38 @@
+﻿@model BiotLabWeb.Models.EntradumViewModel
+
+@{
+    ViewData["Title"] = "Criar Entradum";
+}
+
+<h1>Criar Entradum</h1>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="NumeroNotaFiscal"></label>
+        <input asp-for="NumeroNotaFiscal" class="form-control" />
+        <span asp-validation-for="NumeroNotaFiscal" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DataEntrada"></label>
+        <input asp-for="DataEntrada" class="form-control" type="date" />
+        <span asp-validation-for="DataEntrada" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="IdFornecedor"></label>
+        <select asp-for="IdFornecedor" class="form-control" asp-items="ViewBag.Fornecedores"></select>
+        <span asp-validation-for="IdFornecedor" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="IdInstituicao"></label>
+        <select asp-for="IdInstituicao" class="form-control" asp-items="ViewBag.Instituicoes"></select>
+        <span asp-validation-for="IdInstituicao" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

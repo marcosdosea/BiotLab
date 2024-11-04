@@ -1,0 +1,24 @@
+﻿@model BiotLabWeb.Models.EntradumViewModel
+
+@{
+    ViewData["Title"] = "Excluir Entradum";
+}
+
+<h1>Excluir Entradum</h1>
+
+<div>
+    <h4>Tem certeza que deseja excluir?</h4>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NumeroNotaFiscal)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NumeroNotaFiscal)
+        </dd>
+    </dl>
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Excluir</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

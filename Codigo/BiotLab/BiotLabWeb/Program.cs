@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Service;
 using BiotLabWeb.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace BiotLabWeb
 {
@@ -54,6 +55,21 @@ namespace BiotLabWeb
                 options.Lockout.AllowedForNewUsers = true;
             }).AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<IdentityContext>();
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                options.Cookie.Name = "BiotLabWebCookies";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
+                options.Cookie.SameSite = SameSiteMode.Lax; 
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.LoginPath = "/Identity/Account/Login"; 
+                options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+            });
+
+
+
 
             var app = builder.Build();
             // Configure the HTTP request pipeline.

@@ -8,25 +8,30 @@ using BiotLabWeb.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
-using Service;
 
 namespace BiotLabWeb.Controllers.Tests
 {
     [TestClass]
     public class EntradaanestesicoControllerTests
     {
-        private static EntradaanestesicoController controller;
+        private static EntradaanestesicoController controller = null!;
+        private static IMapper mapper = null!;
+        private static Mock<IEntradaanestesicoService> mockService = new Mock<IEntradaanestesicoService>();
+        private static Mock<IAnestesicosService> mockAnestesicoService = new Mock<IAnestesicosService>();
+        private static Mock<IEntradumService> mockEntradumService = new Mock<IEntradumService>();
 
         [TestInitialize]
         public void Initialize()
         {
             // Arrange
-            var mockService = new Mock<IEntradaanestesicoService>();
-            var mockAnestesicoService = new Mock<IAnestesicosService>();
-            var mockEntradumService = new Mock<IEntradumService>();
-
             IMapper mapper = new MapperConfiguration(cfg =>
                 cfg.AddProfile(new EntradaanestesicoProfile())).CreateMapper();
+            mockService = new Mock<IEntradaanestesicoService>();
+            mockAnestesicoService = new Mock<IAnestesicosService>();
+            mockEntradumService = new Mock<IEntradumService>();
+
+            var config = new MapperConfiguration(cfg => cfg.AddProfile(new EntradaanestesicoProfile()));
+            mapper = config.CreateMapper();
 
             // Configurando os serviços mock
             mockService.Setup(service => service.GetAll())
@@ -40,7 +45,6 @@ namespace BiotLabWeb.Controllers.Tests
             mockService.Setup(service => service.Delete(1, 1))
                 .Verifiable();
 
-            // Configurando os serviços auxiliares para preencher os dropdowns
             mockAnestesicoService.Setup(service => service.GetAll())
                 .Returns(GetTestAnestesicos());
             mockEntradumService.Setup(service => service.GetAll())
@@ -86,7 +90,20 @@ namespace BiotLabWeb.Controllers.Tests
         }
 
         [TestMethod]
-        public void CreateTest_Post()
+        public void CreateTest_Get()
+        {
+            // Act
+            var result = controller.Create();
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
+            var viewResult = (ViewResult)result;
+            Assert.IsNotNull(viewResult.ViewData["Anestesicos"]);
+            Assert.IsNotNull(viewResult.ViewData["Entradas"]);
+        }
+
+        [TestMethod]
+        public void CreateTest_Post_ValidModel()
         {
             // Arrange
             var newModel = GetNewEntradaanestesicoViewModel();
@@ -99,6 +116,34 @@ namespace BiotLabWeb.Controllers.Tests
             var redirectResult = (RedirectToActionResult)result;
             Assert.IsNull(redirectResult.ControllerName);
             Assert.AreEqual("Index", redirectResult.ActionName);
+            mockService.Verify(service => service.Create(It.IsAny<Entradaanestesico>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void CreateTest_Post_InvalidModel()
+        {
+            // Arrange
+            var invalidModel = new EntradaanestesicoViewModel
+            {
+                IdEntrada = 0, // ID inválido
+                IdAnestesico = 3,
+                Quantidade = 15,
+                Lote = "Lote003",
+                ValorUnitario = 200,
+                SubTotal = 3000
+            };
+            controller.ModelState.AddModelError("IdEntrada", "O ID da entrada é obrigatório.");
+
+            // Act
+            var result = controller.Create(invalidModel);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
+            var viewResult = (ViewResult)result;
+            Assert.AreEqual(invalidModel, viewResult.Model);
+            Assert.IsNotNull(viewResult.ViewData["Anestesicos"]);
+            Assert.IsNotNull(viewResult.ViewData["Entradas"]);
+            mockService.Verify(service => service.Create(It.IsAny<Entradaanestesico>()), Times.Never);
         }
 
         [TestMethod]
@@ -115,6 +160,7 @@ namespace BiotLabWeb.Controllers.Tests
             var redirectResult = (RedirectToActionResult)result;
             Assert.IsNull(redirectResult.ControllerName);
             Assert.AreEqual("Index", redirectResult.ActionName);
+            mockService.Verify(service => service.Update(It.IsAny<Entradaanestesico>()), Times.Once);
         }
 
         [TestMethod]
@@ -128,6 +174,7 @@ namespace BiotLabWeb.Controllers.Tests
             var redirectResult = (RedirectToActionResult)result;
             Assert.IsNull(redirectResult.ControllerName);
             Assert.AreEqual("Index", redirectResult.ActionName);
+            mockService.Verify(service => service.Delete(1, 1), Times.Once);
         }
 
         // Métodos auxiliares para dados de teste
@@ -237,17 +284,17 @@ namespace BiotLabWeb.Controllers.Tests
             {
                 new Anestesico { Id = 1, Nome = "Anestésico A", Marca = "Marca A" },
                 new Anestesico { Id = 2, Nome = "Anestésico B", Marca = "Marca B" },
-                new Anestesico { Id = 3, Nome = "Anestésico C", Marca = "Marca C" }
+                new Anestesico { Id = 3, Nome = "Anestésico C", Marca = "Marca C" },
             };
         }
 
         private IEnumerable<Entradum> GetTestEntradas()
-        {
-            return new List<Entradum>
+            {
+                return new List<Entradum>
             {
                 new Entradum { Id = 1, DataEntrada = System.DateTime.Now.AddDays(-1), NumeroNotaFiscal = "NF001" },
-                new Entradum { Id = 2, DataEntrada = System.DateTime.Now, NumeroNotaFiscal = "NF002" }
+                new Entradum { Id = 2, DataEntrada = System.DateTime.Now.AddDays(-2), NumeroNotaFiscal = "NF002" }
             };
+            }
         }
     }
-}

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using BiotLabWeb.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BiotLabWeb.Controllers
+namespace BiotLabWeb.Controllers.Tests
 {
     [TestClass()]
     public class UsoanestesicoControllerTests

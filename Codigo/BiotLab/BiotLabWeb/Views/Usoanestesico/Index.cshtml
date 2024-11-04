@@ -1,0 +1,35 @@
+﻿@model IEnumerable<BiotLabWeb.Models.UsoanestesicoViewModel>
+
+<h2>Lista de Usos Anestésicos</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Quantidade</th>
+            <th>Procedimento</th>
+            <th>Data</th>
+            <th>Cepa</th>
+            <th>Número de Animais</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var usoanestesico in Model)
+        {
+            <tr>
+                <td>@usoanestesico.Quantidade</td>
+                <td>@usoanestesico.Procedimento</td>
+                <td>@usoanestesico.Data.ToShortDateString()</td>
+                <td>@usoanestesico.Cepa</td>
+                <td>@usoanestesico.NumeroAnimais</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@usoanestesico.Id" class="btn btn-info">Detalhes</a>
+                    <a asp-action="Edit" asp-route-id="@usoanestesico.Id" class="btn btn-warning">Editar</a>
+                    <a asp-action="Delete" asp-route-id="@usoanestesico.Id" class="btn btn-danger">Deletar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Adicionar Novo</a>

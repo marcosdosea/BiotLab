@@ -1,0 +1,28 @@
+﻿@model BiotLabWeb.Models.UsoanestesicoViewModel
+
+<h2>Deletar Uso Anestésico</h2>
+
+<div>
+    <h4>Uso Anestésico</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Quantidade</dt>
+        <dd class="col-sm-10">@Model.Quantidade</dd>
+        <dt class="col-sm-2">Procedimento</dt>
+        <dd class="col-sm-10">@Model.Procedimento</dd>
+        <dt class="col-sm-2">Data</dt>
+        <dd class="col-sm-10">@Model.Data.ToShortDateString()</dd>
+        <dt class="col-sm-2">Cepa</dt>
+        <dd class="col-sm-10">@Model.Cepa</dd>
+        <dt class="col-sm-2">Número de Animais</dt>
+        <dd class="col-sm-10">@Model.NumeroAnimais</dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <button type="submit" class="btn btn-danger">Deletar</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>

@@ -74,7 +74,7 @@ namespace BiotLabWeb.Controllers
                 ViewBag.Entradas = GetEntradaSelectList();
                 return View(entradaAnestesico);
             }
-            catch
+            catch(Exception e)
             {
                 // Em caso de erro, retornar as listas novamente
                 ViewBag.Anestesicos = GetAnestesicoSelectList();

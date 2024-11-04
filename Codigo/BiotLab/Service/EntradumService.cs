@@ -49,8 +49,19 @@ namespace Service
 
         public void Update(Entradum entradum)
         {
-            context.Entrada.Update(entradum);
-            context.SaveChanges();
+            var existingEntradum = context.Entrada.Find(entradum.Id);
+            if (existingEntradum != null)
+            {
+                context.Entry(existingEntradum).CurrentValues.SetValues(entradum);
+                context.SaveChanges();
+            }
+            else
+            {
+                context.Entrada.Attach(entradum);
+                context.Entry(entradum).State = EntityState.Modified;
+                context.SaveChanges();
+            }
         }
+
     }
 }

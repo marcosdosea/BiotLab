@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BiotLabWeb.Tests.Controllers
+namespace BiotLabWeb.Controllers.Tests
 {
     [TestClass]
     public class GaiolaharemControllerTests

@@ -6,31 +6,49 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<h3>Você tem certeza que deseja excluir esta entrada?</h3>
 <div>
     <h4>Entrada de Anestésico</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>@Html.DisplayNameFor(model => model.DataEntrada)</dt>
-        <dd>@Model.DataEntrada.ToString? ('dd/MM/yyyy')</dd>
-
-
-        <dt>@Html.DisplayNameFor(model => model.NomeAnestesico)</dt>
-        <dd>@Model.NomeAnestesico</dd>
-
-        <dt>@Html.DisplayNameFor(model => model.Quantidade)</dt>
-        <dd>@Model.Quantidade</dd>
-
-      
+        <dt>
+            @Html.DisplayNameFor(model => model.IdEntrada)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IdEntrada)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IdAnestesico)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IdAnestesico)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Quantidade)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Quantidade)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Lote)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Lote)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ValorUnitario)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ValorUnitario)
+        </dd>
     </dl>
-</div>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(model => model.IdAnestesico)
-    <div class="form-actions no-color">
-        <input type="submit" value="Excluir" class="btn btn-danger" /> |
-        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    <div>
+        <h4>Tem certeza de que deseja excluir esta entrada?</h4>
+        @using (Html.BeginForm("DeleteConfirmed", "Entradaanestesico", new { idEntrada = Model.IdEntrada, idAnestesico = Model.IdAnestesico }, FormMethod.Post))
+        {
+            <input type="submit" value="Excluir" class="btn btn-danger" />
+            @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary" })
+        }
+        }
     </div>
-}
+</div>

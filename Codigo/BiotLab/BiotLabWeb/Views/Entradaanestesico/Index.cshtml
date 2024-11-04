@@ -1,22 +1,33 @@
 ﻿@model IEnumerable<BiotLabWeb.Models.EntradaanestesicoViewModel>
 
 @{
-    ViewData["Title"] = "Lista de Entradas de Anestésicos";
+    ViewData["Title"] = "Entradas de Anestésico";
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Adicionar Nova Entrada</a>
+    @Html.ActionLink("Criar Nova Entrada", "Create", null, new { @class = "btn btn-primary" })
 </p>
 
-<table class="table table-striped">
+<table class="table">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.DataEntrada)</th>
-            <th>@Html.DisplayNameFor(model => model.NomeAnestesico)</th>
-            <th>@Html.DisplayNameFor(model => model.Quantidade)</th>
-           
+            <th>
+                @Html.DisplayNameFor(model => model.First().IdEntrada)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().IdAnestesico)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Quantidade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Lote)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().ValorUnitario)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -24,14 +35,15 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.DataEntrada.ToString? ('dd/MM/yyyy')</td>
-                <td>@item.NomeAnestesico</td>
-                <td>@item.Quantidade</td>
-          
+                <td>@Html.DisplayFor(modelItem => item.IdEntrada)</td>
+                <td>@Html.DisplayFor(modelItem => item.IdAnestesico)</td>
+                <td>@Html.DisplayFor(modelItem => item.Quantidade)</td>
+                <td>@Html.DisplayFor(modelItem => item.Lote)</td>
+                <td>@Html.DisplayFor(modelItem => item.ValorUnitario)</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.IdAnestesico" class="btn btn-info btn-sm">Detalhes</a>
-                    <a asp-action="Edit" asp-route-id="@item.IdAnestesico" class="btn btn-warning btn-sm">Editar</a>
-                    <a asp-action="Delete" asp-route-id="@item.IdAnestesico" class="btn btn-danger btn-sm">Excluir</a>
+                    @Html.ActionLink("Detalhes", "Details", new { idEntrada = item.IdEntrada, idAnestesico = item.IdAnestesico }) |
+                    @Html.ActionLink("Editar", "Edit", new { idEntrada = item.IdEntrada, idAnestesico = item.IdAnestesico }) |
+                    @Html.ActionLink("Excluir", "Delete", new { idEntrada = item.IdEntrada, idAnestesico = item.IdAnestesico })
                 </td>
             </tr>
         }

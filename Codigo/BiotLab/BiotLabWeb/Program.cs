@@ -6,6 +6,7 @@ using BiotLabWeb.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using BiotLabWeb.Helpers;
 
 namespace BiotLabWeb
 {
@@ -31,7 +32,8 @@ namespace BiotLabWeb
             builder.Services.AddDbContext<BiotlabContext>(options => options.UseMySQL(builder.Configuration.GetConnectionString("BiotLabConnection")));
             builder.Services.AddDbContext<IdentityContext>(options => options.UseMySQL(builder.Configuration.GetConnectionString("IdentityConnection")));
 
-            builder.Services.AddTransient<IEmailSender, IEmailSender>();
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
+
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

@@ -1,0 +1,35 @@
+﻿@model BiotLabWeb.Models.UsoanestesicoViewModel
+
+<h2>Editar Uso Anestésico</h2>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="Quantidade"></label>
+        <input asp-for="Quantidade" class="form-control" />
+        <span asp-validation-for="Quantidade" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Procedimento"></label>
+        <input asp-for="Procedimento" class="form-control" />
+        <span asp-validation-for="Procedimento" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Data"></label>
+        <input asp-for="Data" type="date" class="form-control" />
+        <span asp-validation-for="Data" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Cepa"></label>
+        <input asp-for="Cepa" class="form-control" />
+        <span asp-validation-for="Cepa" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="NumeroAnimais"></label>
+        <input asp-for="NumeroAnimais" class="form-control" />
+        <span asp-validation-for="NumeroAnimais" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+</form>

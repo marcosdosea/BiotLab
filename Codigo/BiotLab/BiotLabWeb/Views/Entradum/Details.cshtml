@@ -1,0 +1,39 @@
+﻿@model BiotLabWeb.Models.EntradumViewModel
+
+@{
+    ViewData["Title"] = "Detalhes do Entradum";
+}
+
+<h1>Detalhes do Entradum</h1>
+
+<div>
+    <h4>Entradum</h4>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NumeroNotaFiscal)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NumeroNotaFiscal)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DataEntrada)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DataEntrada.ToShortDateString())
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdFornecedor)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Fornecedor.Nome)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdInstituicao)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Instituicao.Nome)
+        </dd>
+    </dl>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
+    <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+</div>

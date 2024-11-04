@@ -1,108 +1,117 @@
 ﻿using AutoMapper;
-using BiotLabWeb.Models;
 using Core;
 using Core.Service;
 using Microsoft.AspNetCore.Mvc;
-using Service;
+using BiotLabWeb.Models;
+using System.Globalization;
+
 namespace BiotLabWeb.Controllers
 {
     public class ExperimentoController : Controller
     {
-        private readonly IExperimentoService experimentoService;
-        private readonly IMapper mapper;
+        private readonly IExperimentoService _experimentoService;
+        private readonly IMapper _mapper;
 
         public ExperimentoController(IExperimentoService experimentoService, IMapper mapper)
         {
-            this.experimentoService = experimentoService;
-            this.mapper = mapper;
+            _experimentoService = experimentoService;
+            _mapper = mapper;
         }
 
-        // GET: ExperimentoController
-        public ActionResult Index()
+        public IActionResult Index()
         {
-            var experimento = experimentoService.GetAll();
-            var vm = mapper.Map<IEnumerable<ExperimentoViewModel>>(experimento);
-            return View(vm);
+            var experimentos = _experimentoService.GetAll();
+            var experimentosViewModel = _mapper.Map<List<ExperimentoViewModel>>(experimentos);
+            return View(experimentosViewModel);
         }
 
-        // GET: ExperimentoController/Details/5
-        public ActionResult Details(uint id)
+        public IActionResult Create()
         {
-            var experimento = experimentoService.Get(id);
-            var vm = mapper.Map<ExperimentoViewModel>(experimento);
-            return View(vm);
+            return View(new ExperimentoViewModel());
         }
 
-        // GET: ExperimentoController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: ExperimentoController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ExperimentoViewModel experimento)
+        public IActionResult Create(ExperimentoViewModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                var experimentoDB = mapper.Map<Experimento>(experimento);
-                experimentoService.Create(experimentoDB);
+                var experimento = _mapper.Map<Experimento>(model);
+                experimento.DataInicio = DateTime.ParseExact(model.DataInicio, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                experimento.DataFim = DateTime.ParseExact(model.DataFim, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+                _experimentoService.Create(experimento);
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View(model);
         }
 
-        // GET: ExperimentoController/Edit/5
-        public ActionResult Edit(uint id)
+        public IActionResult Edit(uint id)
         {
-            var experimento = experimentoService.Get(id);
-            var vm = mapper.Map<ExperimentoViewModel>(experimento);
-            return View(vm);
+            var experimento = _experimentoService.Get(id);
+            if (experimento == null)
+            {
+                return NotFound();
+            }
+            var model = _mapper.Map<ExperimentoViewModel>(experimento);
+            model.DataInicio = experimento.DataInicio.ToString("dd/MM/yyyy");
+            model.DataFim = experimento.DataFim.ToString("dd/MM/yyyy");
+            return View(model);
         }
 
-        // POST: ExperimentoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, ExperimentoViewModel experimento)
+        public IActionResult Edit(uint id, ExperimentoViewModel model)
         {
-            try
+            if (id != model.Id)
             {
-                var experimentoDB = mapper.Map<Experimento>(experimento);
-                experimentoService.Update(experimentoDB);
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var experimento = _mapper.Map<Experimento>(model);
+                experimento.DataInicio = DateTime.ParseExact(model.DataInicio, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                experimento.DataFim = DateTime.ParseExact(model.DataFim, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+                _experimentoService.Update(experimento);
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View(model);
         }
 
-        // GET: ExperimentoController/Delete/5
-        public ActionResult Delete(uint id)
+        public IActionResult Delete(uint id)
         {
-            var experimento = experimentoService.Get(id);
-            var vm = mapper.Map<ExperimentoViewModel>(experimento);
-            return View(vm);
+            var experimento = _experimentoService.Get(id);
+            if (experimento == null)
+            {
+                return NotFound();
+            }
+            var model = _mapper.Map<ExperimentoViewModel>(experimento);
+            model.DataInicio = experimento.DataInicio.ToString("dd/MM/yyyy");
+            model.DataFim = experimento.DataFim.ToString("dd/MM/yyyy");
+            return View(model);
         }
 
-        // POST: ExperimentoController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(uint id, ExperimentoViewModel experimento)
+        public IActionResult DeleteConfirmed(uint id)
         {
-            try
+            _experimentoService.Delete(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Details(uint id)
+        {
+            var experimento = _experimentoService.Get(id);
+            if (experimento == null)
             {
-                experimentoService.Delete(id);
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
-            {
-                return View();
-            }
+            var model = _mapper.Map<ExperimentoViewModel>(experimento);
+            model.DataInicio = experimento.DataInicio.ToString("dd/MM/yyyy");
+            model.DataFim = experimento.DataFim.ToString("dd/MM/yyyy");
+            return View(model);
         }
     }
 }

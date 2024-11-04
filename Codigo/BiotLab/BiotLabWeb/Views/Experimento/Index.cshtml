@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BiotLabWeb.Models.InstituicaoViewModel>
+﻿@model IEnumerable<BiotLabWeb.Models.ExperimentoViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -12,22 +12,11 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.First().Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.First().Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.First().Cepa)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.First().DataInicio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.First().DataFim)
-            </th>
-            <th>
+            <th>@Html.DisplayNameFor(model => model.First().Id)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Nome)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Cepa)</th>
+            <th>@Html.DisplayNameFor(model => model.First().DataInicio)</th>
+            <th>@Html.DisplayNameFor(model => model.First().DataFim)</th>
             <th></th>
         </tr>
     </thead>
@@ -35,21 +24,11 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.First().Id)
-                </td>
-                <td>
-                    @Html.DisplayNameFor(model => model.First().Nome)
-                </td>
-                <td>
-                    @Html.DisplayNameFor(model => model.First().Cepa)
-                </td>
-                <td>
-                    @Html.DisplayNameFor(model => model.First().DataInicio)
-                </td>
-                <td>
-                    @Html.DisplayNameFor(model => model.First().DataFim)
-                </td>
+                <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                <td>@Html.DisplayFor(modelItem => item.Nome)</td>
+                <td>@Html.DisplayFor(modelItem => item.Cepa)</td>
+                <td>@Html.DisplayFor(modelItem => item.DataInicio)</td>
+                <td>@Html.DisplayFor(modelItem => item.DataFim)</td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
                     @Html.ActionLink("Details", "Details", new { id = item.Id }) |

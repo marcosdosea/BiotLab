@@ -27,6 +27,7 @@ namespace BiotLabWeb
             builder.Services.AddTransient<IFornecedorService, FornecedorService>();
             builder.Services.AddTransient<IGaiolaharemService, GaiolaharemService>();
             builder.Services.AddTransient<IUsoanestesicoService, UsoanestesicoService>();
+            builder.Services.AddTransient<IPesquisadorService, PesquisadorService>();
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             builder.Services.AddDbContext<BiotlabContext>(options => options.UseMySQL(builder.Configuration.GetConnectionString("BiotLabConnection")));

@@ -17,7 +17,8 @@ namespace BiotLabWeb.Models
 
         [Display(Name = "CEP")]
         [Required(ErrorMessage = "O CEP é obrigatório")]
-        [RegularExpression(@"\d{5}-\d{3}", ErrorMessage = "Formato de CEP inválido")]
+        [MaxLength(8)]
+        [MinLength(8, ErrorMessage = "Tamanho insuficiente!")]
         public string Cep { get; set; } = null!;
 
         [Display(Name = "Rua")]

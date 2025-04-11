@@ -49,7 +49,7 @@
   
   <h2 id="linksuteis">4. Links Úteis :link:</h2>
 
-  <a href="Em Breve" target="_blank">1 - Vídeo de Apresentação </a>
+  <a href="https://www.youtube.com/watch?v=VTavPwydjJQ" target="_blank">1 - Vídeo de Apresentação </a>
 
   <a href="Em Breve" target="_blank">2 - Manual de Uso </a>
 

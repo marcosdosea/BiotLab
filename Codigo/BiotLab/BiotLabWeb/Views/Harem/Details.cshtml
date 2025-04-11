@@ -1,30 +1,44 @@
 ﻿@model BiotLabWeb.Models.HaremViewModel
-
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalhes do Harém";
 }
 
-<h1>Detalhes do Harem</h1>
+<div class="max-w-3xl mx-auto mt-10 bg-white p-8 rounded-lg shadow">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+        <i data-lucide="users" class="w-6 h-6 text-blue-600"></i> Detalhes do Harém
+    </h2>
 
-<div>
-    <h4>HaremViewModel</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Id)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Id)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.NumeroMacho)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.NumeroMacho)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.NumeroFemea)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.NumeroFemea)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Status)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Status)</dd>
+    <dl class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+        <div>
+            <dt class="font-medium text-gray-600">ID</dt>
+            <dd class="mt-1 text-gray-900">@Model.Id</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-600">Número de Machos</dt>
+            <dd class="mt-1 text-gray-900">@Model.NumeroMacho</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-600">Número de Fêmeas</dt>
+            <dd class="mt-1 text-gray-900">@Model.NumeroFemea</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-600">Status</dt>
+            <dd class="mt-1 text-gray-900">
+                @(Model.Status == "A" ? "Ativo" : "Inativo")
+            </dd>
+        </div>
     </dl>
+
+    <div class="mt-6 flex justify-between">
+        <a asp-action="Index" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar
+        </a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+            <i data-lucide="pencil" class="w-4 h-4"></i> Editar
+        </a>
+    </div>
 </div>
 
-<div>
-    @Html.ActionLink("Editar", "Edit", new { id = Model.Id }) |
-    <a asp-action="Index">Voltar para Lista</a>
-</div>
+@section Scripts {
+    <script>lucide.createIcons();</script>
+}

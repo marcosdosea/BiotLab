@@ -11,29 +11,31 @@ namespace Service
     public class AnestesicoService : IAnestesicosService
     {
 
-        private readonly BiotlabContext Context;
+        private readonly BiotlabContext context;
         public AnestesicoService(BiotlabContext biotlabContext)
         {
-            Context = biotlabContext;
+            context = biotlabContext;
         }
 
         public Anestesico? Buscar(uint id)
         {
-           return Context.Anestesicos.Find(id);
+           return context.Anestesicos.Find(id);
         }
 
         public uint Create(Anestesico anestesico)
         {
-            throw new NotImplementedException();
+            context.Add(anestesico);
+            context.SaveChanges();
+            return anestesico.Id;
         }
 
         public void Delete(uint id)
         {
-            var anestesico = Context.Anestesicos.Find(id);
+            var anestesico = context.Anestesicos.Find(id);
             if (anestesico != null)
             {
-                Context.Anestesicos.Remove(anestesico);
-                Context.SaveChanges();
+                context.Anestesicos.Remove(anestesico);
+                context.SaveChanges();
             }
         }
 
@@ -44,8 +46,8 @@ namespace Service
 
         public void Update(Anestesico anestesico)
         {
-            Context.Update(anestesico);
-            Context.SaveChanges();
+            context.Update(anestesico);
+            context.SaveChanges();
         }
 
         public bool Validar(uint id)
@@ -55,7 +57,7 @@ namespace Service
 
         IEnumerable<Anestesico> IAnestesicosService.GetAll()
         {
-            throw new NotImplementedException();
+            return context.Anestesicos.ToList();
         }
     }
 }

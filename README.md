@@ -51,7 +51,7 @@
 
   <a href="https://www.youtube.com/watch?v=VTavPwydjJQ" target="_blank">1 - Vídeo de Apresentação </a>
 
-  <a href="Em Breve" target="_blank">2 - Manual de Uso </a>
+  <a href="https://docs.google.com/document/d/1i6_IjwYee5jAxyF43Akke-AgiD80b6samx5Qj8KxgZw/edit?tab=t.0#heading=h.22m2czr403dw" target="_blank">2 - Manual de Uso </a>
 
   
   <h2 id="equipe">5. Equipe :technologist: :man_technologist: :woman_technologist:</h2>

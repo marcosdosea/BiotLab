@@ -1,46 +1,85 @@
 ﻿@model IEnumerable<BiotLabWeb.Models.PesquisadorViewModel>
-
 @{
-    ViewData["Title"] = "Pesquisadores Index";
+    ViewData["Title"] = "Pesquisadores";
 }
 
-<h2>Pesquisadores</h2>
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <i data-lucide="user" class="w-6 h-6 text-blue-600"></i>
+            Pesquisadores
+        </h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+        <a asp-action="Create" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded shadow flex items-center gap-2">
+            <i data-lucide="plus-circle" class="w-5 h-5"></i>
+            Novo Pesquisador
+        </a>
+    </div>
+
+    <!-- Campo de busca -->
+    <div class="mb-4">
+        <input type="text" id="pesquisaInput" placeholder="Buscar por nome ou email..."
+               class="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    </div>
+
+    <table class="min-w-full divide-y divide-gray-200" id="tabelaPesquisadores">
+        <thead class="bg-gray-50">
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nome)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase">Nome</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase">Email</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase">Status</th>
+                <th class="px-6 py-3 text-right text-sm font-semibold text-gray-600 uppercase">Ações</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-100">
+            @foreach (var item in Model)
+            {
+                <tr class="linha-pesquisador">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 nome">@item.Nome</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 email">@item.Email</td>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        @{
+                            // Exemplo: status pode vir de item.Ativo (bool) ou item.Status (string)
+                            var statusAtivo = string.IsNullOrEmpty(item.Email) ? false : true;
+                            var statusClasse = statusAtivo ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800";
+                            var statusTexto = statusAtivo ? "Ativo" : "Inativo";
+                        }
+                        <span class="px-2 inline-flex text-xs font-semibold leading-5 rounded-full @statusClasse">
+                            @statusTexto
+                        </span>
+                    </td>
+
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="text-blue-600 hover:text-blue-800 mr-3 flex items-center gap-1 inline-flex">
+                            <i data-lucide="edit" class="w-4 h-4"></i> Editar
+                        </a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="text-gray-600 hover:text-gray-800 mr-3 flex items-center gap-1 inline-flex">
+                            <i data-lucide="eye" class="w-4 h-4"></i> Detalhes
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="text-red-600 hover:text-red-800 flex items-center gap-1 inline-flex">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i> Excluir
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
+
+@section Scripts {
+    <script>
+        lucide.createIcons();
+
+        const input = document.getElementById('pesquisaInput');
+        input.addEventListener('input', function () {
+            const termo = input.value.toLowerCase();
+            const linhas = document.querySelectorAll('.linha-pesquisador');
+            linhas.forEach(linha => {
+                const nome = linha.querySelector('.nome').innerText.toLowerCase();
+                const email = linha.querySelector('.email').innerText.toLowerCase();
+                linha.style.display = (nome.includes(termo) || email.includes(termo)) ? '' : 'none';
+            });
+        });
+    </script>
+}

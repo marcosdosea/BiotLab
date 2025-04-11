@@ -1,90 +1,39 @@
 ﻿@model BiotLabWeb.Models.PesquisadorViewModel
-
 @{
-    ViewData["Title"] = "Details Pesquisador";
+    ViewData["Title"] = "Detalhes do Pesquisador";
 }
 
-<h2>Details Pesquisador</h2>
+<div class="bg-white p-6 rounded-lg shadow-md max-w-3xl mx-auto">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+        <i data-lucide="user-check" class="w-6 h-6 text-blue-600"></i>
+        Detalhes do Pesquisador
+    </h2>
 
-<div>
-    <h4>Pesquisador</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Cpf)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Cpf)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Nome)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Nome)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Cep)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Cep)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Rua)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Rua)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Bairro)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Bairro)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Cidade)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Cidade)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Numero)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Numero)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Complemento)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Complemento)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Estado)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Estado)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Telefone1)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Telefone1)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Telefone2)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Telefone2)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-    </dl>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div><strong>Nome:</strong> @Model.Nome</div>
+        <div><strong>CPF:</strong> @Model.Cpf</div>
+        <div><strong>Email:</strong> @Model.Email</div>
+        <div><strong>Telefone 1:</strong> @Model.Telefone1</div>
+        <div><strong>Telefone 2:</strong> @Model.Telefone2</div>
+        <div><strong>CEP:</strong> @Model.Cep</div>
+        <div><strong>Rua:</strong> @Model.Rua</div>
+        <div><strong>Número:</strong> @Model.Numero</div>
+        <div><strong>Bairro:</strong> @Model.Bairro</div>
+        <div><strong>Cidade:</strong> @Model.Cidade</div>
+        <div><strong>Complemento:</strong> @Model.Complemento</div>
+        <div><strong>Estado:</strong> @Model.Estado</div>
+    </div>
+
+    <div class="mt-6 flex justify-end gap-3">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-5 py-2 rounded flex items-center gap-2">
+            <i data-lucide="edit-3" class="w-4 h-4"></i> Editar
+        </a>
+        <a asp-action="Index" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-5 py-2 rounded flex items-center gap-2">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar
+        </a>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+@section Scripts {
+    <script> lucide.createIcons(); </script>
+}

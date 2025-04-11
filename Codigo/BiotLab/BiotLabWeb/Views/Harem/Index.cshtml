@@ -1,39 +1,64 @@
 ﻿@model IEnumerable<BiotLabWeb.Models.HaremViewModel>
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Haréns";
 }
 
-<h1>Lista de Harems</h1>
+<div class="max-w-7xl mx-auto py-8 px-4">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+            <i data-lucide="users" class="w-6 h-6 text-pink-600"></i> Haréns
+        </h2>
+        <a asp-action="Create" class="inline-flex items-center gap-2 px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700 transition">
+            <i data-lucide="plus-circle" class="w-5 h-5"></i> Novo Harém
+        </a>
+    </div>
 
-<p>
-    <a asp-action="Create">Criar Novo Harem</a>
-</p>
+    <div class="overflow-x-auto bg-white shadow rounded-lg">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                <tr>
+                    <th class="px-6 py-3">@Html.DisplayNameFor(model => model.First().Id)</th>
+                    <th class="px-6 py-3">@Html.DisplayNameFor(model => model.First().NumeroMacho)</th>
+                    <th class="px-6 py-3">@Html.DisplayNameFor(model => model.First().NumeroFemea)</th>
+                    <th class="px-6 py-3">@Html.DisplayNameFor(model => model.First().Status)</th>
+                    <th class="px-6 py-3 text-right">Ações</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 text-sm text-gray-700">
+                @foreach (var item in Model)
+                {
+                        <tr>
+                            <td class="px-6 py-4">@Html.DisplayFor(modelItem => item.Id)</td>
+                            <td class="px-6 py-4">@Html.DisplayFor(modelItem => item.NumeroMacho)</td>
+                            <td class="px-6 py-4">@Html.DisplayFor(modelItem => item.NumeroFemea)</td>
+                            <td class="px-6 py-4">
+                            @if (item.Status == "A")
+                            {
+                                        <span class="text-green-600 font-semibold">Ativo</span>
+                            }
+                            else
+                            {
+                                        <span class="text-red-600 font-semibold">Inativo</span>
+                            }
+                            </td>
+                            <td class="px-6 py-4 text-right space-x-2">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="text-pink-600 hover:text-pink-900" title="Editar">
+                                    <i data-lucide="pencil-line" class="w-5 h-5 inline"></i>
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="text-blue-600 hover:text-blue-900" title="Detalhes">
+                                    <i data-lucide="eye" class="w-5 h-5 inline"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="text-red-600 hover:text-red-900" title="Excluir">
+                                    <i data-lucide="trash-2" class="w-5 h-5 inline"></i>
+                                </a>
+                            </td>
+                        </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.First().Id)</th>
-            <th>@Html.DisplayNameFor(model => model.First().NumeroMacho)</th>
-            <th>@Html.DisplayNameFor(model => model.First().NumeroFemea)</th>
-            <th>@Html.DisplayNameFor(model => model.First().Status)</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.Id)</td>
-                <td>@Html.DisplayFor(modelItem => item.NumeroMacho)</td>
-                <td>@Html.DisplayFor(modelItem => item.NumeroFemea)</td>
-                <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                <td>
-                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Detalhes", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Deletar", "Delete", new { id = item.Id })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<script>
+    lucide.createIcons();
+</script>

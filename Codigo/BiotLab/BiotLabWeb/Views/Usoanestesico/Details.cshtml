@@ -1,25 +1,58 @@
 ﻿@model BiotLabWeb.Models.UsoanestesicoViewModel
+@{
+    ViewData["Title"] = "Detalhes do Uso de Anestésico";
+}
 
-<h2>Detalhes do Uso Anestésico</h2>
+<div class="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-lg shadow">
+    <h2 class="text-2xl font-semibold text-blue-600 mb-6 flex items-center gap-2">
+        <i data-lucide="activity" class="w-6 h-6"></i> Detalhes do Uso de Anestésico
+    </h2>
 
-<div>
-    <h4>Uso Anestésico</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">Quantidade</dt>
-        <dd class="col-sm-10">@Model.Quantidade</dd>
-        <dt class="col-sm-2">Procedimento</dt>
-        <dd class="col-sm-10">@Model.Procedimento</dd>
-        <dt class="col-sm-2">Data</dt>
-        <dd class="col-sm-10">@Model.Data.ToShortDateString()</dd>
-        <dt class="col-sm-2">Cepa</dt>
-        <dd class="col-sm-10">@Model.Cepa</dd>
-        <dt class="col-sm-2">Número de Animais</dt>
-        <dd class="col-sm-10">@Model.NumeroAnimais</dd>
+    <dl class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+        <div>
+            <dt class="font-medium text-gray-600">ID</dt>
+            <dd class="mt-1 text-gray-900">@Model.Id</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-600">Data</dt>
+            <dd class="mt-1 text-gray-900">@Model.Data</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-600">Pesquisador</dt>
+            <dd class="mt-1 text-gray-900">@Model.IdPesquisador</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-600">Experimento</dt>
+            <dd class="mt-1 text-gray-900">@Model.IdExperimento</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-600">Cepa</dt>
+            <dd class="mt-1 text-gray-900">@Model.Cepa</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-600">Número de Animais</dt>
+            <dd class="mt-1 text-gray-900">@Model.NumeroAnimais</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-600">Quantidade</dt>
+            <dd class="mt-1 text-gray-900">@Model.Quantidade</dd>
+        </div>
+        <div class="md:col-span-2">
+            <dt class="font-medium text-gray-600">Procedimento</dt>
+            <dd class="mt-1 text-gray-900">@Model.Procedimento</dd>
+        </div>
     </dl>
 
-    <div>
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
-        <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+    <div class="mt-6 flex justify-between">
+        <a asp-action="Index" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar
+        </a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+            <i data-lucide="pencil" class="w-4 h-4"></i> Editar
+        </a>
     </div>
 </div>
+
+@section Scripts {
+    <script>lucide.createIcons();</script>
+}

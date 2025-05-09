@@ -1,90 +1,54 @@
-﻿@model BiotLabWeb.Models.BioterioViewModel
-
+﻿@model BiotLabWeb.Models.ExperimentoViewModel
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalhes do Experimento";
 }
 
-<h1>Details</h1>
+<div class="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-lg shadow">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+        <i data-lucide="flask-conical" class="w-6 h-6 text-blue-600"></i> Detalhes do Experimento
+    </h2>
 
-<div>
-    <h4>BioterioViewModel</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Nome)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Nome)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Cep)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Cep)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Rua)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Rua)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Bairro)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Bairro)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Cidade)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Cidade)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Numero)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Numero)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Complemento)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Complemento)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Estado)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Estado)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Telefone1)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Telefone1)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Telefone2)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Telefone2)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
+    <dl class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+        <div>
+            <dt class="font-medium text-gray-600">ID</dt>
+            <dd class="mt-1 text-gray-900">@Model.Id</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-600">Nome do Pesquisador</dt>
+            <dd class="mt-1 text-gray-900">@Model.Nome</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-600">Cepa</dt>
+            <dd class="mt-1 text-gray-900">@Model.Cepa</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-600">Data de Início</dt>
+            <dd class="mt-1 text-gray-900">@Model.DataInicio</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-600">Data de Fim</dt>
+            <dd class="mt-1 text-gray-900">@Model.DataFim</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-600">Gaiolas</dt>
+            <dd class="mt-1 text-gray-900">@Model.Gaiolas</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-600">Anestésico</dt>
+            <dd class="mt-1 text-gray-900">@Model.Usoanestesicos</dd>
+        </div>
     </dl>
+
+    <div class="mt-6 flex justify-between">
+        <a asp-action="Index" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar
+        </a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+            <i data-lucide="pencil" class="w-4 h-4"></i> Editar
+        </a>
+    </div>
 </div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+@section Scripts {
+    <script>lucide.createIcons();</script>
+}

@@ -5,364 +5,345 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema BiotLab
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema BiotLab
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `BiotLab` DEFAULT CHARACTER SET utf8 ;
+USE `BiotLab` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`TB_Instituição`
+-- Table `BiotLab`.`Pesquisador`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TB_Instituição` (
-  `Id` INT NOT NULL AUTO_INCREMENT,
-  `Nome` VARCHAR(255) NOT NULL,
-  `Cnpj` CHAR(14) NOT NULL,
-  `Telefone` VARCHAR(20) NULL,
-  `Email` VARCHAR(255) NOT NULL,
-  `Endereço` VARCHAR(255) NOT NULL,
-  `UF` CHAR(2) NOT NULL,
-  `CEP` CHAR(8) NOT NULL,
-  PRIMARY KEY (`Id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`TB_Fornecedor`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TB_Fornecedor` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`TB_Pesquisador`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TB_Pesquisador` (
-  `ID` INT NOT NULL AUTO_INCREMENT,
-  `Nome` VARCHAR(255) NOT NULL,
-  `CPF` CHAR(11) NOT NULL,
-  `Endereço` VARCHAR(255) NOT NULL,
-  `Instituição` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`ID`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`TB_Bioterio`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TB_Bioterio` (
-  `Id` INT NOT NULL AUTO_INCREMENT,
-  `NumeroGaiola` INT NOT NULL,
-  `Cidade` VARCHAR(100) NOT NULL,
-  `Responsavel` VARCHAR(255) NOT NULL,
-  `NomeDoBioterio` VARCHAR(255) NOT NULL,
-  `TB_Pesquisador_ID` INT NOT NULL,
-  `TB_Instituição_Id` INT NOT NULL,
-  PRIMARY KEY (`Id`),
-  INDEX `fk_TB_Bioterio_TB_Pesquisador1_idx` (`TB_Pesquisador_ID` ASC) VISIBLE,
-  INDEX `fk_TB_Bioterio_TB_Instituição1_idx` (`TB_Instituição_Id` ASC) VISIBLE,
-  CONSTRAINT `fk_TB_Bioterio_TB_Pesquisador1`
-    FOREIGN KEY (`TB_Pesquisador_ID`)
-    REFERENCES `mydb`.`TB_Pesquisador` (`ID`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT,
-  CONSTRAINT `fk_TB_Bioterio_TB_Instituição1`
-    FOREIGN KEY (`TB_Instituição_Id`)
-    REFERENCES `mydb`.`TB_Instituição` (`Id`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`TB_Entrada`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TB_Entrada` (
-  `Id` INT NOT NULL AUTO_INCREMENT,
-  `NumeroNotaFiscal` VARCHAR(20) NOT NULL,
-  `DataEntrada` DATE NOT NULL,
-  `TB_Fornecedor_id` INT NOT NULL,
-  `TB_Bioterio_Id` INT NOT NULL,
-  `TB_Pesquisador_ID1` INT NOT NULL,
-  PRIMARY KEY (`Id`),
-  INDEX `fk_TB_Entrada_TB_Fornecedor1_idx` (`TB_Fornecedor_id` ASC) VISIBLE,
-  INDEX `fk_TB_Entrada_TB_Bioterio1_idx` (`TB_Bioterio_Id` ASC) VISIBLE,
-  INDEX `fk_TB_Entrada_TB_Pesquisador2_idx` (`TB_Pesquisador_ID1` ASC) VISIBLE,
-  CONSTRAINT `fk_TB_Entrada_TB_Fornecedor1`
-    FOREIGN KEY (`TB_Fornecedor_id`)
-    REFERENCES `mydb`.`TB_Fornecedor` (`id`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT,
-  CONSTRAINT `fk_TB_Entrada_TB_Bioterio1`
-    FOREIGN KEY (`TB_Bioterio_Id`)
-    REFERENCES `mydb`.`TB_Bioterio` (`Id`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT,
-  CONSTRAINT `fk_TB_Entrada_TB_Pesquisador2`
-    FOREIGN KEY (`TB_Pesquisador_ID1`)
-    REFERENCES `mydb`.`TB_Pesquisador` (`ID`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`TB_Anestesicos`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TB_Anestesicos` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `Nome` VARCHAR(255) NOT NULL,
-  `Dosagem` VARCHAR(50) NOT NULL,
-  `Marca` VARCHAR(100) NOT NULL,
-  `Anestesicoscol` VARCHAR(45) NOT NULL,
-  `TB_Instituição_Id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `BiotLab`.`Pesquisador` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `cpf` VARCHAR(11) NOT NULL,
+  `nome` VARCHAR(50) NOT NULL,
+  `cep` VARCHAR(9) NOT NULL,
+  `rua` VARCHAR(50) NULL,
+  `bairro` VARCHAR(50) NULL,
+  `cidade` VARCHAR(50) NULL,
+  `numero` VARCHAR(20) NULL,
+  `complemento` VARCHAR(50) NULL,
+  `estado` VARCHAR(2) NOT NULL,
+  `telefone1` VARCHAR(15) NOT NULL,
+  `telefone2` VARCHAR(15) NULL,
+  `email` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_TB_Anestesicos_TB_Instituição1_idx` (`TB_Instituição_Id` ASC) VISIBLE,
-  CONSTRAINT `fk_TB_Anestesicos_TB_Instituição1`
-    FOREIGN KEY (`TB_Instituição_Id`)
-    REFERENCES `mydb`.`TB_Instituição` (`Id`)
+  UNIQUE INDEX `cpf_UNIQUE` (`cpf` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `BiotLab`.`Experimento`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `BiotLab`.`Experimento` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `dataInicio` DATE NOT NULL,
+  `dataFim` DATE NOT NULL,
+  `cepa` VARCHAR(50) NOT NULL,
+  `idPesquisador` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_Experimento_Pesquisador1_idx` (`idPesquisador` ASC) VISIBLE,
+  CONSTRAINT `fk_Experimento_Pesquisador1`
+    FOREIGN KEY (`idPesquisador`)
+    REFERENCES `BiotLab`.`Pesquisador` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`TB_Haren`
+-- Table `BiotLab`.`Instituicao`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TB_Haren` (
-  `Id` INT NOT NULL AUTO_INCREMENT,
-  `Origem` VARCHAR(255) NOT NULL,
-  `Natalidade` DATE NOT NULL,
-  PRIMARY KEY (`Id`))
+CREATE TABLE IF NOT EXISTS `BiotLab`.`Instituicao` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(50) NOT NULL,
+  `cnpj` VARCHAR(18) NOT NULL,
+  `cep` VARCHAR(9) NOT NULL,
+  `rua` VARCHAR(50) NULL,
+  `bairro` VARCHAR(50) NULL,
+  `cidade` VARCHAR(50) NULL,
+  `numero` VARCHAR(20) NULL,
+  `complemento` VARCHAR(50) NULL,
+  `estado` VARCHAR(2) NOT NULL,
+  `telefone1` VARCHAR(15) NOT NULL,
+  `telefone2` VARCHAR(15) NULL,
+  `email` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `cnpj_UNIQUE` (`cnpj` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`TB_Gaiola`
+-- Table `BiotLab`.`Anestesico`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TB_Gaiola` (
-  `Id` INT NOT NULL AUTO_INCREMENT,
-  `NumControleInterno` VARCHAR(50) NOT NULL,
-  `Bioterio` VARCHAR(255) NOT NULL,
-  `Localização` VARCHAR(255) NOT NULL,
-  `TB_Bioterio_Id` INT NOT NULL,
-  PRIMARY KEY (`Id`),
-  INDEX `fk_TB_Gaiola_TB_Bioterio1_idx` (`TB_Bioterio_Id` ASC) VISIBLE,
-  CONSTRAINT `fk_TB_Gaiola_TB_Bioterio1`
-    FOREIGN KEY (`TB_Bioterio_Id`)
-    REFERENCES `mydb`.`TB_Bioterio` (`Id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`TB_Experimento`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TB_Experimento` (
-  `Id` INT NOT NULL AUTO_INCREMENT,
-  `DataInicio` DATE NOT NULL,
-  `PesquisadorResponsavel` CHAR(11) NOT NULL,
-  `DataFIm` DATE NOT NULL,
-  `Gaiola` INT NOT NULL,
-  `Cepa` VARCHAR(50) NOT NULL,
-  `Experimentocol` VARCHAR(45) NOT NULL,
-  `TB_Pesquisador_ID` INT NOT NULL,
-  PRIMARY KEY (`Id`),
-  INDEX `fk_TB_Experimento_TB_Pesquisador1_idx` (`TB_Pesquisador_ID` ASC) VISIBLE,
-  CONSTRAINT `fk_TB_Experimento_TB_Pesquisador1`
-    FOREIGN KEY (`TB_Pesquisador_ID`)
-    REFERENCES `mydb`.`TB_Pesquisador` (`ID`)
+CREATE TABLE IF NOT EXISTS `BiotLab`.`Anestesico` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(50) NOT NULL,
+  `marca` VARCHAR(50) NOT NULL,
+  `concentracao` DECIMAL(10,2) NOT NULL,
+  `idInstituicao` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_Anestesico_Instituicao1_idx` (`idInstituicao` ASC) VISIBLE,
+  CONSTRAINT `fk_Anestesico_Instituicao1`
+    FOREIGN KEY (`idInstituicao`)
+    REFERENCES `BiotLab`.`Instituicao` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`TB_EntradaAnestesico`
+-- Table `BiotLab`.`Fornecedor`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TB_EntradaAnestesico` (
-  `Id` INT NOT NULL AUTO_INCREMENT,
-  `Quantidade` INT NOT NULL,
-  `Lote` VARCHAR(50) NOT NULL,
-  `ValorUnitario` DECIMAL(10,2) NOT NULL,
-  `Subtotal` DECIMAL(10,2) NOT NULL,
-  PRIMARY KEY (`Id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`TB_UsoAnestesicos`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TB_UsoAnestesicos` (
-  `Id` INT NOT NULL AUTO_INCREMENT,
-  `NomeAnestesicos` VARCHAR(255) NOT NULL,
-  `Volume` DECIMAL(10,2) NOT NULL,
-  `Data` DATE NOT NULL,
-  `Procedimento` VARCHAR(255) NOT NULL,
-  `Cepa` VARCHAR(50) NOT NULL,
-  `AnimaisEnvolvidos` INT NOT NULL,
-  `TB_Experimento_Id` INT NOT NULL,
-  `TB_Pesquisador_ID` INT NOT NULL,
-  `TB_EntradaAnestesico_Id` INT NOT NULL,
-  PRIMARY KEY (`Id`),
-  INDEX `fk_TB_UsoAnestesicos_TB_Experimento1_idx` (`TB_Experimento_Id` ASC) VISIBLE,
-  INDEX `fk_TB_UsoAnestesicos_TB_Pesquisador1_idx` (`TB_Pesquisador_ID` ASC) VISIBLE,
-  INDEX `fk_TB_UsoAnestesicos_TB_EntradaAnestesico1_idx` (`TB_EntradaAnestesico_Id` ASC) VISIBLE,
-  CONSTRAINT `fk_TB_UsoAnestesicos_TB_Experimento1`
-    FOREIGN KEY (`TB_Experimento_Id`)
-    REFERENCES `mydb`.`TB_Experimento` (`Id`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT,
-  CONSTRAINT `fk_TB_UsoAnestesicos_TB_Pesquisador1`
-    FOREIGN KEY (`TB_Pesquisador_ID`)
-    REFERENCES `mydb`.`TB_Pesquisador` (`ID`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT,
-  CONSTRAINT `fk_TB_UsoAnestesicos_TB_EntradaAnestesico1`
-    FOREIGN KEY (`TB_EntradaAnestesico_Id`)
-    REFERENCES `mydb`.`TB_EntradaAnestesico` (`Id`)
+CREATE TABLE IF NOT EXISTS `BiotLab`.`Fornecedor` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(50) NOT NULL,
+  `cnpj` VARCHAR(18) NOT NULL,
+  `cep` VARCHAR(9) NOT NULL,
+  `rua` VARCHAR(50) NULL,
+  `bairro` VARCHAR(50) NULL,
+  `cidade` VARCHAR(50) NULL,
+  `numero` VARCHAR(20) NULL,
+  `complemento` VARCHAR(50) NULL,
+  `estado` VARCHAR(2) NOT NULL,
+  `telefone1` VARCHAR(15) NOT NULL,
+  `telefone2` VARCHAR(15) NULL,
+  `email` VARCHAR(50) NOT NULL,
+  `idInstituicao` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_Fornecedor_Instituicao1_idx` (`idInstituicao` ASC) VISIBLE,
+  CONSTRAINT `fk_Fornecedor_Instituicao1`
+    FOREIGN KEY (`idInstituicao`)
+    REFERENCES `BiotLab`.`Instituicao` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`TB_PovoarGaiola`
+-- Table `BiotLab`.`Entrada`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TB_PovoarGaiola` (
-  `Id` INT NOT NULL AUTO_INCREMENT,
-  `EstadoDaGaiola` VARCHAR(50) NOT NULL,
-  `Sexo` CHAR(1) NOT NULL,
-  `Peso` DECIMAL(10,2) NOT NULL,
-  `QuantidadeDeAnimais` INT NOT NULL,
-  `HarenOrigem` VARCHAR(255) NOT NULL,
-  `BioterioOrigem` VARCHAR(255) NOT NULL,
-  `DataNascimento` DATE NOT NULL,
-  `DataChegada` DATE NOT NULL,
-  `TB_Pesquisador_ID` INT NOT NULL,
-  `TB_Haren_Id` INT NOT NULL,
-  `TB_Gaiola_Id` INT NOT NULL,
-  PRIMARY KEY (`Id`),
-  INDEX `fk_TB_PovoarGaiola_TB_Pesquisador1_idx` (`TB_Pesquisador_ID` ASC) VISIBLE,
-  INDEX `fk_TB_PovoarGaiola_TB_Haren1_idx` (`TB_Haren_Id` ASC) VISIBLE,
-  INDEX `fk_TB_PovoarGaiola_TB_Gaiola1_idx` (`TB_Gaiola_Id` ASC) VISIBLE,
-  CONSTRAINT `fk_TB_PovoarGaiola_TB_Pesquisador1`
-    FOREIGN KEY (`TB_Pesquisador_ID`)
-    REFERENCES `mydb`.`TB_Pesquisador` (`ID`)
+CREATE TABLE IF NOT EXISTS `BiotLab`.`Entrada` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `numeroNotaFiscal` VARCHAR(20) NOT NULL,
+  `dataEntrada` DATETIME NOT NULL,
+  `idFornecedor` INT UNSIGNED NOT NULL,
+  `idInstituicao` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_Entrada_Fornecedor1_idx` (`idFornecedor` ASC) VISIBLE,
+  INDEX `fk_Entrada_Instituicao1_idx` (`idInstituicao` ASC) VISIBLE,
+  CONSTRAINT `fk_Entrada_Fornecedor1`
+    FOREIGN KEY (`idFornecedor`)
+    REFERENCES `BiotLab`.`Fornecedor` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
-  CONSTRAINT `fk_TB_PovoarGaiola_TB_Haren1`
-    FOREIGN KEY (`TB_Haren_Id`)
-    REFERENCES `mydb`.`TB_Haren` (`Id`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT,
-  CONSTRAINT `fk_TB_PovoarGaiola_TB_Gaiola1`
-    FOREIGN KEY (`TB_Gaiola_Id`)
-    REFERENCES `mydb`.`TB_Gaiola` (`Id`)
+  CONSTRAINT `fk_Entrada_Instituicao1`
+    FOREIGN KEY (`idInstituicao`)
+    REFERENCES `BiotLab`.`Instituicao` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`TB_Obituario`
+-- Table `BiotLab`.`EntradaAnestesico`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TB_Obituario` (
-  `Id` INT NOT NULL AUTO_INCREMENT,
-  `DataObito` DATE NOT NULL,
-  `GaiolaOrigem` INT NOT NULL,
-  `TB_Pesquisador_ID` INT NOT NULL,
-  `TB_Gaiola_Id` INT NOT NULL,
-  PRIMARY KEY (`Id`),
-  INDEX `fk_TB_Obituario_TB_Pesquisador1_idx` (`TB_Pesquisador_ID` ASC) VISIBLE,
-  INDEX `fk_TB_Obituario_TB_Gaiola1_idx` (`TB_Gaiola_Id` ASC) VISIBLE,
-  CONSTRAINT `fk_TB_Obituario_TB_Pesquisador1`
-    FOREIGN KEY (`TB_Pesquisador_ID`)
-    REFERENCES `mydb`.`TB_Pesquisador` (`ID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_TB_Obituario_TB_Gaiola1`
-    FOREIGN KEY (`TB_Gaiola_Id`)
-    REFERENCES `mydb`.`TB_Gaiola` (`Id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`TB_Anestesicos_has_TB_Entrada`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TB_Anestesicos_has_TB_Entrada` (
-  `TB_Anestesicos_id` INT NOT NULL,
-  `TB_Entrada_Id` INT NOT NULL,
-  `TB_EntradaAnestesico_Id` INT NOT NULL,
-  PRIMARY KEY (`TB_Anestesicos_id`, `TB_Entrada_Id`, `TB_EntradaAnestesico_Id`),
-  INDEX `fk_TB_Anestesicos_has_TB_Entrada_TB_Entrada1_idx` (`TB_Entrada_Id` ASC) VISIBLE,
-  INDEX `fk_TB_Anestesicos_has_TB_Entrada_TB_Anestesicos_idx` (`TB_Anestesicos_id` ASC) VISIBLE,
-  INDEX `fk_TB_Anestesicos_has_TB_Entrada_TB_EntradaAnestesico1_idx` (`TB_EntradaAnestesico_Id` ASC) VISIBLE,
-  CONSTRAINT `fk_TB_Anestesicos_has_TB_Entrada_TB_Anestesicos`
-    FOREIGN KEY (`TB_Anestesicos_id`)
-    REFERENCES `mydb`.`TB_Anestesicos` (`id`)
+CREATE TABLE IF NOT EXISTS `BiotLab`.`EntradaAnestesico` (
+  `idEntrada` INT UNSIGNED NOT NULL,
+  `idAnestesico` INT UNSIGNED NOT NULL,
+  `quantidade` DECIMAL(10,2) NOT NULL,
+  `lote` VARCHAR(50) NOT NULL,
+  `valorUnitario` DECIMAL(10,2) NOT NULL,
+  `subTotal` DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (`idEntrada`, `idAnestesico`),
+  INDEX `fk_EntradaAnestesico_Entrada1_idx` (`idEntrada` ASC) VISIBLE,
+  CONSTRAINT `fk_EntradaAnestesico_Anestesico1`
+    FOREIGN KEY (`idAnestesico`)
+    REFERENCES `BiotLab`.`Anestesico` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
-  CONSTRAINT `fk_TB_Anestesicos_has_TB_Entrada_TB_Entrada1`
-    FOREIGN KEY (`TB_Entrada_Id`)
-    REFERENCES `mydb`.`TB_Entrada` (`Id`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT,
-  CONSTRAINT `fk_TB_Anestesicos_has_TB_Entrada_TB_EntradaAnestesico1`
-    FOREIGN KEY (`TB_EntradaAnestesico_Id`)
-    REFERENCES `mydb`.`TB_EntradaAnestesico` (`Id`)
+  CONSTRAINT `fk_EntradaAnestesico_Entrada1`
+    FOREIGN KEY (`idEntrada`)
+    REFERENCES `BiotLab`.`Entrada` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`TB_Gaiola_has_TB_Haren`
+-- Table `BiotLab`.`UsoAnestesico`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TB_Gaiola_has_TB_Haren` (
-  `TB_Gaiola_Id` INT NOT NULL,
-  `TB_Haren_Id` INT NOT NULL,
-  PRIMARY KEY (`TB_Gaiola_Id`, `TB_Haren_Id`),
-  INDEX `fk_TB_Gaiola_has_TB_Haren_TB_Haren1_idx` (`TB_Haren_Id` ASC) VISIBLE,
-  INDEX `fk_TB_Gaiola_has_TB_Haren_TB_Gaiola1_idx` (`TB_Gaiola_Id` ASC) VISIBLE,
-  CONSTRAINT `fk_TB_Gaiola_has_TB_Haren_TB_Gaiola1`
-    FOREIGN KEY (`TB_Gaiola_Id`)
-    REFERENCES `mydb`.`TB_Gaiola` (`Id`)
+CREATE TABLE IF NOT EXISTS `BiotLab`.`UsoAnestesico` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `quantidade` DECIMAL(10,2) NOT NULL,
+  `procedimento` VARCHAR(255) NOT NULL,
+  `data` DATETIME NOT NULL,
+  `cepa` VARCHAR(50) NOT NULL,
+  `numeroAnimais` INT NOT NULL,
+  `idPesquisador` INT UNSIGNED NOT NULL,
+  `idExperimento` INT UNSIGNED NOT NULL,
+  `idEntrada` INT UNSIGNED NOT NULL,
+  `idAnestesico` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_usoAnestesico_Pesquisador1_idx` (`idPesquisador` ASC) VISIBLE,
+  INDEX `fk_usoAnestesico_Experimento1_idx` (`idExperimento` ASC) VISIBLE,
+  INDEX `fk_usoAnestesico_EntradaAnestesico1_idx` (`idEntrada` ASC, `idAnestesico` ASC) VISIBLE,
+  CONSTRAINT `fk_usoAnestesico_Pesquisador1`
+    FOREIGN KEY (`idPesquisador`)
+    REFERENCES `BiotLab`.`Pesquisador` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
-  CONSTRAINT `fk_TB_Gaiola_has_TB_Haren_TB_Haren1`
-    FOREIGN KEY (`TB_Haren_Id`)
-    REFERENCES `mydb`.`TB_Haren` (`Id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  CONSTRAINT `fk_usoAnestesico_Experimento1`
+    FOREIGN KEY (`idExperimento`)
+    REFERENCES `BiotLab`.`Experimento` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `fk_usoAnestesico_EntradaAnestesico1`
+    FOREIGN KEY (`idEntrada` , `idAnestesico`)
+    REFERENCES `BiotLab`.`EntradaAnestesico` (`idEntrada` , `idAnestesico`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`TB_Gaiola_has_TB_Experimento`
+-- Table `BiotLab`.`Bioterio`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TB_Gaiola_has_TB_Experimento` (
-  `TB_Gaiola_Id` INT NOT NULL,
-  `TB_Experimento_Id` INT NOT NULL,
-  PRIMARY KEY (`TB_Gaiola_Id`, `TB_Experimento_Id`),
-  INDEX `fk_TB_Gaiola_has_TB_Experimento_TB_Experimento1_idx` (`TB_Experimento_Id` ASC) VISIBLE,
-  INDEX `fk_TB_Gaiola_has_TB_Experimento_TB_Gaiola1_idx` (`TB_Gaiola_Id` ASC) VISIBLE,
-  CONSTRAINT `fk_TB_Gaiola_has_TB_Experimento_TB_Gaiola1`
-    FOREIGN KEY (`TB_Gaiola_Id`)
-    REFERENCES `mydb`.`TB_Gaiola` (`Id`)
+CREATE TABLE IF NOT EXISTS `BiotLab`.`Bioterio` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(50) NOT NULL,
+  `cep` VARCHAR(9) NOT NULL,
+  `rua` VARCHAR(50) NULL,
+  `bairro` VARCHAR(50) NULL,
+  `cidade` VARCHAR(50) NULL,
+  `numero` VARCHAR(20) NULL,
+  `complemento` VARCHAR(50) NULL,
+  `estado` VARCHAR(2) NOT NULL,
+  `telefone1` VARCHAR(15) NOT NULL,
+  `telefone2` VARCHAR(15) NULL,
+  `email` VARCHAR(50) NOT NULL,
+  `idInstituicao` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_Bioterio_Instituicao1_idx` (`idInstituicao` ASC) VISIBLE,
+  CONSTRAINT `fk_Bioterio_Instituicao1`
+    FOREIGN KEY (`idInstituicao`)
+    REFERENCES `BiotLab`.`Instituicao` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `BiotLab`.`Gaiola`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `BiotLab`.`Gaiola` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `codigoInterno` VARCHAR(50) NOT NULL,
+  `numeroMachos` INT NOT NULL,
+  `numeroFemeas` INT NOT NULL,
+  `etiqueta` VARCHAR(50) NULL,
+  `localizacao` VARCHAR(100) NOT NULL,
+  `status` ENUM('N', 'E', 'F') NOT NULL COMMENT 'N - NOVA\nE - EXPERIMENTO SENDO REALIZADO\nF - EXPERIMENTO FINALIZADO',
+  `idBioterio` INT UNSIGNED NOT NULL,
+  `idExperimento` INT UNSIGNED NOT NULL,
+  `idPesquisador` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_Gaiola_Bioterio1_idx` (`idBioterio` ASC) VISIBLE,
+  INDEX `fk_Gaiola_experimento1_idx` (`idExperimento` ASC) VISIBLE,
+  INDEX `fk_Gaiola_Pesquisador1_idx` (`idPesquisador` ASC) VISIBLE,
+  CONSTRAINT `fk_Gaiola_Bioterio1`
+    FOREIGN KEY (`idBioterio`)
+    REFERENCES `BiotLab`.`Bioterio` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
-  CONSTRAINT `fk_TB_Gaiola_has_TB_Experimento_TB_Experimento1`
-    FOREIGN KEY (`TB_Experimento_Id`)
-    REFERENCES `mydb`.`TB_Experimento` (`Id`)
+  CONSTRAINT `fk_Gaiola_experimento1`
+    FOREIGN KEY (`idExperimento`)
+    REFERENCES `BiotLab`.`Experimento` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `fk_Gaiola_Pesquisador1`
+    FOREIGN KEY (`idPesquisador`)
+    REFERENCES `BiotLab`.`Pesquisador` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `BiotLab`.`Harem`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `BiotLab`.`Harem` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `codigoInterno` VARCHAR(20) NOT NULL,
+  `numeroMachos` INT NOT NULL,
+  `numeroFemeas` INT NOT NULL,
+  `dataNascimento` DATETIME NOT NULL,
+  `status` ENUM('A', 'I') NOT NULL COMMENT 'A - ATIVO\nI - INATIVO',
+  `idBioterio` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `codigoInterno_UNIQUE` (`codigoInterno` ASC) VISIBLE,
+  INDEX `fk_Harem_Bioterio1_idx` (`idBioterio` ASC) VISIBLE,
+  CONSTRAINT `fk_Harem_Bioterio1`
+    FOREIGN KEY (`idBioterio`)
+    REFERENCES `BiotLab`.`Bioterio` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `BiotLab`.`obituario`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `BiotLab`.`obituario` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `data` DATETIME NOT NULL,
+  `idGaiola` INT UNSIGNED NOT NULL,
+  `idPesquisador` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_obituario_Gaiola1_idx` (`idGaiola` ASC) VISIBLE,
+  INDEX `fk_obituario_Pesquisador1_idx` (`idPesquisador` ASC) VISIBLE,
+  CONSTRAINT `fk_obituario_Gaiola1`
+    FOREIGN KEY (`idGaiola`)
+    REFERENCES `BiotLab`.`Gaiola` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `fk_obituario_Pesquisador1`
+    FOREIGN KEY (`idPesquisador`)
+    REFERENCES `BiotLab`.`Pesquisador` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `BiotLab`.`GaiolaHarem`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `BiotLab`.`GaiolaHarem` (
+  `idGaiola` INT UNSIGNED NOT NULL,
+  `idHarem` INT UNSIGNED NOT NULL,
+  `dataPovoamento` DATETIME NOT NULL,
+  `idPesquisador` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`idGaiola`, `idHarem`),
+  INDEX `fk_GaiolaHarem_Harem1_idx` (`idHarem` ASC) VISIBLE,
+  INDEX `fk_GaiolaHarem_Gaiola1_idx` (`idGaiola` ASC) VISIBLE,
+  INDEX `fk_GaiolaHarem_Pesquisador1_idx` (`idPesquisador` ASC) VISIBLE,
+  CONSTRAINT `fk_GaiolaHarem_Gaiola1`
+    FOREIGN KEY (`idGaiola`)
+    REFERENCES `BiotLab`.`Gaiola` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `fk_GaiolaHarem_Harem1`
+    FOREIGN KEY (`idHarem`)
+    REFERENCES `BiotLab`.`Harem` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `fk_GaiolaHarem_Pesquisador1`
+    FOREIGN KEY (`idPesquisador`)
+    REFERENCES `BiotLab`.`Pesquisador` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;

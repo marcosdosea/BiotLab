@@ -5,10 +5,10 @@ namespace Core.Service
 {
     public interface IEntradaanestesicoService
     {
-        uint Create(Entradaanestesico entradaAnestesico);
-        void Update(Entradaanestesico entradaAnestesico);
-        void Delete(uint idEntrada, uint idAnestesico);
-        IEnumerable<Entradaanestesico> GetAll();
-        Entradaanestesico Get(uint idEntrada, uint idAnestesico);
+       public uint Create(Entradaanestesico entradaAnestesico);
+       public void Update(Entradaanestesico entradaAnestesico);
+       public void Delete(uint idEntrada, uint idAnestesico);
+       public IEnumerable<Entradaanestesico> GetAll();
+       public Entradaanestesico Get(uint idEntrada, uint idAnestesico);
     }
 }

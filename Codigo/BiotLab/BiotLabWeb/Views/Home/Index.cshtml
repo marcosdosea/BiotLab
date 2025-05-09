@@ -1,6 +1,92 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Início";
 }
-<div class="text-center">
-    <h1 class="display-4">Bem Vindo ao BiotLab</h1>
+
+<div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="hidden lg:flex flex-col w-64 bg-gray-100 border-r px-4 py-6">
+        <h2 class="text-lg font-semibold text-gray-700 mb-4">Menu</h2>
+        <nav class="space-y-2">
+            <a href="/Gaiola" class="flex items-center gap-2 text-gray-700 hover:text-purple-600">
+                <i data-lucide="grid-3x3" class="w-5 h-5"></i> Gaiolas
+            </a>
+            <a href="/Anestesico" class="flex items-center gap-2 text-gray-700 hover:text-purple-600">
+                <i data-lucide="pill" class="w-5 h-5"></i> Anestésicos
+            </a>
+            <a href="/Entrada" class="flex items-center gap-2 text-gray-700 hover:text-purple-600">
+                <i data-lucide="package" class="w-5 h-5"></i> Entradas
+            </a>
+            <a href="/EntradaAnestesico" class="flex items-center gap-2 text-gray-700 hover:text-purple-600">
+                <i data-lucide="flask-round" class="w-5 h-5"></i> Entrada Anestésico
+            </a>
+            <a href="/Obituario" class="flex items-center gap-2 text-gray-700 hover:text-purple-600">
+                <i data-lucide="skull" class="w-5 h-5"></i> Obituário
+            </a>
+            <a href="/UsoAnestesico" class="flex items-center gap-2 text-gray-700 hover:text-purple-600">
+                <i data-lucide="activity" class="w-5 h-5"></i> Uso Anestésico
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Botão Mobile -->
+    <button class="fixed top-4 left-4 z-50 lg:hidden bg-gray-800 text-white p-2 rounded-md" onclick="document.getElementById('sidebar').classList.toggle('hidden')">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+    </button>
+
+    <!-- Conteúdo principal -->
+    <main class="flex-1 bg-gray-100 py-10 px-4">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Painel de Controle</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <!-- Card 1 -->
+            <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+                <div class="flex items-center mb-4">
+                    <i data-lucide="rabbit" class="w-6 h-6 text-blue-600 mr-3"></i>
+                    <h3 class="text-lg font-semibold text-gray-700">Animais Ativos</h3>
+                </div>
+                <p class="text-3xl font-bold text-gray-900">150</p>
+                <p class="text-sm text-gray-500 mt-1">Total de animais no biotério</p>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+                <div class="flex items-center mb-4">
+                    <i data-lucide="grid-3x3" class="w-6 h-6 text-green-600 mr-3"></i>
+                    <h3 class="text-lg font-semibold text-gray-700">Gaiolas Ocupadas</h3>
+                </div>
+                <p class="text-3xl font-bold text-gray-900">45 / 60</p>
+                <p class="text-sm text-gray-500 mt-1">Ocupação atual das gaiolas</p>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+                <div class="flex items-center mb-4">
+                    <i data-lucide="clipboard-list" class="w-6 h-6 text-purple-600 mr-3"></i>
+                    <h3 class="text-lg font-semibold text-gray-700">Experimentos Ativos</h3>
+                </div>
+                <p class="text-3xl font-bold text-gray-900">12</p>
+                <p class="text-sm text-gray-500 mt-1">Experimentos em andamento</p>
+            </div>
+        </div>
+
+        <!-- Alertas -->
+        <div class="max-w-6xl mx-auto mt-10 space-y-3">
+            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded">
+                <p class="font-semibold">[Alerta]</p>
+                Baixo estoque de ração tipo A.
+            </div>
+            <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 rounded">
+                <p class="font-semibold">[Info]</p>
+                Limpeza geral agendada para 10/04/2025.
+            </div>
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-800 p-4 rounded">
+                <p class="font-semibold">[Urgente]</p>
+                Gaiola C-12 requer manutenção.
+            </div>
+        </div>
+    </main>
 </div>
+
+<script>
+    lucide.createIcons();
+</script>

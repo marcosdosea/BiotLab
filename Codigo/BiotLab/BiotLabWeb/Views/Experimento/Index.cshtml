@@ -1,40 +1,57 @@
 ﻿@model IEnumerable<BiotLabWeb.Models.ExperimentoViewModel>
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Experimentos";
 }
 
-<h1>Index</h1>
+<div class="max-w-7xl mx-auto py-8 px-4">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+            <i data-lucide="flask-conical" class="w-6 h-6 text-purple-700"></i> Experimentos
+        </h2>
+        <a asp-action="Create" class="inline-flex items-center gap-2 px-4 py-2 bg-purple-700 text-white rounded hover:bg-purple-800 transition">
+            <i data-lucide="plus-circle" class="w-5 h-5"></i> Novo Experimento
+        </a>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.First().Id)</th>
-            <th>@Html.DisplayNameFor(model => model.First().Nome)</th>
-            <th>@Html.DisplayNameFor(model => model.First().Cepa)</th>
-            <th>@Html.DisplayNameFor(model => model.First().DataInicio)</th>
-            <th>@Html.DisplayNameFor(model => model.First().DataFim)</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.Id)</td>
-                <td>@Html.DisplayFor(modelItem => item.Nome)</td>
-                <td>@Html.DisplayFor(modelItem => item.Cepa)</td>
-                <td>@Html.DisplayFor(modelItem => item.DataInicio)</td>
-                <td>@Html.DisplayFor(modelItem => item.DataFim)</td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="overflow-x-auto bg-white shadow rounded-lg">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                <tr>
+                    <th class="px-6 py-3">@Html.DisplayNameFor(model => model.First().Id)</th>
+                    <th class="px-6 py-3">@Html.DisplayNameFor(model => model.First().Nome)</th>
+                    <th class="px-6 py-3">@Html.DisplayNameFor(model => model.First().Cepa)</th>
+                    <th class="px-6 py-3">@Html.DisplayNameFor(model => model.First().DataInicio)</th>
+                    <th class="px-6 py-3">@Html.DisplayNameFor(model => model.First().DataFim)</th>
+                    <th class="px-6 py-3 text-right">Ações</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 text-sm text-gray-700">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="px-6 py-4">@Html.DisplayFor(modelItem => item.Id)</td>
+                        <td class="px-6 py-4">@Html.DisplayFor(modelItem => item.Nome)</td>
+                        <td class="px-6 py-4">@Html.DisplayFor(modelItem => item.Cepa)</td>
+                        <td class="px-6 py-4">@Html.DisplayFor(modelItem => item.DataInicio)</td>
+                        <td class="px-6 py-4">@Html.DisplayFor(modelItem => item.DataFim)</td>
+                        <td class="px-6 py-4 text-right space-x-2">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="text-purple-600 hover:text-purple-800" title="Editar">
+                                <i data-lucide="pencil-line" class="w-5 h-5 inline"></i>
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="text-blue-600 hover:text-blue-800" title="Detalhes">
+                                <i data-lucide="eye" class="w-5 h-5 inline"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="text-red-600 hover:text-red-800" title="Excluir">
+                                <i data-lucide="trash-2" class="w-5 h-5 inline"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+</script>

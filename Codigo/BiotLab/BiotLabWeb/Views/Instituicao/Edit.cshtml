@@ -1,95 +1,52 @@
-﻿@model BiotLabWeb.Models.InstituicaoViewModel
-
+@model BiotLabWeb.Models.InstituicaoViewModel
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Instituição";
 }
 
-<h1>Edit</h1>
+<div class="max-w-3xl mx-auto mt-10 bg-white p-8 rounded-lg shadow">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+        <i data-lucide="edit" class="w-6 h-6 text-yellow-600"></i> Editar Instituição
+    </h2>
 
-<h4>InstituicaoViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" readonly />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Nome" class="control-label"></label>
-                <input asp-for="Nome" class="form-control" />
-                <span asp-validation-for="Nome" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Cnpj" class="control-label"></label>
-                <input asp-for="Cnpj" class="form-control" />
-                <span asp-validation-for="Cnpj" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Cep" class="control-label"></label>
-                <input asp-for="Cep" class="form-control" />
-                <span asp-validation-for="Cep" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Rua" class="control-label"></label>
-                <input asp-for="Rua" class="form-control" />
-                <span asp-validation-for="Rua" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Bairro" class="control-label"></label>
-                <input asp-for="Bairro" class="form-control" />
-                <span asp-validation-for="Bairro" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Cidade" class="control-label"></label>
-                <input asp-for="Cidade" class="form-control" />
-                <span asp-validation-for="Cidade" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Numero" class="control-label"></label>
-                <input asp-for="Numero" class="form-control" />
-                <span asp-validation-for="Numero" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Complemento" class="control-label"></label>
-                <input asp-for="Complemento" class="form-control" />
-                <span asp-validation-for="Complemento" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Estado" class="control-label"></label>
-                <input asp-for="Estado" class="form-control" />
-                <span asp-validation-for="Estado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Telefone1" class="control-label"></label>
-                <input asp-for="Telefone1" class="form-control" />
-                <span asp-validation-for="Telefone1" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Telefone2" class="control-label"></label>
-                <input asp-for="Telefone2" class="form-control" />
-                <span asp-validation-for="Telefone2" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+    <form asp-action="Edit" method="post" class="grid grid-cols-1 gap-6">
+        <input type="hidden" asp-for="Id" />
 
-<div>
-    <a asp-action="Index">Back to List</a>
+        <div>
+            <label asp-for="Nome" class="block text-sm font-medium text-gray-700">Nome</label>
+            <input asp-for="Nome" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500" />
+            <span asp-validation-for="Nome" class="text-sm text-red-600"></span>
+        </div>
+
+        <div>
+            <label asp-for="Cnpj" class="block text-sm font-medium text-gray-700">CNPJ</label>
+            <input asp-for="Cnpj" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500" />
+            <span asp-validation-for="Cnpj" class="text-sm text-red-600"></span>
+        </div>
+
+        <div>
+            <label asp-for="Cep" class="block text-sm font-medium text-gray-700">CEP</label>
+            <input asp-for="Cep" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500" />
+            <span asp-validation-for="Cep" class="text-sm text-red-600"></span>
+        </div>
+
+        <div>
+            <label asp-for="Rua" class="block text-sm font-medium text-gray-700">Rua</label>
+            <input asp-for="Rua" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500" />
+            <span asp-validation-for="Rua" class="text-sm text-red-600"></span>
+        </div>
+
+        <div class="flex justify-between">
+            <a asp-action="Index" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar
+            </a>
+            <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition">
+                <i data-lucide="save" class="w-4 h-4"></i> Atualizar
+            </button>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
+    <script>lucide.createIcons();</script>
 }

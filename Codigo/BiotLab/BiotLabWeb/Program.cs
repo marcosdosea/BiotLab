@@ -28,6 +28,14 @@ namespace BiotLabWeb
             builder.Services.AddTransient<IGaiolaharemService, GaiolaharemService>();
             builder.Services.AddTransient<IUsoanestesicoService, UsoanestesicoService>();
             builder.Services.AddTransient<IPesquisadorService, PesquisadorService>();
+            builder.Services.AddTransient<IEntradaanestesicoService, EntradaanestesicoService>();
+            builder.Services.AddTransient<IAnestesicosService, AnestesicoService>();
+            builder.Services.AddTransient<IEntradumService, EntradumService>();
+
+
+
+
+
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             builder.Services.AddDbContext<BiotlabContext>(options => options.UseMySQL(builder.Configuration.GetConnectionString("BiotLabConnection")));
@@ -69,10 +77,10 @@ namespace BiotLabWeb
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.Cookie.Name = "BiotLabWebCookies";
                 options.Cookie.HttpOnly = true;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
-                options.Cookie.SameSite = SameSiteMode.Lax; 
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Lax;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-                options.LoginPath = "/Identity/Account/Login"; 
+                options.LoginPath = "/Identity/Account/Login";
                 options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
             });
 

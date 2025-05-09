@@ -424,6 +424,7 @@ public partial class BiotlabContext : DbContext
                 .HasColumnName("telefone2");
         });
 
+
         modelBuilder.Entity<Obituario>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");

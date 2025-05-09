@@ -1,43 +1,47 @@
 ﻿@model BiotLabWeb.Models.HaremViewModel
-
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Cadastrar Harém";
 }
 
-<h1>Criar Novo Harem</h1>
+<div class="max-w-3xl mx-auto mt-10 bg-white p-8 rounded-lg shadow">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+        <i data-lucide="users" class="w-6 h-6 text-pink-600"></i> Cadastrar Harém
+    </h2>
 
-<form asp-action="Create" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <form asp-action="Create" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <label asp-for="NumeroMacho" class="block text-sm font-medium text-gray-700">Número de Machos</label>
+            <input asp-for="NumeroMacho" class="form-input w-full border-gray-300 rounded px-3 py-2" />
+            <span asp-validation-for="NumeroMacho" class="text-red-600 text-sm"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="NumeroMacho" class="control-label"></label>
-        <input asp-for="NumeroMacho" class="form-control" />
-        <span asp-validation-for="NumeroMacho" class="text-danger"></span>
-    </div>
+        <div>
+            <label asp-for="NumeroFemea" class="block text-sm font-medium text-gray-700">Número de Fêmeas</label>
+            <input asp-for="NumeroFemea" class="form-input w-full border-gray-300 rounded px-3 py-2" />
+            <span asp-validation-for="NumeroFemea" class="text-red-600 text-sm"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="NumeroFemea" class="control-label"></label>
-        <input asp-for="NumeroFemea" class="form-control" />
-        <span asp-validation-for="NumeroFemea" class="text-danger"></span>
-    </div>
+        <div>
+            <label asp-for="Status" class="block text-sm font-medium text-gray-700">Status</label>
+            <select asp-for="Status" class="form-select w-full border-gray-300 rounded px-3 py-2">
+                <option value="A">Ativo</option>
+                <option value="I">Inativo</option>
+            </select>
+            <span asp-validation-for="Status" class="text-red-600 text-sm"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Status" class="control-label"></label>
-        <input asp-for="Status" class="form-control" />
-        <span asp-validation-for="Status" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <input type="submit" value="Create" class="btn btn-primary" />
-    </div>
-</form>
-
-<div>
-    <a asp-action="Index">Voltar para Lista</a>
+        <div class="col-span-full flex justify-between mt-6">
+            <a asp-action="Index" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded flex items-center gap-2">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar
+            </a>
+            <button type="submit" class="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-2 rounded flex items-center gap-2">
+                <i data-lucide="save" class="w-4 h-4"></i> Salvar
+            </button>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
+    <script>lucide.createIcons();</script>
 }

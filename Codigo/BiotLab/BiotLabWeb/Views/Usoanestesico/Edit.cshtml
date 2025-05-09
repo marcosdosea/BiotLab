@@ -1,35 +1,64 @@
 ﻿@model BiotLabWeb.Models.UsoanestesicoViewModel
+@{
+    ViewData["Title"] = "Editar Uso de Anestésico";
+}
 
-<h2>Editar Uso Anestésico</h2>
+<div class="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-lg shadow">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+        <i data-lucide="activity" class="w-6 h-6 text-yellow-600"></i> Editar Uso de Anestésico
+    </h2>
 
-<form asp-action="Edit">
-    <input type="hidden" asp-for="Id" />
-    <div class="form-group">
-        <label asp-for="Quantidade"></label>
-        <input asp-for="Quantidade" class="form-control" />
-        <span asp-validation-for="Quantidade" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Procedimento"></label>
-        <input asp-for="Procedimento" class="form-control" />
-        <span asp-validation-for="Procedimento" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Data"></label>
-        <input asp-for="Data" type="date" class="form-control" />
-        <span asp-validation-for="Data" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Cepa"></label>
-        <input asp-for="Cepa" class="form-control" />
-        <span asp-validation-for="Cepa" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="NumeroAnimais"></label>
-        <input asp-for="NumeroAnimais" class="form-control" />
-        <span asp-validation-for="NumeroAnimais" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Salvar</button>
-    </div>
-</form>
+    <form asp-action="Edit" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <input type="hidden" asp-for="Id" />
+
+        <div>
+            <label asp-for="Data" class="block text-sm font-medium text-gray-700">Data</label>
+            <input asp-for="Data" type="date" class="form-input w-full border border-gray-300 rounded px-3 py-2" />
+            <span asp-validation-for="Data" class="text-red-600 text-sm"></span>
+        </div>
+
+        <div>
+            <label asp-for="IdPesquisador" class="block text-sm font-medium text-gray-700">Pesquisador</label>
+            <input asp-for="IdPesquisador" class="form-input w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+
+        <div>
+            <label asp-for="IdExperimento" class="block text-sm font-medium text-gray-700">Experimento</label>
+            <input asp-for="IdExperimento" class="form-input w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+
+        <div>
+            <label asp-for="Cepa" class="block text-sm font-medium text-gray-700">Cepa</label>
+            <input asp-for="Cepa" class="form-input w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+
+        <div>
+            <label asp-for="NumeroAnimais" class="block text-sm font-medium text-gray-700">Número de Animais</label>
+            <input asp-for="NumeroAnimais" class="form-input w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+
+        <div>
+            <label asp-for="Quantidade" class="block text-sm font-medium text-gray-700">Quantidade</label>
+            <input asp-for="Quantidade" class="form-input w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+
+        <div class="md:col-span-2">
+            <label asp-for="Procedimento" class="block text-sm font-medium text-gray-700">Procedimento</label>
+            <textarea asp-for="Procedimento" rows="4" class="form-textarea w-full border border-gray-300 rounded px-3 py-2"></textarea>
+        </div>
+
+        <div class="col-span-full flex justify-between mt-6">
+            <a asp-action="Index" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded flex items-center gap-2">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar
+            </a>
+            <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-6 py-2 rounded flex items-center gap-2">
+                <i data-lucide="save" class="w-4 h-4"></i> Atualizar
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>lucide.createIcons();</script>
+}

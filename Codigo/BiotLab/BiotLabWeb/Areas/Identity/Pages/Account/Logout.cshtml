@@ -1,21 +1,29 @@
 ﻿@page
 @model LogoutModel
 @{
-    ViewData["Title"] = "Log out";
+    ViewData["Title"] = "Sair";
+    Layout = "/Views/Shared/_AuthLayout.cshtml";
 }
 
-<header>
-    <h1>@ViewData["Title"]</h1>
-    @{
-        if (User.Identity?.IsAuthenticated ?? false)
+<div class="flex min-h-screen items-center justify-center px-4 py-10">
+    <div class="w-full max-w-md rounded-[2rem] border border-slate-200 bg-white p-8 text-center shadow-2xl shadow-slate-900/10">
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+            <i data-lucide="log-out" class="h-8 w-8"></i>
+        </div>
+        <h1 class="mt-6 text-2xl font-black text-slate-950">Sair do sistema</h1>
+        @if (User.Identity?.IsAuthenticated ?? false)
         {
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-                <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
+            <p class="mt-3 text-sm text-slate-600">Confirme para encerrar sua sessão.</p>
+            <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl='@Url.Page("/", new { area = "" })' method="post">
+                <button type="submit" class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-red-600 px-5 py-3 text-sm font-black text-white shadow-lg shadow-red-600/20 transition hover:bg-red-700">
+                    Sair agora
+                </button>
             </form>
         }
         else
         {
-            <p>You have successfully logged out of the application.</p>
+            <p class="mt-3 text-sm text-slate-600">Você saiu do sistema com sucesso.</p>
+            <a asp-page="./Login" class="mt-6 inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-black text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700">Entrar novamente</a>
         }
-    }
-</header>
+    </div>
+</div>

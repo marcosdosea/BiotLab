@@ -8,7 +8,12 @@ namespace BiotLabWeb.Mapper
     {
         public FornecedorProfile()
         {
-            CreateMap<Fornecedor, FornecedorViewModel>().ReverseMap();
+            CreateMap<Fornecedor, FornecedorViewModel>()
+                .ForMember(dest => dest.NomeInstituicao, opt => opt.MapFrom(src => src.IdInstituicaoNavigation.Nome));
+
+            CreateMap<FornecedorViewModel, Fornecedor>()
+                .ForMember(dest => dest.IdInstituicaoNavigation, opt => opt.Ignore())
+                .ForMember(dest => dest.Entrada, opt => opt.Ignore());
         }
     }
 }

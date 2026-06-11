@@ -1,61 +1,64 @@
 ﻿using Core;
 using Core.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Service
 {
     public class AnestesicoService : IAnestesicosService
     {
+        private readonly BiotlabContext context;
 
-        private readonly BiotlabContext Context;
         public AnestesicoService(BiotlabContext biotlabContext)
         {
-            Context = biotlabContext;
+            context = biotlabContext;
         }
 
         public Anestesico? Buscar(uint id)
         {
-           return Context.Anestesicos.Find(id);
+            return context.Anestesicos.Find(id);
         }
 
         public uint Create(Anestesico anestesico)
         {
-            throw new NotImplementedException();
+            context.Anestesicos.Add(anestesico);
+            context.SaveChanges();
+            return anestesico.Id;
         }
 
         public void Delete(uint id)
         {
-            var anestesico = Context.Anestesicos.Find(id);
+            var anestesico = context.Anestesicos.Find(id);
             if (anestesico != null)
             {
-                Context.Anestesicos.Remove(anestesico);
-                Context.SaveChanges();
+                context.Anestesicos.Remove(anestesico);
+                context.SaveChanges();
             }
         }
 
-        public object GetAll()
+        public IEnumerable<Anestesico> GetAll()
         {
-            throw new NotImplementedException();
+            return context.Anestesicos
+                .AsNoTracking()
+                .OrderBy(a => a.Nome)
+                .ToList();
         }
 
         public void Update(Anestesico anestesico)
         {
-            Context.Update(anestesico);
-            Context.SaveChanges();
+            var anestesicoExistente = context.Anestesicos.Find(anestesico.Id);
+
+            if (anestesicoExistente == null)
+            {
+                throw new InvalidOperationException("Anestésico não encontrado para atualização.");
+            }
+
+            context.Entry(anestesicoExistente).CurrentValues.SetValues(anestesico);
+            context.SaveChanges();
         }
 
         public bool Validar(uint id)
         {
-            throw new NotImplementedException();
-        }
-
-        IEnumerable<Anestesico> IAnestesicosService.GetAll()
-        {
-            throw new NotImplementedException();
+            return context.Anestesicos.Any(a => a.Id == id);
         }
     }
 }

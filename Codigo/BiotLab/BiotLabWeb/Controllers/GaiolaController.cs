@@ -1,94 +1,261 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BiotLabWeb.Models;
 using Core;
 using Core.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
 namespace BiotLabWeb.Controllers
 {
+    [Authorize(Roles = "Administrador,Estudante")]
     public class GaiolaController : Controller
     {
         private readonly IGaiolaService gaiolaService;
+        private readonly IBioterioService bioterioService;
+        private readonly IExperimentoService experimentoService;
+        private readonly IPesquisadorService pesquisadorService;
         private readonly IMapper mapper;
 
-        public GaiolaController(IGaiolaService gaiolaService, IMapper mapper)
+        public GaiolaController(
+            IGaiolaService gaiolaService,
+            IBioterioService bioterioService,
+            IExperimentoService experimentoService,
+            IPesquisadorService pesquisadorService,
+            IMapper mapper)
         {
             this.gaiolaService = gaiolaService;
+            this.bioterioService = bioterioService;
+            this.experimentoService = experimentoService;
+            this.pesquisadorService = pesquisadorService;
             this.mapper = mapper;
         }
 
-        // GET: GaiolaController
+        private void CarregarCombos(
+            uint? idBioterioSelecionado = null,
+            uint? idExperimentoSelecionado = null,
+            uint? idPesquisadorSelecionado = null)
+        {
+            var bioterios = bioterioService.GetAll()
+                .Select(b => new
+                {
+                    b.Id,
+                    b.Nome
+                })
+                .ToList();
+
+            var experimentos = experimentoService.GetAll()
+                .Select(e => new
+                {
+                    e.Id,
+                    Nome = $"{e.Cepa} ({e.DataInicio:dd/MM/yyyy} - {e.DataFim:dd/MM/yyyy})"
+                })
+                .ToList();
+
+            var pesquisadores = pesquisadorService.GetAll()
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Nome
+                })
+                .ToList();
+
+            ViewBag.Bioterios = new SelectList(bioterios, "Id", "Nome", idBioterioSelecionado);
+            ViewBag.Experimentos = new SelectList(experimentos, "Id", "Nome", idExperimentoSelecionado);
+            ViewBag.Pesquisadores = new SelectList(pesquisadores, "Id", "Nome", idPesquisadorSelecionado);
+        }
+
         public ActionResult Index()
         {
-            var gaiolas = gaiolaService.GetAll();
-            var vm = mapper.Map<IEnumerable<GaiolaViewModel>>(gaiolas);
+            var gaiolas = gaiolaService.GetAll().ToList();
+            var bioterios = bioterioService.GetAll().ToList();
+            var experimentos = experimentoService.GetAll().ToList();
+            var pesquisadores = pesquisadorService.GetAll().ToList();
+
+            var vm = gaiolas.Select(g => new GaiolaViewModel
+            {
+                Id = g.Id,
+                CodigoInterno = g.CodigoInterno,
+                NumeroMachos = g.NumeroMachos,
+                NumeroFemeas = g.NumeroFemeas,
+                Etiqueta = g.Etiqueta,
+                Localizacao = g.Localizacao,
+                Status = g.Status,
+                IdBioterio = g.IdBioterio,
+                IdExperimento = g.IdExperimento,
+                IdPesquisador = g.IdPesquisador,
+                NomeBioterio = bioterios.FirstOrDefault(b => b.Id == g.IdBioterio)?.Nome,
+                NomeExperimento = g.IdExperimento.HasValue
+                    ? experimentos.FirstOrDefault(e => e.Id == g.IdExperimento.Value)?.Cepa
+                    : null,
+                NomePesquisador = g.IdPesquisador.HasValue
+                    ? pesquisadores.FirstOrDefault(p => p.Id == g.IdPesquisador.Value)?.Nome
+                    : null
+            }).ToList();
+
             return View(vm);
         }
 
-        // GET: GaiolaController/Details/5
         public ActionResult Details(uint id)
         {
             var gaiola = gaiolaService.Get(id);
+            if (gaiola == null)
+            {
+                return NotFound();
+            }
+
             var vm = mapper.Map<GaiolaViewModel>(gaiola);
+            vm.NomeBioterio = bioterioService.Get(gaiola.IdBioterio)?.Nome;
+            vm.NomeExperimento = gaiola.IdExperimento.HasValue
+                ? experimentoService.Get(gaiola.IdExperimento.Value)?.Cepa
+                : null;
+            vm.NomePesquisador = gaiola.IdPesquisador.HasValue
+                ? pesquisadorService.Buscar(gaiola.IdPesquisador.Value)?.Nome
+                : null;
+
             return View(vm);
         }
 
-        // GET: GaiolaController/Create
         public ActionResult Create()
         {
-            return View();
+            CarregarCombos();
+            return View(new GaiolaViewModel());
         }
 
-        // POST: GaiolaController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(GaiolaViewModel gaiola)
         {
+            if (!ModelState.IsValid)
+            {
+                CarregarCombos(gaiola.IdBioterio, gaiola.IdExperimento, gaiola.IdPesquisador);
+                return View(gaiola);
+            }
+
+            if (bioterioService.Get(gaiola.IdBioterio) == null)
+            {
+                ModelState.AddModelError(nameof(gaiola.IdBioterio), "O biotério selecionado não existe.");
+            }
+
+            if (gaiola.IdExperimento.HasValue && experimentoService.Get(gaiola.IdExperimento.Value) == null)
+            {
+                ModelState.AddModelError(nameof(gaiola.IdExperimento), "O experimento selecionado não existe.");
+            }
+
+            if (gaiola.IdPesquisador.HasValue && pesquisadorService.Buscar(gaiola.IdPesquisador.Value) == null)
+            {
+                ModelState.AddModelError(nameof(gaiola.IdPesquisador), "O pesquisador selecionado não existe.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                CarregarCombos(gaiola.IdBioterio, gaiola.IdExperimento, gaiola.IdPesquisador);
+                return View(gaiola);
+            }
+
             try
             {
                 var gaiolaDB = mapper.Map<Gaiola>(gaiola);
                 gaiolaService.Create(gaiolaDB);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ModelState.AddModelError(string.Empty, $"Não foi possível salvar a gaiola. {ex.InnerException?.Message ?? ex.Message}");
+                CarregarCombos(gaiola.IdBioterio, gaiola.IdExperimento, gaiola.IdPesquisador);
+                return View(gaiola);
             }
         }
 
-        // GET: GaiolaController/Edit/5
         public ActionResult Edit(uint id)
         {
             var gaiola = gaiolaService.Get(id);
+            if (gaiola == null)
+            {
+                return NotFound();
+            }
+
             var vm = mapper.Map<GaiolaViewModel>(gaiola);
+            CarregarCombos(vm.IdBioterio, vm.IdExperimento, vm.IdPesquisador);
             return View(vm);
         }
 
-        // POST: GaiolaController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, GaiolaViewModel gaiola)
+        public ActionResult Edit(uint id, GaiolaViewModel gaiola)
         {
+            if (id != gaiola.Id)
+            {
+                return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                CarregarCombos(gaiola.IdBioterio, gaiola.IdExperimento, gaiola.IdPesquisador);
+                return View(gaiola);
+            }
+
+            var atual = gaiolaService.Get(id);
+            if (atual == null)
+            {
+                return NotFound();
+            }
+
+            if (bioterioService.Get(gaiola.IdBioterio) == null)
+            {
+                ModelState.AddModelError(nameof(gaiola.IdBioterio), "O biotério selecionado não existe.");
+            }
+
+            if (gaiola.IdExperimento.HasValue && experimentoService.Get(gaiola.IdExperimento.Value) == null)
+            {
+                ModelState.AddModelError(nameof(gaiola.IdExperimento), "O experimento selecionado não existe.");
+            }
+
+            if (gaiola.IdPesquisador.HasValue && pesquisadorService.Buscar(gaiola.IdPesquisador.Value) == null)
+            {
+                ModelState.AddModelError(nameof(gaiola.IdPesquisador), "O pesquisador selecionado não existe.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                CarregarCombos(gaiola.IdBioterio, gaiola.IdExperimento, gaiola.IdPesquisador);
+                return View(gaiola);
+            }
+
             try
             {
                 var gaiolaDB = mapper.Map<Gaiola>(gaiola);
                 gaiolaService.Update(gaiolaDB);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ModelState.AddModelError(string.Empty, $"Não foi possível atualizar a gaiola. {ex.InnerException?.Message ?? ex.Message}");
+                CarregarCombos(gaiola.IdBioterio, gaiola.IdExperimento, gaiola.IdPesquisador);
+                return View(gaiola);
             }
         }
 
-        // GET: GaiolaController/Delete/5
         public ActionResult Delete(uint id)
         {
             var gaiola = gaiolaService.Get(id);
+            if (gaiola == null)
+            {
+                return NotFound();
+            }
+
             var vm = mapper.Map<GaiolaViewModel>(gaiola);
+            vm.NomeBioterio = bioterioService.Get(gaiola.IdBioterio)?.Nome;
+            vm.NomeExperimento = gaiola.IdExperimento.HasValue
+                ? experimentoService.Get(gaiola.IdExperimento.Value)?.Cepa
+                : null;
+            vm.NomePesquisador = gaiola.IdPesquisador.HasValue
+                ? pesquisadorService.Buscar(gaiola.IdPesquisador.Value)?.Nome
+                : null;
+
             return View(vm);
         }
 
-        // POST: GaiolaController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(uint id, GaiolaViewModel gaiola)
@@ -98,9 +265,25 @@ namespace BiotLabWeb.Controllers
                 gaiolaService.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                var existente = gaiolaService.Get(id);
+                if (existente == null)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+
+                var vm = mapper.Map<GaiolaViewModel>(existente);
+                vm.NomeBioterio = bioterioService.Get(existente.IdBioterio)?.Nome;
+                vm.NomeExperimento = existente.IdExperimento.HasValue
+                    ? experimentoService.Get(existente.IdExperimento.Value)?.Cepa
+                    : null;
+                vm.NomePesquisador = existente.IdPesquisador.HasValue
+                    ? pesquisadorService.Buscar(existente.IdPesquisador.Value)?.Nome
+                    : null;
+
+                ModelState.AddModelError(string.Empty, $"Não foi possível excluir a gaiola. {ex.InnerException?.Message ?? ex.Message}");
+                return View(vm);
             }
         }
     }

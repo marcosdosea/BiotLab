@@ -5,7 +5,6 @@ namespace BiotLabWeb.Models
     public class InstituicaoViewModel
     {
         [Display(Name = "Código da Instituição")]
-        [Required(ErrorMessage = "O código da instituição é obrigatório")]
         [Key]
         public uint Id { get; set; }
 
@@ -16,24 +15,24 @@ namespace BiotLabWeb.Models
 
         [Display(Name = "CNPJ")]
         [Required(ErrorMessage = "O CNPJ é obrigatório")]
-        [RegularExpression(@"\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}", ErrorMessage = "Formato de CNPJ inválido")]
+        [RegularExpression(@"^\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2}$", ErrorMessage = "Formato de CNPJ inválido")]
         public string Cnpj { get; set; } = null!;
 
         [Display(Name = "CEP")]
         [Required(ErrorMessage = "O CEP é obrigatório")]
-        [RegularExpression(@"\d{5}-\d{3}", ErrorMessage = "Formato de CEP inválido")]
+        [RegularExpression(@"^\d{5}-?\d{3}$", ErrorMessage = "Formato de CEP inválido")]
         public string Cep { get; set; } = null!;
 
         [Display(Name = "Rua")]
-        [StringLength(50, ErrorMessage = "O nome da rua deve ter no máximo 50 caracteres")]
+        [StringLength(50, ErrorMessage = "A rua deve ter no máximo 50 caracteres")]
         public string? Rua { get; set; }
 
         [Display(Name = "Bairro")]
-        [StringLength(50, ErrorMessage = "O nome do bairro deve ter no máximo 50 caracteres")]
+        [StringLength(50, ErrorMessage = "O bairro deve ter no máximo 50 caracteres")]
         public string? Bairro { get; set; }
 
         [Display(Name = "Cidade")]
-        [StringLength(50, ErrorMessage = "O nome da cidade deve ter no máximo 50 caracteres")]
+        [StringLength(50, ErrorMessage = "A cidade deve ter no máximo 50 caracteres")]
         public string? Cidade { get; set; }
 
         [Display(Name = "Número")]
@@ -46,26 +45,22 @@ namespace BiotLabWeb.Models
 
         [Display(Name = "Estado")]
         [Required(ErrorMessage = "O estado é obrigatório")]
-        [StringLength(2, ErrorMessage = "O estado deve ser representado por 2 caracteres")]
+        [StringLength(2, MinimumLength = 2, ErrorMessage = "O estado deve ter 2 caracteres")]
         public string Estado { get; set; } = null!;
 
         [Display(Name = "Telefone 1")]
         [Required(ErrorMessage = "O telefone 1 é obrigatório")]
-        [Phone(ErrorMessage = "Formato de telefone inválido")]
+        [StringLength(15, ErrorMessage = "O telefone 1 deve ter no máximo 15 caracteres")]
         public string Telefone1 { get; set; } = null!;
 
         [Display(Name = "Telefone 2")]
-        [Phone(ErrorMessage = "Formato de telefone inválido")]
+        [StringLength(15, ErrorMessage = "O telefone 2 deve ter no máximo 15 caracteres")]
         public string? Telefone2 { get; set; }
 
         [Display(Name = "Email")]
         [Required(ErrorMessage = "O email é obrigatório")]
         [EmailAddress(ErrorMessage = "Formato de email inválido")]
+        [StringLength(50, ErrorMessage = "O email deve ter no máximo 50 caracteres")]
         public string Email { get; set; } = null!;
-        public string Cepa { get; set; } = null!;
-        public DateTime DataInicio { get; set; }
-        public DateTime DataFim { get; set; }
-
     }
-
 }

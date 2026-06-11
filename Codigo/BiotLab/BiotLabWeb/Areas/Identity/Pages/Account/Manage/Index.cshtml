@@ -1,28 +1,45 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "Perfil";
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
-<h3>@ViewData["Title"]</h3>
-<partial name="_StatusMessage" for="StatusMessage" />
-<div class="row">
-    <div class="col-md-6">
-        <form id="profile-form" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />
-                <label asp-for="Username" class="form-label"></label>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/>
-                <label asp-for="Input.PhoneNumber" class="form-label"></label>
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-            </div>
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
-        </form>
+<div class="max-w-2xl">
+    <div class="mb-6">
+        <h2 class="text-2xl font-bold text-slate-900">Perfil</h2>
+        <p class="mt-2 text-sm text-slate-600">
+            Atualize suas informações básicas de conta.
+        </p>
     </div>
+
+    <form id="profile-form" method="post" class="space-y-5">
+        <div asp-validation-summary="ModelOnly"
+             class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        </div>
+
+        <div>
+            <label class="mb-2 block text-sm font-medium text-slate-700">Nome de usuário</label>
+            <input asp-for="Username"
+                   class="w-full rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-sm text-slate-500"
+                   disabled />
+        </div>
+
+        <div>
+            <label asp-for="Input.PhoneNumber" class="mb-2 block text-sm font-medium text-slate-700">
+                Telefone
+            </label>
+            <input asp-for="Input.PhoneNumber"
+                   class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
+            <span asp-validation-for="Input.PhoneNumber" class="mt-1 block text-sm text-red-600"></span>
+        </div>
+
+        <button id="update-profile-button"
+                type="submit"
+                class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700">
+            Salvar alterações
+        </button>
+    </form>
 </div>
 
 @section Scripts {

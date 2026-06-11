@@ -13,8 +13,10 @@ namespace BiotLabWeb.Mapper
                 .ForMember(dest => dest.DataEntrada, opt => opt.MapFrom(src => src.IdEntradaNavigation.DataEntrada));
 
             CreateMap<EntradaanestesicoViewModel, Entradaanestesico>()
+                .ForMember(dest => dest.SubTotal, opt => opt.MapFrom(src => src.Quantidade * src.ValorUnitario))
                 .ForMember(dest => dest.IdAnestesicoNavigation, opt => opt.Ignore())
-                .ForMember(dest => dest.IdEntradaNavigation, opt => opt.Ignore());
+                .ForMember(dest => dest.IdEntradaNavigation, opt => opt.Ignore())
+                .ForMember(dest => dest.Usoanestesicos, opt => opt.Ignore());
         }
     }
 }

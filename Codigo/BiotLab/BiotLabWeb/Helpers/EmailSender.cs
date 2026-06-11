@@ -1,82 +1,46 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Net.Mail;
-using System.Net.Mime;
 
 namespace BiotLabWeb.Helpers
 {
     public class EmailSender : IEmailSender
     {
-        private readonly SmtpClient _client;
-        private readonly string _from;
-        private readonly string _webRootPath;
+        private readonly IConfiguration _configuration;
 
-        public EmailSender(IConfiguration configuration, IWebHostEnvironment environment)
+        public EmailSender(IConfiguration configuration)
         {
-            _from = configuration["Smtp:From"];
-            _webRootPath = environment.WebRootPath; // Obtém o caminho físico do wwwroot
-            _client = new SmtpClient
-            {
-                Host = configuration["Smtp:Host"],
-                Port = int.Parse(configuration["Smtp:Port"]),
-                Credentials = new NetworkCredential(configuration["Smtp:Username"], configuration["Smtp:Password"]),
-                EnableSsl = true
-            };
+            _configuration = configuration;
         }
 
-        public Task SendEmailAsync(string email, string subject, string htmlMessage)
+        public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            // Caminho físico para a imagem no servidor, dentro do wwwroot
-            //var imagePath = Path.Combine(_webRootPath, "img", "");
+            var host = _configuration["EmailSettings:Host"];
+            var port = int.Parse(_configuration["EmailSettings:Port"] ?? "2525");
+            var username = _configuration["EmailSettings:Username"];
+            var password = _configuration["EmailSettings:Password"];
+            var fromEmail = _configuration["EmailSettings:FromEmail"];
+            var fromName = _configuration["EmailSettings:FromName"];
 
-            var mailMessage = new MailMessage
+            using var client = new SmtpClient(host, port)
             {
-                From = new MailAddress(_from),
+                Credentials = new NetworkCredential(username, password),
+                EnableSsl = true,
+                UseDefaultCredentials = false
+            };
+
+            using var message = new MailMessage
+            {
+                From = new MailAddress(fromEmail!, fromName),
                 Subject = subject,
                 Body = htmlMessage,
                 IsBodyHtml = true
             };
-            mailMessage.To.Add(email);
 
-            // Cria o conteúdo HTML com a imagem embutida
-            var htmlWithHeaderAndFooter = $@"
-            <html>
-                <body>
-                    <div style='text-align: center; margin-bottom: 20px;'>
-                        <img src='cid:HeaderImage' alt='Househub' style='max-width: 30%; height: auto;'/>
-                    </div>
+            message.To.Add(email);
 
-                    <div style='margin-bottom: 20px; font-size: 14px'>
-                        {htmlMessage}
-                    </div>
-
-                    <div style='text-align: center; font-size: 14px; color: #888888; margin-top: 20px; width: 100%; padding: 20px 0; background-color: #f1f1f1;'>
-                        <p>&copy; 2024 - Househub - Todos os direitos reservados.</p>
-                    </div>
-                </body>
-            </html>";
-
-            // Cria a visualização alternativa com o HTML e a imagem inline
-            var altView = AlternateView.CreateAlternateViewFromString(htmlWithHeaderAndFooter, null, MediaTypeNames.Text.Html);
-            /*
-             
-            // Adiciona a imagem como um recurso inline
-            var inlineLogo = new LinkedResource(imagePath, MediaTypeNames.Image.Jpeg)
-            {
-                ContentId = "HeaderImage"
-            };
-            altView.LinkedResources.Add(inlineLogo);
-            */
-
-            // Adiciona a visualização alternativa (HTML com a imagem inline) ao email
-            mailMessage.AlternateViews.Add(altView);
-
-            return _client.SendMailAsync(mailMessage);
+            await client.SendMailAsync(message);
         }
     }
 }
-
-
-
-
-

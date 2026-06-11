@@ -1,39 +1,56 @@
 ﻿@model BiotLabWeb.Models.EntradumViewModel
 
 @{
-    ViewData["Title"] = "Detalhes do Entradum";
+    ViewData["Title"] = "Detalhes - Entrada";
 }
 
-<h1>Detalhes do Entradum</h1>
+<div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+    <div class="flex items-start gap-4">
+        <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-600/20">
+            <i data-lucide="file-input" class="h-7 w-7"></i>
+        </div>
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">BiotLab</p>
+            <h1 class="mt-1 text-3xl font-extrabold tracking-tight text-slate-950">Detalhes de Entrada</h1>
+            <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Confira os dados completos deste registro antes de realizar alterações.</p>
+        </div>
+    </div>
+    
+</div>
 
-<div>
-    <h4>Entradum</h4>
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.NumeroNotaFiscal)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.NumeroNotaFiscal)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DataEntrada)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DataEntrada.ToShortDateString())
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IdFornecedor)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Fornecedor.Nome)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IdInstituicao)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Instituicao.Nome)
-        </dd>
+<div class="rounded-3xl border border-slate-200 bg-white shadow-sm">
+    <div class="border-b border-slate-200 p-6">
+        <h2 class="text-lg font-bold text-slate-950">Informações do registro</h2>
+        <p class="mt-1 text-sm text-slate-500">Dados apresentados conforme o cadastro atual.</p>
+    </div>
+    <dl class="grid grid-cols-1 gap-4 p-6 md:grid-cols-2">
+        <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+    <dt class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Código</dt>
+    <dd class="mt-2 break-words text-sm font-semibold text-slate-800">@Model.Id</dd>
+</div>
+<div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+    <dt class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Nota fiscal</dt>
+    <dd class="mt-2 break-words text-sm font-semibold text-slate-800">@Model.NumeroNotaFiscal</dd>
+</div>
+<div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+    <dt class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Data de entrada</dt>
+    <dd class="mt-2 break-words text-sm font-semibold text-slate-800">@(Model.DataEntrada.ToString("dd/MM/yyyy") ?? "—")</dd>
+</div>
+<div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+    <dt class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Fornecedor</dt>
+    <dd class="mt-2 break-words text-sm font-semibold text-slate-800">@(Model.NomeFornecedor ?? "—")</dd>
+</div>
+<div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+    <dt class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Instituição</dt>
+    <dd class="mt-2 break-words text-sm font-semibold text-slate-800">@(Model.NomeInstituicao ?? "—")</dd>
+</div>
     </dl>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
-    <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+    <div class="flex flex-col-reverse gap-3 border-t border-slate-200 p-6 sm:flex-row sm:justify-end">
+        <a asp-action="Index" class="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50">
+            <i data-lucide="arrow-left" class="h-4 w-4"></i> Voltar
+        </a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700">
+            <i data-lucide="pencil" class="h-4 w-4"></i> Editar
+        </a>
+    </div>
 </div>

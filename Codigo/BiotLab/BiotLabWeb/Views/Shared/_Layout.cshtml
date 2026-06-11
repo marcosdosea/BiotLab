@@ -1,69 +1,194 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@using BiotLabWeb.Areas.Identity.Data
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<UsuarioIdentity> UserManager
+
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - BiotLabWeb</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>@ViewData["Title"] - BiotLab</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/BiotLabWeb.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BiotLabWeb</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">                   
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Bioterio" asp-action="Index">Bioterio</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Harem" asp-action="Index">Harem</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Gaiola" asp-action="Index">Gaiola</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Experimento" asp-action="Index">Experimento</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Obituario" asp-action="Index">Obituario</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Pesquisador" asp-action="Index">Pesquisador</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Instituicao" asp-action="Index">Instituicao</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <partial name="_LoginPartial"/>
-                        </li>
-                    </ul>
+<body class="min-h-screen bg-slate-100 text-slate-900 antialiased">
+    @{
+        UsuarioIdentity? usuarioLogado = null;
+        string nomeUsuario = "Usuário";
+        string emailUsuario = "";
+        string perfilUsuario = "";
+        string inicialUsuario = "U";
+
+        if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            usuarioLogado = await UserManager.GetUserAsync(User);
+
+            if (usuarioLogado != null)
+            {
+                nomeUsuario = string.IsNullOrWhiteSpace(usuarioLogado.NomeCompleto)
+                    ? (usuarioLogado.Email ?? "Usuário")
+                    : usuarioLogado.NomeCompleto;
+
+                emailUsuario = usuarioLogado.Email ?? "";
+
+                if (User.IsInRole("Administrador"))
+                {
+                    perfilUsuario = "Administrador";
+                }
+                else if (User.IsInRole("Estudante"))
+                {
+                    perfilUsuario = "Estudante";
+                }
+
+                inicialUsuario = nomeUsuario.Substring(0, 1).ToUpper();
+            }
+        }
+    }
+
+    @if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        <div class="flex min-h-screen">
+            <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 flex w-80 -translate-x-full flex-col border-r border-slate-200 bg-white/95 shadow-2xl shadow-slate-900/10 backdrop-blur transition-transform duration-300 lg:static lg:translate-x-0 lg:shadow-none">
+                <div class="flex h-20 items-center justify-between border-b border-slate-200 px-6">
+                    <a asp-controller="Home" asp-action="Index" class="flex items-center gap-3">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-600/25">
+                            <i data-lucide="flask-conical" class="h-6 w-6"></i>
+                        </span>
+                        <span>
+                            <span class="block text-xl font-black tracking-tight text-slate-950">BiotLab</span>
+                            <span class="block text-xs font-semibold uppercase tracking-[0.18em] text-blue-600">Gestão de biotérios</span>
+                        </span>
+                    </a>
+                    <button type="button" data-sidebar-close class="rounded-xl p-2 text-slate-500 hover:bg-slate-100 lg:hidden" aria-label="Fechar menu">
+                        <i data-lucide="x" class="h-5 w-5"></i>
+                    </button>
                 </div>
+
+                <nav class="flex-1 space-y-7 overflow-y-auto px-4 py-6 text-sm">
+                    <div>
+                        <p class="px-3 text-xs font-bold uppercase tracking-[0.18em] text-slate-400">Principal</p>
+                        <div class="mt-3 space-y-1">
+                            <a asp-controller="Home" asp-action="Index" class="nav-link flex items-center gap-3 rounded-2xl px-3 py-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700">
+                                <i data-lucide="layout-dashboard" class="h-5 w-5"></i> Dashboard
+                            </a>
+                        </div>
+                    </div>
+
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <div>
+                            <p class="px-3 text-xs font-bold uppercase tracking-[0.18em] text-slate-400">Administração</p>
+                            <div class="mt-3 space-y-1">
+                                <a asp-controller="Instituicao" asp-action="Index" class="nav-link flex items-center gap-3 rounded-2xl px-3 py-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"><i data-lucide="building-2" class="h-5 w-5"></i> Instituições</a>
+                                <a asp-controller="Bioterio" asp-action="Index" class="nav-link flex items-center gap-3 rounded-2xl px-3 py-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"><i data-lucide="warehouse" class="h-5 w-5"></i> Biotérios</a>
+                                <a asp-controller="Pesquisador" asp-action="Index" class="nav-link flex items-center gap-3 rounded-2xl px-3 py-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"><i data-lucide="user-round-search" class="h-5 w-5"></i> Pesquisadores</a>
+                                <a asp-controller="Fornecedor" asp-action="Index" class="nav-link flex items-center gap-3 rounded-2xl px-3 py-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"><i data-lucide="truck" class="h-5 w-5"></i> Fornecedores</a>
+                                <a asp-controller="Entradum" asp-action="Index" class="nav-link flex items-center gap-3 rounded-2xl px-3 py-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"><i data-lucide="file-input" class="h-5 w-5"></i> Entradas</a>
+                                <a asp-controller="Entradaanestesico" asp-action="Index" class="nav-link flex items-center gap-3 rounded-2xl px-3 py-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"><i data-lucide="package-plus" class="h-5 w-5"></i> Entrada anestésico</a>
+                                <a asp-controller="Usoanestesico" asp-action="Index" class="nav-link flex items-center gap-3 rounded-2xl px-3 py-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"><i data-lucide="syringe" class="h-5 w-5"></i> Uso anestésico</a>
+                                <a asp-controller="AdminUsuarios" asp-action="Index" class="nav-link flex items-center gap-3 rounded-2xl px-3 py-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"><i data-lucide="users" class="h-5 w-5"></i> Usuários</a>
+                            </div>
+                        </div>
+                    }
+
+                    @if (User.IsInRole("Administrador") || User.IsInRole("Estudante"))
+                    {
+                        <div>
+                            <p class="px-3 text-xs font-bold uppercase tracking-[0.18em] text-slate-400">Operação</p>
+                            <div class="mt-3 space-y-1">
+                                <a asp-controller="Experimento" asp-action="Index" class="nav-link flex items-center gap-3 rounded-2xl px-3 py-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"><i data-lucide="microscope" class="h-5 w-5"></i> Experimentos</a>
+                                <a asp-controller="Gaiola" asp-action="Index" class="nav-link flex items-center gap-3 rounded-2xl px-3 py-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"><i data-lucide="box" class="h-5 w-5"></i> Gaiolas</a>
+                                <a asp-controller="Harem" asp-action="Index" class="nav-link flex items-center gap-3 rounded-2xl px-3 py-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"><i data-lucide="heart-pulse" class="h-5 w-5"></i> Haréns</a>
+                                <a asp-controller="Gaiolaharem" asp-action="Index" class="nav-link flex items-center gap-3 rounded-2xl px-3 py-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"><i data-lucide="git-branch" class="h-5 w-5"></i> Gaiola-Harém</a>
+                                <a asp-controller="Anestesico" asp-action="Index" class="nav-link flex items-center gap-3 rounded-2xl px-3 py-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"><i data-lucide="flask-conical" class="h-5 w-5"></i> Anestésicos</a>
+                                <a asp-controller="Obituario" asp-action="Index" class="nav-link flex items-center gap-3 rounded-2xl px-3 py-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"><i data-lucide="clipboard-x" class="h-5 w-5"></i> Obituário</a>
+                            </div>
+                        </div>
+                    }
+                </nav>
+            </aside>
+
+            <div id="sidebarBackdrop" data-sidebar-close class="fixed inset-0 z-30 hidden bg-slate-950/40 backdrop-blur-sm lg:hidden"></div>
+
+            <div class="flex min-w-0 flex-1 flex-col">
+                <header class="sticky top-0 z-20 border-b border-slate-200 bg-white/90 backdrop-blur">
+                    <div class="flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
+                        <div class="flex items-center gap-3">
+                            <button type="button" data-sidebar-open class="rounded-2xl border border-slate-200 bg-white p-3 text-slate-700 shadow-sm hover:bg-slate-50 lg:hidden" aria-label="Abrir menu">
+                                <i data-lucide="menu" class="h-5 w-5"></i>
+                            </button>
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-[0.18em] text-blue-600">Área autenticada</p>
+                                <p class="text-sm text-slate-500">@DateTime.Now.ToString("dd/MM/yyyy")</p>
+                            </div>
+                        </div>
+
+                        <div class="relative" id="userMenuWrapper">
+                            <button id="userMenuButton" type="button" class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm transition hover:bg-slate-50">
+                                <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-600 text-sm font-black text-white">@inicialUsuario</span>
+                                <span class="hidden text-left sm:block">
+                                    <span class="block text-sm font-bold leading-5 text-slate-950">@nomeUsuario</span>
+                                    <span class="block text-xs font-medium text-slate-500">@perfilUsuario</span>
+                                </span>
+                                <i data-lucide="chevron-down" class="h-4 w-4 text-slate-400"></i>
+                            </button>
+
+                            <div id="userMenuDropdown" class="absolute right-0 z-50 mt-3 hidden w-80 overflow-hidden rounded-3xl border border-slate-200 bg-white text-slate-900 shadow-2xl shadow-slate-900/10">
+                                <div class="border-b border-slate-200 p-5">
+                                    <div class="flex items-center gap-4">
+                                        <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600 text-lg font-black text-white">@inicialUsuario</span>
+                                        <div class="min-w-0">
+                                            <p class="truncate text-base font-extrabold text-slate-950">@nomeUsuario</p>
+                                            <p class="truncate text-sm text-slate-500">@emailUsuario</p>
+                                            <span class="mt-2 inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">@perfilUsuario</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-2">
+                                    <a asp-area="Identity" asp-page="/Account/Manage/Index" class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"><i data-lucide="user-circle-2" class="h-5 w-5"></i> Minha conta</a>
+                                    <a asp-area="Identity" asp-page="/Account/Manage/Email" class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"><i data-lucide="mail" class="h-5 w-5"></i> Meus dados</a>
+                                    <a asp-area="Identity" asp-page="/Account/Manage/ChangePassword" class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"><i data-lucide="key-round" class="h-5 w-5"></i> Alterar senha</a>
+                                    @if (User.IsInRole("Administrador"))
+                                    {
+                                        <a asp-controller="AdminUsuarios" asp-action="NovoAdministrador" class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"><i data-lucide="shield-plus" class="h-5 w-5"></i> Convidar administrador</a>
+                                    }
+                                </div>
+                                <div class="border-t border-slate-200 p-2">
+                                    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl='@Url.Page("/Account/Login", new { area = "Identity" })' method="post">
+                                        <button type="submit" class="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-red-600 transition hover:bg-red-50"><i data-lucide="log-out" class="h-5 w-5"></i> Sair</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <main role="main" class="flex-1 p-4 sm:p-6 lg:p-8">
+                    <div class="mx-auto max-w-7xl">
+                        @RenderBody()
+                    </div>
+                </main>
+
+                <footer class="border-t border-slate-200 bg-white px-6 py-5 text-center text-sm text-slate-500">
+                    &copy; @DateTime.Now.Year - BiotLab. Sistema de apoio à gestão de biotérios acadêmicos.
+                </footer>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+        </div>
+    }
+    else
+    {
+        <main role="main">
             @RenderBody()
         </main>
-    </div>
+    }
 
-    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

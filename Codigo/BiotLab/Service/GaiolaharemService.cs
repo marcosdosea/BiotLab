@@ -1,8 +1,6 @@
 ﻿using Core;
 using Core.Service;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Service
 {
@@ -17,21 +15,19 @@ namespace Service
 
         public void Create(Gaiolaharem gaiolaharem)
         {
-            // Verifica se a entidade já está sendo rastreada pelo contexto
-            if (context.Entry(gaiolaharem).State == EntityState.Detached)
+            var existente = context.Gaiolaharems.Find(gaiolaharem.IdGaiola, gaiolaharem.IdHarem);
+            if (existente != null)
             {
-                context.Gaiolaharems.Add(gaiolaharem);
+                throw new InvalidOperationException("Já existe um vínculo entre esta gaiola e este harém.");
             }
-            else
-            {
-                context.Entry(gaiolaharem).State = EntityState.Added;
-            }
+
+            context.Gaiolaharems.Add(gaiolaharem);
             context.SaveChanges();
         }
 
         public void Delete(uint idGaiola, uint idHarem)
         {
-            var gaiolaharem = Get(idGaiola, idHarem);
+            var gaiolaharem = context.Gaiolaharems.Find(idGaiola, idHarem);
             if (gaiolaharem != null)
             {
                 context.Gaiolaharems.Remove(gaiolaharem);
@@ -55,21 +51,23 @@ namespace Service
                 .Include(gh => gh.IdHaremNavigation)
                 .Include(gh => gh.IdPesquisadorNavigation)
                 .AsNoTracking()
+                .OrderBy(gh => gh.IdGaiolaNavigation.CodigoInterno)
+                .ThenBy(gh => gh.IdHaremNavigation.CodigoInterno)
                 .ToList();
         }
 
         public void Update(Gaiolaharem gaiolaharem)
         {
-            // Verifica se a entidade está sendo rastreada pelo contexto
-            if (context.Entry(gaiolaharem).State == EntityState.Detached)
+            var existente = context.Gaiolaharems.Find(gaiolaharem.IdGaiola, gaiolaharem.IdHarem);
+
+            if (existente == null)
             {
-                context.Gaiolaharems.Attach(gaiolaharem);
-                context.Entry(gaiolaharem).State = EntityState.Modified;
+                throw new InvalidOperationException("Vínculo gaiola-harém não encontrado para atualização.");
             }
-            else
-            {
-                context.Update(gaiolaharem);
-            }
+
+            existente.DataPovoamento = gaiolaharem.DataPovoamento;
+            existente.IdPesquisador = gaiolaharem.IdPesquisador;
+
             context.SaveChanges();
         }
     }

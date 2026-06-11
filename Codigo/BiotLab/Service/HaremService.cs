@@ -15,7 +15,7 @@ namespace Service
 
         public uint Create(Harem harem)
         {
-            context.Add(harem);
+            context.Harems.Add(harem);
             context.SaveChanges();
             return harem.Id;
         }
@@ -25,24 +25,33 @@ namespace Service
             var harem = context.Harems.Find(id);
             if (harem != null)
             {
-                context.Remove(harem);
+                context.Harems.Remove(harem);
                 context.SaveChanges();
             }
         }
 
-        public Harem Get(uint id)
+        public Harem? Get(uint id)
         {
             return context.Harems.Find(id);
         }
 
         public IEnumerable<Harem> GetAll()
         {
-            return context.Harems.AsNoTracking();
+            return context.Harems
+                .AsNoTracking()
+                .ToList();
         }
 
         public void Update(Harem harem)
         {
-            context.Update(harem);
+            var haremExistente = context.Harems.Find(harem.Id);
+
+            if (haremExistente == null)
+            {
+                throw new InvalidOperationException("Harém não encontrado para atualização.");
+            }
+
+            context.Entry(haremExistente).CurrentValues.SetValues(harem);
             context.SaveChanges();
         }
     }

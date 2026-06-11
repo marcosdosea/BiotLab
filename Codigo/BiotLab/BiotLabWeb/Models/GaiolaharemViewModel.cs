@@ -5,12 +5,12 @@ namespace BiotLabWeb.Models
 {
     public class GaiolaharemViewModel
     {
-        [Display(Name = "ID da Gaiola")]
-        [Required(ErrorMessage = "O ID da gaiola é obrigatório")]
+        [Display(Name = "Gaiola")]
+        [Required(ErrorMessage = "A gaiola é obrigatória")]
         public uint IdGaiola { get; set; }
 
-        [Display(Name = "ID do Harem")]
-        [Required(ErrorMessage = "O ID do harem é obrigatório")]
+        [Display(Name = "Harém")]
+        [Required(ErrorMessage = "O harém é obrigatório")]
         public uint IdHarem { get; set; }
 
         [Display(Name = "Data de Povoamento")]
@@ -18,24 +18,23 @@ namespace BiotLabWeb.Models
         [DataType(DataType.Date)]
         public DateTime DataPovoamento { get; set; }
 
-        [Display(Name = "ID do Pesquisador")]
-        [Required(ErrorMessage = "O ID do pesquisador é obrigatório")]
+        [Display(Name = "Pesquisador")]
+        [Required(ErrorMessage = "O pesquisador é obrigatório")]
         public uint IdPesquisador { get; set; }
 
-        // Propriedades adicionais para exibição
-        [Display(Name = "Nome da Gaiola")]
+        [Display(Name = "Gaiola")]
         public string? NomeGaiola { get; set; }
 
-        [Display(Name = "Nome do Harem")]
+        [Display(Name = "Harém")]
         public string? NomeHarem { get; set; }
 
-        [Display(Name = "Nome do Pesquisador")]
+        [Display(Name = "Pesquisador")]
         public string? NomePesquisador { get; set; }
 
         [Display(Name = "Código Interno da Gaiola")]
         public string? CodigoInternoGaiola { get; set; }
 
-        [Display(Name = "Código Interno do Harem")]
+        [Display(Name = "Código Interno do Harém")]
         public string? CodigoInternoHarem { get; set; }
     }
 }

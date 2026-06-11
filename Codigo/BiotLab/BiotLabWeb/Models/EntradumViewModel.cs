@@ -5,31 +5,32 @@ namespace BiotLabWeb.Models
 {
     public class EntradumViewModel
     {
-        [Display(Name = "Código do Registro")]
-        [Required(ErrorMessage = "O código do registro é obrigatório")]
+        [Display(Name = "Código da Entrada")]
         [Key]
         public uint Id { get; set; }
 
         [Display(Name = "Número da Nota Fiscal")]
-        [Required(ErrorMessage = "O número da nota fiscal é obrigatório")]
-        [StringLength(50, ErrorMessage = "O número deve ter no máximo 50 caracteres")]
-        public string NumeroNotaFiscal { get; set; } = string.Empty; // Número da Nota Fiscal
+        [Required(ErrorMessage = "O número da nota fiscal é obrigatório.")]
+        [StringLength(50, ErrorMessage = "O número da nota fiscal deve ter no máximo 50 caracteres.")]
+        public string NumeroNotaFiscal { get; set; } = string.Empty;
 
-        [Display(Name = "Data de Entrada")]
-        [Required(ErrorMessage = "A data de entrada é obrigatória")]
-        public DateTime DataEntrada { get; set; } // Data de entrada
+        [Display(Name = "Data da Entrada")]
+        [Required(ErrorMessage = "A data da entrada é obrigatória.")]
+        [DataType(DataType.Date)]
+        public DateTime DataEntrada { get; set; }
 
-        [Display(Name = "Código do Fornecedor")]
-        [Required(ErrorMessage = "O código do fornecedor é obrigatório")]
-        public uint IdFornecedor { get; set; } // Identificador do fornecedor
+        [Display(Name = "Fornecedor")]
+        [Required(ErrorMessage = "O fornecedor é obrigatório.")]
+        public uint IdFornecedor { get; set; }
 
-        public FornecedorViewModel Fornecedor { get; set; } = new FornecedorViewModel(); // Representação do fornecedor
+        [Display(Name = "Instituição")]
+        [Required(ErrorMessage = "A instituição é obrigatória.")]
+        public uint IdInstituicao { get; set; }
 
-        [Display(Name = "Código da Instituição")]
-        [Required(ErrorMessage = "O código da instituição é obrigatório")]
-        public uint IdInstituicao { get; set; } // Identificador da instituição
+        [Display(Name = "Fornecedor")]
+        public string? NomeFornecedor { get; set; }
 
-        public InstituicaoViewModel Instituicao { get; set; } = new InstituicaoViewModel(); // Representação da instituição
-
+        [Display(Name = "Instituição")]
+        public string? NomeInstituicao { get; set; }
     }
 }

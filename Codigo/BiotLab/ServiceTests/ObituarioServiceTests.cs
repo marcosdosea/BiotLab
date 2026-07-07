@@ -32,16 +32,23 @@ namespace Service.Tests
                 new()
                 {
                     Id = 1,
-                    Data = DateTime.Now,
+                    Data = new DateTime(2025, 8, 21, 9, 0, 0),
                     IdGaiola = 101,
                     IdPesquisador = 202
                 },
                 new()
                 {
                     Id = 2,
-                    Data = DateTime.Now.AddDays(-1),
+                    Data = new DateTime(2025, 9, 20, 18, 30, 0),
                     IdGaiola = 102,
                     IdPesquisador = 203
+                },
+                new()
+                {
+                    Id = 3,
+                    Data = new DateTime(2025, 9, 21),
+                    IdGaiola = 103,
+                    IdPesquisador = 204
                 }
             };
 
@@ -65,17 +72,17 @@ namespace Service.Tests
             var novoObituario = new Obituario
             {
                 Data = DateTime.Now.AddDays(-2),
-                IdGaiola = 103,
-                IdPesquisador = 204
+                IdGaiola = 104,
+                IdPesquisador = 205
             };
 
             var createdId = obituarioService.Create(novoObituario);
 
             // Verificando a criação
-            Assert.AreEqual(3, obituarioService.GetAll().Count());
+            Assert.AreEqual(4, obituarioService.GetAll().Count());
             var obituario = obituarioService.Buscar(createdId);
             Assert.IsNotNull(obituario);
-            Assert.AreEqual(103u, obituario.IdGaiola); // Especificando uint
+            Assert.AreEqual(104u, obituario.IdGaiola); // Especificando uint
         }
 
         [TestMethod]
@@ -85,7 +92,7 @@ namespace Service.Tests
             obituarioService.Delete(1);
 
             // Verificando se foi removido
-            Assert.AreEqual(1, obituarioService.GetAll().Count());
+            Assert.AreEqual(2, obituarioService.GetAll().Count());
             var obituario = obituarioService.Buscar(1);
             Assert.IsNull(obituario);
         }
@@ -108,9 +115,22 @@ namespace Service.Tests
             // Verificando se a lista contém todos os obituários esperados
             Assert.IsInstanceOfType(listaObituarios, typeof(IEnumerable<Obituario>));
             Assert.IsNotNull(listaObituarios);
-            Assert.AreEqual(2, listaObituarios.Count());
-            Assert.AreEqual(1u, listaObituarios.First().Id); // Especificando uint
-            Assert.AreEqual(101u, listaObituarios.First().IdGaiola); // Especificando uint
+            Assert.AreEqual(3, listaObituarios.Count());
+            Assert.AreEqual(3u, listaObituarios.First().Id); // Especificando uint
+            Assert.AreEqual(103u, listaObituarios.First().IdGaiola); // Especificando uint
+        }
+
+        [TestMethod]
+        public void GetByPeriodoTest_IncluiDataInicialEFinal()
+        {
+            var listaObituarios = obituarioService
+                .GetByPeriodo(new DateTime(2025, 8, 21), new DateTime(2025, 9, 20))
+                .ToList();
+
+            Assert.AreEqual(2, listaObituarios.Count);
+            Assert.IsTrue(listaObituarios.Any(x => x.Id == 1));
+            Assert.IsTrue(listaObituarios.Any(x => x.Id == 2));
+            Assert.IsFalse(listaObituarios.Any(x => x.Id == 3));
         }
     }
 }

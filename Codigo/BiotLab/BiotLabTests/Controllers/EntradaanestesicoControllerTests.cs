@@ -24,14 +24,11 @@ namespace BiotLabWeb.Controllers.Tests
         public void Initialize()
         {
             // Arrange
-            IMapper mapper = new MapperConfiguration(cfg =>
-                cfg.AddProfile(new EntradaanestesicoProfile())).CreateMapper();
             mockService = new Mock<IEntradaanestesicoService>();
             mockAnestesicoService = new Mock<IAnestesicosService>();
             mockEntradumService = new Mock<IEntradumService>();
 
-            var config = new MapperConfiguration(cfg => cfg.AddProfile(new EntradaanestesicoProfile()));
-            mapper = config.CreateMapper();
+            mapper = MapperTestFactory.CreateMapper(new EntradaanestesicoProfile());
 
             // Configurando os serviços mock
             mockService.Setup(service => service.GetAll())
@@ -47,8 +44,12 @@ namespace BiotLabWeb.Controllers.Tests
 
             mockAnestesicoService.Setup(service => service.GetAll())
                 .Returns(GetTestAnestesicos());
+            mockAnestesicoService.Setup(service => service.Buscar(3))
+                .Returns(GetTestAnestesicos().First(a => a.Id == 3));
             mockEntradumService.Setup(service => service.GetAll())
                 .Returns(GetTestEntradas());
+            mockEntradumService.Setup(service => service.Get(2))
+                .Returns(GetTestEntradas().First(e => e.Id == 2));
 
             controller = new EntradaanestesicoController(
                 mockService.Object,

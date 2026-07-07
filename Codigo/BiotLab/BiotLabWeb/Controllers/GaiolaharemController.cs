@@ -5,10 +5,11 @@ using Core.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
 namespace BiotLabWeb.Controllers
 {
-    [Authorize(Roles = "Administrador,Estudante")]
+    [Authorize(Roles = "Administrador,Estudante,Aluno")]
     public class GaiolaharemController : Controller
     {
         private readonly IGaiolaharemService gaiolaharemService;
@@ -31,6 +32,49 @@ namespace BiotLabWeb.Controllers
             this.mapper = mapper;
         }
 
+        private bool DeveVincularPesquisadorLogado()
+        {
+            return User?.Identity?.IsAuthenticated == true && !User.IsInRole("Administrador");
+        }
+
+        private Pesquisador? ObterPesquisadorDoUsuarioLogado()
+        {
+            var emailUsuario = User.FindFirstValue(ClaimTypes.Email) ?? User.Identity?.Name;
+            if (string.IsNullOrWhiteSpace(emailUsuario))
+            {
+                return null;
+            }
+
+            return pesquisadorService.GetAll()
+                .FirstOrDefault(p => string.Equals(p.Email, emailUsuario, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private Pesquisador? VincularPesquisadorLogado(GaiolaharemViewModel gaiolaharem)
+        {
+            ViewBag.PesquisadorBloqueado = false;
+
+            if (!DeveVincularPesquisadorLogado())
+            {
+                return null;
+            }
+
+            ViewBag.PesquisadorBloqueado = true;
+
+            var pesquisador = ObterPesquisadorDoUsuarioLogado();
+            if (pesquisador == null)
+            {
+                ViewBag.PesquisadorLogadoNome = "Pesquisador não encontrado para o usuário logado";
+                return null;
+            }
+
+            gaiolaharem.IdPesquisador = pesquisador.Id;
+            gaiolaharem.NomePesquisador = pesquisador.Nome;
+            ViewBag.PesquisadorLogadoNome = pesquisador.Nome;
+            ModelState.Remove(nameof(gaiolaharem.IdPesquisador));
+
+            return pesquisador;
+        }
+
         public ActionResult Index()
         {
             var gaiolaharems = gaiolaharemService.GetAll();
@@ -50,25 +94,35 @@ namespace BiotLabWeb.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.Gaiolas = GetGaiolaSelectList();
-            ViewBag.Harems = GetHaremSelectList();
-            ViewBag.Pesquisadores = GetPesquisadorSelectList();
-
-            return View(new GaiolaharemViewModel
+            var vm = new GaiolaharemViewModel
             {
                 DataPovoamento = DateTime.Today
-            });
+            };
+
+            VincularPesquisadorLogado(vm);
+            ViewBag.Gaiolas = GetGaiolaSelectList();
+            ViewBag.Harems = GetHaremSelectList();
+            ViewBag.Pesquisadores = GetPesquisadorSelectList(vm.IdPesquisador);
+
+            return View(vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(GaiolaharemViewModel gaiolaharem)
         {
+            var pesquisadorLogado = VincularPesquisadorLogado(gaiolaharem);
+
+            if (DeveVincularPesquisadorLogado() && pesquisadorLogado == null)
+            {
+                ModelState.AddModelError(nameof(gaiolaharem.IdPesquisador), "Seu usuário não está vinculado a um pesquisador.");
+            }
+
             if (!ModelState.IsValid)
             {
                 ViewBag.Gaiolas = GetGaiolaSelectList();
                 ViewBag.Harems = GetHaremSelectList();
-                ViewBag.Pesquisadores = GetPesquisadorSelectList();
+                ViewBag.Pesquisadores = GetPesquisadorSelectList(gaiolaharem.IdPesquisador);
                 return View(gaiolaharem);
             }
 
@@ -79,7 +133,7 @@ namespace BiotLabWeb.Controllers
 
             if (haremService.Get(gaiolaharem.IdHarem) == null)
             {
-                ModelState.AddModelError(nameof(gaiolaharem.IdHarem), "O harÃ©m selecionado nÃ£o existe.");
+                ModelState.AddModelError(nameof(gaiolaharem.IdHarem), "O berçário selecionado não existe.");
             }
 
             if (pesquisadorService.Buscar(gaiolaharem.IdPesquisador) == null)
@@ -91,7 +145,7 @@ namespace BiotLabWeb.Controllers
             {
                 ViewBag.Gaiolas = GetGaiolaSelectList();
                 ViewBag.Harems = GetHaremSelectList();
-                ViewBag.Pesquisadores = GetPesquisadorSelectList();
+                ViewBag.Pesquisadores = GetPesquisadorSelectList(gaiolaharem.IdPesquisador);
                 return View(gaiolaharem);
             }
 
@@ -106,7 +160,7 @@ namespace BiotLabWeb.Controllers
                 ModelState.AddModelError(string.Empty, $"NÃ£o foi possÃ­vel salvar o vÃ­nculo. {ex.InnerException?.Message ?? ex.Message}");
                 ViewBag.Gaiolas = GetGaiolaSelectList();
                 ViewBag.Harems = GetHaremSelectList();
-                ViewBag.Pesquisadores = GetPesquisadorSelectList();
+                ViewBag.Pesquisadores = GetPesquisadorSelectList(gaiolaharem.IdPesquisador);
                 return View(gaiolaharem);
             }
         }
@@ -118,6 +172,7 @@ namespace BiotLabWeb.Controllers
                 return NotFound();
 
             var vm = mapper.Map<GaiolaharemViewModel>(gaiolaharem);
+            VincularPesquisadorLogado(vm);
             ViewBag.Gaiolas = GetGaiolaSelectList();
             ViewBag.Harems = GetHaremSelectList();
             ViewBag.Pesquisadores = GetPesquisadorSelectList(vm.IdPesquisador);
@@ -128,6 +183,8 @@ namespace BiotLabWeb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(uint idGaiola, uint idHarem, GaiolaharemViewModel gaiolaharem)
         {
+            var pesquisadorLogado = VincularPesquisadorLogado(gaiolaharem);
+
             if (idGaiola != gaiolaharem.IdGaiola || idHarem != gaiolaharem.IdHarem)
             {
                 return BadRequest();
@@ -145,6 +202,11 @@ namespace BiotLabWeb.Controllers
             if (atual == null)
             {
                 return NotFound();
+            }
+
+            if (DeveVincularPesquisadorLogado() && pesquisadorLogado == null)
+            {
+                ModelState.AddModelError(nameof(gaiolaharem.IdPesquisador), "Seu usuário não está vinculado a um pesquisador.");
             }
 
             if (pesquisadorService.Buscar(gaiolaharem.IdPesquisador) == null)
@@ -204,7 +266,7 @@ namespace BiotLabWeb.Controllers
                 }
 
                 var vm = mapper.Map<GaiolaharemViewModel>(existente);
-                ModelState.AddModelError(string.Empty, $"Não foi possível excluir o vínculo gaiola-harém. {ex.InnerException?.Message ?? ex.Message}");
+                ModelState.AddModelError(string.Empty, $"Não foi possível excluir o vínculo gaiola-berçário. {ex.InnerException?.Message ?? ex.Message}");
                 return View("Delete", vm);
             }
         }

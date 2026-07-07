@@ -162,8 +162,9 @@ namespace BiotLabWeb.Controllers
         }
 
         [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(uint id, InstituicaoViewModel instituicao)
+        public ActionResult DeleteConfirmed(uint id)
         {
             try
             {
@@ -179,6 +180,7 @@ namespace BiotLabWeb.Controllers
                 }
 
                 var vm = mapper.Map<InstituicaoViewModel>(existente);
+                ModelState.Clear();
                 ModelState.AddModelError(string.Empty, $"Não foi possível excluir a instituição. {ex.InnerException?.Message ?? ex.Message}");
                 return View(vm);
             }

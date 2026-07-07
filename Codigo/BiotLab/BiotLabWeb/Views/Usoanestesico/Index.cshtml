@@ -61,7 +61,7 @@
 <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Anestésico</th>
 <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Quantidade</th>
 <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Número de animais</th>
-                        <th class="px-6 py-4 text-right text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Ações</th>
+                        <th class="min-w-[21rem] px-6 py-4 text-right text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Ações</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 bg-white">
@@ -75,7 +75,7 @@
 <td class="px-6 py-4 text-sm text-slate-700">@item.Quantidade.ToString("N2")</td>
 <td class="px-6 py-4 text-sm text-slate-700">@item.NumeroAnimais</td>
                             <td class="px-6 py-4 text-right text-sm font-semibold">
-                                <div class="flex flex-wrap justify-end gap-2">
+                                <div class="flex flex-nowrap justify-end gap-2 whitespace-nowrap">
                                     <a asp-action="Details" asp-route-id="@item.Id" class="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-700 transition hover:border-blue-200 hover:text-blue-700">
                                         <i data-lucide="eye" class="h-4 w-4"></i> Detalhes
                                     </a>

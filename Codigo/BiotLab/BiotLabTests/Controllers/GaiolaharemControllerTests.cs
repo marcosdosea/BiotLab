@@ -26,7 +26,7 @@ namespace BiotLabWeb.Controllers.Tests
         public void Initialize()
         {
             // Configuração do AutoMapper
-            var config = new MapperConfiguration(cfg =>
+            var config = MapperTestFactory.CreateConfiguration(cfg =>
             {
                 cfg.CreateMap<Gaiolaharem, GaiolaharemViewModel>()
                     .ForMember(dest => dest.CodigoInternoGaiola, opt => opt.MapFrom(src => src.IdGaiolaNavigation.CodigoInterno))
@@ -56,10 +56,18 @@ namespace BiotLabWeb.Controllers.Tests
 
             mockGaiolaService.Setup(service => service.GetAll())
                 .Returns(GetTestGaiolas());
+            mockGaiolaService.Setup(service => service.Get(3))
+                .Returns(new Gaiola { Id = 3, CodigoInterno = "Gaiola003" });
             mockHaremService.Setup(service => service.GetAll())
                 .Returns(GetTestHarems());
+            mockHaremService.Setup(service => service.Get(3))
+                .Returns(new Harem { Id = 3, CodigoInterno = "Harem003" });
             mockPesquisadorService.Setup(service => service.GetAll())
                 .Returns(GetTestPesquisadores());
+            mockPesquisadorService.Setup(service => service.Buscar(1))
+                .Returns(GetTestPesquisadores().First(p => p.Id == 1));
+            mockPesquisadorService.Setup(service => service.Buscar(2))
+                .Returns(GetTestPesquisadores().First(p => p.Id == 2));
 
             // Instância do controlador
             controller = new GaiolaharemController(

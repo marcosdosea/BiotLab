@@ -29,6 +29,10 @@
     <dd class="mt-2 break-words text-sm font-semibold text-slate-800">@Model.Id</dd>
 </div>
 <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+    <dt class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Título do projeto</dt>
+    <dd class="mt-2 break-words text-sm font-semibold text-slate-800">@Model.Titulo</dd>
+</div>
+<div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
     <dt class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Cepa</dt>
     <dd class="mt-2 break-words text-sm font-semibold text-slate-800">@Model.Cepa</dd>
 </div>
@@ -41,8 +45,8 @@
     <dd class="mt-2 break-words text-sm font-semibold text-slate-800">@Model.DataFim.ToString("dd/MM/yyyy")</dd>
 </div>
 <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
-    <dt class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Pesquisador</dt>
-    <dd class="mt-2 break-words text-sm font-semibold text-slate-800">@(Model.NomePesquisador ?? "—")</dd>
+    <dt class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Pesquisadores</dt>
+    <dd class="mt-2 break-words text-sm font-semibold text-slate-800">@(Model.NomesPesquisadores?.Any() == true ? string.Join(", ", Model.NomesPesquisadores) : "—")</dd>
 </div>
     </dl>
     <div class="flex flex-col-reverse gap-3 border-t border-slate-200 p-6 sm:flex-row sm:justify-end">

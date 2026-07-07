@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Convite enviado";
+    var email = ViewBag.Email as string;
+    var perfil = ViewBag.Perfil as string ?? "usuário";
+}
+
+<div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+    <div class="flex items-start gap-4">
+        <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-600/20">
+            <i data-lucide="mail-check" class="h-7 w-7"></i>
+        </div>
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">BiotLab</p>
+            <h1 class="mt-1 text-3xl font-extrabold tracking-tight text-slate-950">Convite enviado</h1>
+            <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">O convite foi gerado e enviado ao endereço informado.</p>
+        </div>
+    </div>
+    
+</div>
+
+<div class="max-w-2xl rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+        <i data-lucide="check" class="h-8 w-8"></i>
+    </div>
+    <h2 class="mt-6 text-2xl font-black text-slate-950">Tudo certo</h2>
+    <p class="mt-3 text-sm leading-6 text-slate-600">
+        O convite foi enviado para <strong>@email</strong>. O novo <strong>@perfil</strong> deve abrir o e-mail, confirmar a conta e definir a senha pelo link recebido.
+    </p>
+    <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center">
+        <a asp-action="Index" class="inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700">
+            <i data-lucide="users" class="h-4 w-4"></i> Voltar para usuários
+        </a>
+        <a asp-action="NovoEstudante" class="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50">
+            <i data-lucide="user-plus" class="h-4 w-4"></i> Convidar estudante
+        </a>
+        <a asp-action="NovoAdministrador" class="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50">
+            <i data-lucide="shield-plus" class="h-4 w-4"></i> Convidar administrador
+        </a>
+    </div>
+</div>

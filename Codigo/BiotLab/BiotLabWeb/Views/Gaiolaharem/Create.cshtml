@@ -1,7 +1,7 @@
 ﻿@model BiotLabWeb.Models.GaiolaharemViewModel
 
 @{
-    ViewData["Title"] = "Criar Vínculo gaiola-harém";
+    ViewData["Title"] = "Criar Vínculo gaiola-berçário";
 }
 
 <div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -11,7 +11,7 @@
         </div>
         <div>
             <p class="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">BiotLab</p>
-            <h1 class="mt-1 text-3xl font-extrabold tracking-tight text-slate-950">Criar Vínculo gaiola-harém</h1>
+            <h1 class="mt-1 text-3xl font-extrabold tracking-tight text-slate-950">Criar Vínculo gaiola-berçário</h1>
             <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Preencha os dados para cadastrar um novo registro.</p>
         </div>
     </div>
@@ -37,9 +37,9 @@
     <span asp-validation-for="IdGaiola" class="mt-1 block text-xs font-medium text-red-600"></span>
 </div>
 <div>
-    <label asp-for="IdHarem" class="mb-2 block text-sm font-semibold text-slate-700">Harém</label>
+    <label asp-for="IdHarem" class="mb-2 block text-sm font-semibold text-slate-700">Berçário</label>
     <select asp-for="IdHarem" asp-items="ViewBag.Harems" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50">
-        <option value="">Selecione um harém</option>
+        <option value="">Selecione um berçário</option>
     </select>
     <span asp-validation-for="IdHarem" class="mt-1 block text-xs font-medium text-red-600"></span>
 </div>
@@ -50,9 +50,19 @@
 </div>
 <div>
     <label asp-for="IdPesquisador" class="mb-2 block text-sm font-semibold text-slate-700">Pesquisador</label>
-    <select asp-for="IdPesquisador" asp-items="ViewBag.Pesquisadores" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50">
-        <option value="">Selecione um pesquisador</option>
-    </select>
+    @if (ViewBag.PesquisadorBloqueado == true)
+    {
+        <input type="hidden" asp-for="IdPesquisador" />
+        <div class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700">
+            @(ViewBag.PesquisadorLogadoNome ?? Model.NomePesquisador ?? "Pesquisador do usuário logado")
+        </div>
+    }
+    else
+    {
+        <select asp-for="IdPesquisador" asp-items="ViewBag.Pesquisadores" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50">
+            <option value="">Selecione um pesquisador</option>
+        </select>
+    }
     <span asp-validation-for="IdPesquisador" class="mt-1 block text-xs font-medium text-red-600"></span>
 </div>
         </div>

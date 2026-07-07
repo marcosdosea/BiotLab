@@ -12,7 +12,7 @@ namespace BiotLabWeb.Mapper
                 .ForMember(dest => dest.NomePesquisador,
                     opt => opt.MapFrom(src => src.IdPesquisadorNavigation.Nome))
                 .ForMember(dest => dest.NomeExperimento,
-                    opt => opt.MapFrom(src => src.IdExperimentoNavigation.Cepa))
+                    opt => opt.MapFrom(src => src.IdExperimentoNavigation.Titulo))
                 .ForMember(dest => dest.NomeAnestesico,
                     opt => opt.MapFrom(src => src.Entradaanestesico.IdAnestesicoNavigation.Nome))
                 .ForMember(dest => dest.Lote,

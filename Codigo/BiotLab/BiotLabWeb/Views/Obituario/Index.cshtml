@@ -37,6 +37,37 @@
 </div>
 </div>
 
+<form asp-action="Index" method="get" class="mb-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div asp-validation-summary="ModelOnly" class="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700"></div>
+    }
+
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_1fr_auto_auto] lg:items-end">
+        <div>
+            <label for="dataInicio" class="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Data inicial</label>
+            <input id="dataInicio" name="dataInicio" type="date" value="@ViewBag.DataInicio" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100" />
+        </div>
+        <div>
+            <label for="dataFim" class="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Data final</label>
+            <input id="dataFim" name="dataFim" type="date" value="@ViewBag.DataFim" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100" />
+        </div>
+        <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5 hover:bg-blue-700">
+            <i data-lucide="filter" class="h-4 w-4"></i>
+            Filtrar
+        </button>
+        <a asp-action="Index" class="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition hover:border-blue-200 hover:text-blue-700">
+            <i data-lucide="x" class="h-4 w-4"></i>
+            Limpar
+        </a>
+    </div>
+
+    @if (ViewBag.FiltroAplicado == true)
+    {
+        <p class="mt-4 text-sm font-semibold text-slate-600">Filtro ativo para o período selecionado.</p>
+    }
+</form>
+
 <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
     <div class="flex flex-col gap-4 border-b border-slate-200 p-5 lg:flex-row lg:items-center lg:justify-between">
         <div>

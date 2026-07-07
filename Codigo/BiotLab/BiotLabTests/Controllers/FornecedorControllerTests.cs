@@ -1,196 +1,191 @@
-﻿using AutoMapper;
-using Moq;
-using Core.Service;
+using AutoMapper;
 using BiotLabWeb.Mapper;
-using Core;
-using Microsoft.AspNetCore.Mvc;
 using BiotLabWeb.Models;
+using Core;
+using Core.Service;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
 
 namespace BiotLabWeb.Controllers.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class FornecedorControllerTests
     {
-        private static FornecedorController controller;
+        private FornecedorController controller = null!;
 
         [TestInitialize]
         public void Initialize()
         {
-            // Arrange
             var mockService = new Mock<IFornecedorService>();
+            var mockInstituicaoService = new Mock<IInstituicaoService>();
 
-            IMapper mapper = new MapperConfiguration(cfg =>
-                cfg.AddProfile(new FornecedorProfile())).CreateMapper();
+            IMapper mapper = MapperTestFactory.CreateMapper(new FornecedorProfile());
 
-            mockService.Setup(service => service.GetAll())
-                .Returns(GetTestFornecedors());
-            mockService.Setup(service => service.Get(1))
-                .Returns(GetTargetFornecedor());
-            mockService.Setup(service => service.Create(It.IsAny<Fornecedor>()))
-                .Verifiable();
-            mockService.Setup(service => service.Update(It.IsAny<Fornecedor>()))
-                .Verifiable();
-            mockService.Setup(service => service.Delete(1))
-                .Verifiable();
+            mockService.Setup(service => service.GetAll()).Returns(GetTestFornecedores());
+            mockService.Setup(service => service.Get(1)).Returns(GetTargetFornecedor());
+            mockService.Setup(service => service.Create(It.IsAny<Fornecedor>())).Verifiable();
+            mockService.Setup(service => service.Update(It.IsAny<Fornecedor>())).Verifiable();
+            mockService.Setup(service => service.Delete(1)).Verifiable();
 
-            controller = new FornecedorController(mockService.Object, mapper);
+            mockInstituicaoService.Setup(service => service.GetAll()).Returns(GetTestInstituicoes());
+            mockInstituicaoService.Setup(service => service.Get(1)).Returns(GetTargetInstituicao());
+
+            controller = new FornecedorController(mockService.Object, mockInstituicaoService.Object, mapper);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void IndexTest_Valido()
         {
-            // Act
             var result = controller.Index();
 
-            // Assert
             Assert.IsInstanceOfType(result, typeof(ViewResult));
-            ViewResult viewResult = (ViewResult)result;
+            var viewResult = (ViewResult)result;
             Assert.IsInstanceOfType(viewResult.ViewData.Model, typeof(List<FornecedorViewModel>));
 
-            var lista = (List<FornecedorViewModel>)viewResult.ViewData.Model;
+            var lista = (List<FornecedorViewModel>)viewResult.ViewData.Model!;
             Assert.AreEqual(3, lista.Count);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void DetailsTest_Valido()
         {
-            // Act
             var result = controller.Details(1);
 
-            // Assert
             Assert.IsInstanceOfType(result, typeof(ViewResult));
-            ViewResult viewResult = (ViewResult)result;
+            var viewResult = (ViewResult)result;
             Assert.IsInstanceOfType(viewResult.ViewData.Model, typeof(FornecedorViewModel));
 
-            var fornecedorModel = (FornecedorViewModel)viewResult.ViewData.Model;
+            var fornecedorModel = (FornecedorViewModel)viewResult.ViewData.Model!;
             Assert.AreEqual("Fornecedor 1", fornecedorModel.Nome);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void CreateTest_Valido()
         {
-            // Act
             var result = controller.Create(GetNewFornecedor());
 
-            // Assert
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
-            RedirectToActionResult redirectToActionResult = (RedirectToActionResult)result;
+            var redirectToActionResult = (RedirectToActionResult)result;
             Assert.IsNull(redirectToActionResult.ControllerName);
             Assert.AreEqual("Index", redirectToActionResult.ActionName);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void EditTest_Post_Valido()
         {
-            // Act
             var result = controller.Edit(1, GetTargetFornecedorModel());
 
-            // Assert
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
-            RedirectToActionResult redirectToActionResult = (RedirectToActionResult)result;
+            var redirectToActionResult = (RedirectToActionResult)result;
             Assert.IsNull(redirectToActionResult.ControllerName);
             Assert.AreEqual("Index", redirectToActionResult.ActionName);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void DeleteTest_Post_Valido()
         {
-            // Arrange
-            var fornecedorModel = GetTargetFornecedorModel(); // Obtém o modelo para deletar
+            var result = controller.Delete(1, GetTargetFornecedorModel());
 
-            // Act
-            var result = controller.Delete(1, fornecedorModel);
-
-            // Assert
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
-            RedirectToActionResult redirectToActionResult = (RedirectToActionResult)result;
+            var redirectToActionResult = (RedirectToActionResult)result;
             Assert.IsNull(redirectToActionResult.ControllerName);
             Assert.AreEqual("Index", redirectToActionResult.ActionName);
         }
 
-        // Métodos auxiliares
-        private FornecedorViewModel GetNewFornecedor()
+        private static FornecedorViewModel GetNewFornecedor()
         {
             return new FornecedorViewModel
             {
                 Id = 4,
                 Nome = "Fornecedor Novo",
-                Cnpj = "1234567890001",
+                Cnpj = "12345678000199",
                 Cep = "12345-678",
                 Cidade = "Cidade Nova",
-                Estado = "Estado",
+                Estado = "SP",
                 Telefone1 = "12345678",
-                Email = "email@fornecedor.com"
+                Email = "email@fornecedor.com",
+                IdInstituicao = 1
             };
         }
 
-        private Fornecedor GetTargetFornecedor()
+        private static Fornecedor GetTargetFornecedor()
         {
             return new Fornecedor
             {
                 Id = 1,
                 Nome = "Fornecedor 1",
-                Cnpj = "9876543210001",
+                Cnpj = "98765432000199",
                 Cep = "12345-678",
                 Cidade = "Cidade A",
-                Estado = "Estado A",
+                Estado = "SP",
                 Telefone1 = "12345678",
-                Email = "fornecedor1@email.com"
+                Email = "fornecedor1@email.com",
+                IdInstituicao = 1
             };
         }
 
-        private FornecedorViewModel GetTargetFornecedorModel()
+        private static FornecedorViewModel GetTargetFornecedorModel()
         {
             return new FornecedorViewModel
             {
                 Id = 1,
                 Nome = "Fornecedor 1",
-                Cnpj = "9876543210001",
+                Cnpj = "98765432000199",
                 Cep = "12345-678",
                 Cidade = "Cidade A",
-                Estado = "Estado A",
+                Estado = "SP",
                 Telefone1 = "12345678",
-                Email = "fornecedor1@email.com"
+                Email = "fornecedor1@email.com",
+                IdInstituicao = 1
             };
         }
 
-        private IEnumerable<Fornecedor> GetTestFornecedors()
+        private static IEnumerable<Fornecedor> GetTestFornecedores()
         {
             return new List<Fornecedor>
             {
-                new Fornecedor
-                {
-                    Id = 1,
-                    Nome = "Fornecedor 1",
-                    Cnpj = "9876543210001",
-                    Cep = "12345-678",
-                    Cidade = "Cidade A",
-                    Estado = "Estado A",
-                    Telefone1 = "12345678",
-                    Email = "fornecedor1@email.com"
-                },
-                new Fornecedor
+                GetTargetFornecedor(),
+                new()
                 {
                     Id = 2,
                     Nome = "Fornecedor 2",
-                    Cnpj = "1234567890002",
+                    Cnpj = "12345678000188",
                     Cep = "23456-789",
                     Cidade = "Cidade B",
-                    Estado = "Estado B",
+                    Estado = "RJ",
                     Telefone1 = "87654321",
-                    Email = "fornecedor2@email.com"
+                    Email = "fornecedor2@email.com",
+                    IdInstituicao = 1
                 },
-                new Fornecedor
+                new()
                 {
                     Id = 3,
                     Nome = "Fornecedor 3",
-                    Cnpj = "1234567890003",
+                    Cnpj = "12345678000177",
                     Cep = "34567-890",
                     Cidade = "Cidade C",
-                    Estado = "Estado C",
+                    Estado = "MG",
                     Telefone1 = "12349876",
-                    Email = "fornecedor3@email.com"
+                    Email = "fornecedor3@email.com",
+                    IdInstituicao = 1
                 }
+            };
+        }
+
+        private static Instituicao GetTargetInstituicao()
+        {
+            return new Instituicao
+            {
+                Id = 1,
+                Nome = "Instituicao 1"
+            };
+        }
+
+        private static IEnumerable<Instituicao> GetTestInstituicoes()
+        {
+            return new List<Instituicao>
+            {
+                GetTargetInstituicao()
             };
         }
     }

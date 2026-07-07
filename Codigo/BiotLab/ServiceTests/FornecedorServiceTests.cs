@@ -22,6 +22,20 @@ namespace Service.Tests
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
+            var instituicao = new Instituicao
+            {
+                Id = 1,
+                Nome = "Instituicao Teste",
+                Cnpj = "12345678901234",
+                Cep = "12345678",
+                Cidade = "Cidade A",
+                Estado = "SP",
+                Telefone1 = "11111111",
+                Email = "instituicao@exemplo.com"
+            };
+
+            context.Instituicaos.Add(instituicao);
+
             // Criação de uma lista de fornecedores
             var fornecedors = new List<Fornecedor>
             {
@@ -36,7 +50,8 @@ namespace Service.Tests
                     Cidade = "Cidade A",
                     Estado = "Estado A",
                     Telefone1 = "1111-1111",
-                    Email = "email1@exemplo.com"
+                    Email = "email1@exemplo.com",
+                    IdInstituicao = 1
                 },
                 new()
                 {
@@ -49,7 +64,8 @@ namespace Service.Tests
                     Cidade = "Cidade B",
                     Estado = "Estado B",
                     Telefone1 = "2222-2222",
-                    Email = "email2@exemplo.com"
+                    Email = "email2@exemplo.com",
+                    IdInstituicao = 1
                 }
             };
 
@@ -74,7 +90,8 @@ namespace Service.Tests
                 Cidade = "Cidade C",
                 Estado = "Estado C",
                 Telefone1 = "3333-3333",
-                Email = "email3@exemplo.com"
+                Email = "email3@exemplo.com",
+                IdInstituicao = 1
             };
 
             var createdId = fornecedorService.Create(novoFornecedor);
@@ -82,6 +99,7 @@ namespace Service.Tests
             // Verificando a criação
             Assert.AreEqual(3, fornecedorService.GetAll().Count());
             var fornecedor = fornecedorService.Get(createdId);
+            Assert.IsNotNull(fornecedor);
             Assert.AreEqual("Fornecedor 3", fornecedor.Nome);
             Assert.AreEqual("Cidade C", fornecedor.Cidade);
         }
@@ -103,6 +121,8 @@ namespace Service.Tests
         {
             // Atualizando um fornecedor existente
             var fornecedor = fornecedorService.Get(2);
+            Assert.IsNotNull(fornecedor);
+
             fornecedor.Nome = "Fornecedor Alterado";
             fornecedorService.Update(fornecedor);
 

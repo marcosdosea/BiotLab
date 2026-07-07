@@ -7,10 +7,14 @@ namespace BiotLabWeb.Models
         [Key]
         public uint Id { get; set; }
 
+        [Display(Name = "Título")]
+        [Required(ErrorMessage = "O título é obrigatório.")]
+        [StringLength(100, ErrorMessage = "O título deve ter no máximo 100 caracteres.")]
+        public string Titulo { get; set; } = null!;
+
         [Display(Name = "Cepa")]
-        [Required(ErrorMessage = "A cepa é obrigatória.")]
         [StringLength(100, ErrorMessage = "A cepa deve ter no máximo 100 caracteres.")]
-        public string Cepa { get; set; } = null!;
+        public string? Cepa { get; set; }
 
         [Display(Name = "Data de Início")]
         [Required(ErrorMessage = "A data de início é obrigatória.")]
@@ -22,11 +26,10 @@ namespace BiotLabWeb.Models
         [DataType(DataType.Date)]
         public DateTime DataFim { get; set; }
 
-        [Display(Name = "Pesquisador")]
-        [Required(ErrorMessage = "O pesquisador é obrigatório.")]
-        public uint IdPesquisador { get; set; }
+        [Display(Name = "Pesquisadores")]
+        public List<uint> IdsPesquisadores { get; set; } = new();
 
-        [Display(Name = "Pesquisador")]
-        public string? NomePesquisador { get; set; }
+        [Display(Name = "Pesquisadores")]
+        public List<string>? NomesPesquisadores { get; set; }
     }
 }

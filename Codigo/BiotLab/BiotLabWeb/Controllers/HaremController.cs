@@ -47,6 +47,8 @@ namespace BiotLabWeb.Controllers
                 NumeroMachos = h.NumeroMachos,
                 NumeroFemeas = h.NumeroFemeas,
                 DataNascimento = h.DataNascimento,
+                OrigemPai = h.OrigemPai,
+                OrigemMae = h.OrigemMae,
                 Status = h.Status,
                 IdBioterio = h.IdBioterio,
                 NomeBioterio = bioterios.FirstOrDefault(b => b.Id == h.IdBioterio)?.Nome

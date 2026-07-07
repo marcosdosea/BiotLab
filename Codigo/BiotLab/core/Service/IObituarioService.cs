@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
 namespace Core.Service
 {
@@ -9,5 +10,6 @@ namespace Core.Service
         void Delete(uint id);
         Obituario? Buscar(uint id);
         IEnumerable<Obituario> GetAll();
+        IEnumerable<Obituario> GetByPeriodo(DateTime? dataInicio, DateTime? dataFim);
     }
 }

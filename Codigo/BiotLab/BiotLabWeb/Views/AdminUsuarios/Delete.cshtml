@@ -1,0 +1,65 @@
+@model BiotLabWeb.Models.AdminUsuarios.UsuarioListagemViewModel
+
+@{
+    ViewData["Title"] = Model.EhConvite ? "Excluir convite" : "Excluir usuario";
+}
+
+<div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+    <div class="flex items-start gap-4">
+        <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-600/20">
+            <i data-lucide="triangle-alert" class="h-7 w-7"></i>
+        </div>
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">BiotLab</p>
+            <h1 class="mt-1 text-3xl font-extrabold tracking-tight text-slate-950">@(Model.EhConvite ? "Excluir convite" : "Excluir usuario")</h1>
+            <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+                @(Model.EhConvite ? "Revise as informacoes antes de cancelar o convite." : "Revise as informacoes antes de remover a conta do sistema.")
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-2xl rounded-3xl border border-red-200 bg-white shadow-sm">
+    <div class="border-b border-red-100 bg-red-50/80 p-6">
+        <h2 class="text-lg font-black text-red-900">Confirmar exclusao</h2>
+        <p class="mt-1 text-sm text-red-700">
+            @(Model.EhConvite ? "Esta acao cancela o convite pendente." : "Esta acao remove o acesso do usuario selecionado ao sistema.")
+        </p>
+    </div>
+
+    <dl class="grid grid-cols-1 gap-4 p-6">
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <dt class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Nome</dt>
+            <dd class="mt-2 text-sm font-bold text-slate-900">@Model.NomeCompleto</dd>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <dt class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">E-mail</dt>
+            <dd class="mt-2 text-sm font-bold text-slate-900">@Model.Email</dd>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <dt class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Perfil</dt>
+            <dd class="mt-2 text-sm font-bold text-slate-900">@Model.Perfil</dd>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <dt class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Status</dt>
+            <dd class="mt-2 text-sm font-bold text-slate-900">@Model.Status</dd>
+        </div>
+    </dl>
+
+    @if (Model.EhUsuarioAtual)
+    {
+        <div class="border-t border-red-100 bg-red-50 px-6 py-4 text-sm font-bold text-red-700">
+            Voce nao pode excluir o usuario que esta logado no momento.
+        </div>
+    }
+
+    <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="flex flex-col-reverse gap-3 border-t border-slate-200 p-6 sm:flex-row sm:justify-end">
+        <input type="hidden" asp-for="Id" />
+        <a asp-action="Index" class="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50">
+            <i data-lucide="arrow-left" class="h-4 w-4"></i> Cancelar
+        </a>
+        <button type="submit" disabled="@Model.EhUsuarioAtual" class="inline-flex items-center justify-center gap-2 rounded-2xl bg-red-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-red-600/20 transition hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none">
+            <i data-lucide="trash-2" class="h-4 w-4"></i> @(Model.EhConvite ? "Excluir convite" : "Excluir")
+        </button>
+    </form>
+</div>

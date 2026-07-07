@@ -1,163 +1,161 @@
-﻿using AutoMapper;
-using BiotLabWeb.Controllers;
-using BiotLabWeb.Models;
-using Core.Service;
-using Core;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System;
-using System.Collections.Generic;
+using AutoMapper;
 using BiotLabWeb.Mapper;
+using BiotLabWeb.Models;
+using Core;
+using Core.Service;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
 
 namespace BiotLabWeb.Controllers.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class ExperimentoControllerTests
     {
-        private ExperimentoController _controller = null!;
-        private Mock<IExperimentoService> _mockService = null!;
+        private ExperimentoController controller = null!;
+        private Mock<IExperimentoService> mockService = null!;
 
         [TestInitialize]
         public void Initialize()
         {
-            // Arrange
-            _mockService = new Mock<IExperimentoService>();
-            IMapper mapper = new MapperConfiguration(cfg => cfg.AddProfile(new ExperimentoProfile())).CreateMapper();
+            mockService = new Mock<IExperimentoService>();
+            var mockPesquisadorService = new Mock<IPesquisadorService>();
+            IMapper mapper = MapperTestFactory.CreateMapper(new ExperimentoProfile());
 
-            _mockService.Setup(service => service.GetAll()).Returns(GetTestExperimentos());
-            _mockService.Setup(service => service.Get(It.IsAny<uint>())).Returns(GetTargetExperimento());
-            _mockService.Setup(service => service.Create(It.IsAny<Experimento>())).Verifiable();
-            _mockService.Setup(service => service.Update(It.IsAny<Experimento>())).Verifiable();
-            _mockService.Setup(service => service.Delete(It.IsAny<uint>())).Verifiable();
+            mockService.Setup(service => service.GetAll()).Returns(GetTestExperimentos());
+            mockService.Setup(service => service.Get(It.IsAny<uint>())).Returns(GetTargetExperimento());
+            mockService.Setup(service => service.Create(It.IsAny<Experimento>(), It.IsAny<IEnumerable<uint>>())).Verifiable();
+            mockService.Setup(service => service.Update(It.IsAny<Experimento>(), It.IsAny<IEnumerable<uint>>())).Verifiable();
+            mockService.Setup(service => service.Delete(It.IsAny<uint>())).Verifiable();
 
-            _controller = new ExperimentoController(_mockService.Object, mapper);
+            mockPesquisadorService.Setup(service => service.GetAll()).Returns(GetTestPesquisadores());
+            mockPesquisadorService.Setup(service => service.Buscar(1)).Returns(GetTargetPesquisador());
+
+            controller = new ExperimentoController(mockService.Object, mockPesquisadorService.Object, mapper);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void IndexTest_Valido()
         {
-            // Act
-            var result = _controller.Index();
+            var result = controller.Index();
 
-            // Assert
             Assert.IsInstanceOfType(result, typeof(ViewResult));
-            ViewResult viewResult = (ViewResult)result;
+            var viewResult = (ViewResult)result;
             Assert.IsInstanceOfType(viewResult.ViewData.Model, typeof(List<ExperimentoViewModel>));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void CreateTest_Valido()
         {
-            // Arrange
             var newExperimento = new ExperimentoViewModel
             {
                 Id = 2,
-                Nome = "Experimento 2",
-                DataInicio = DateTime.Now.ToString("dd/MM/yyyy"),
-                DataFim = DateTime.Now.AddDays(1).ToString("dd/MM/yyyy"),
+                Titulo = "Projeto Teste",
+                DataInicio = DateTime.Today,
+                DataFim = DateTime.Today.AddDays(1),
                 Cepa = "Cepa Teste",
-                Gaiolas = "Gaiola 1, Gaiola 2",
-                IdPesquisadorNavigation = "1",
-                Usoanestesicos = "Anestésico Teste"
+                IdsPesquisadores = new List<uint> { 1 }
             };
 
-            // Act
-            var result = _controller.Create(newExperimento);
+            var result = controller.Create(newExperimento);
 
-            // Assert
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
-            _mockService.Verify(service => service.Create(It.IsAny<Experimento>()), Times.Once);
+            mockService.Verify(service => service.Create(It.IsAny<Experimento>(), It.IsAny<IEnumerable<uint>>()), Times.Once);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void DetailsTest_Valido()
         {
-            // Act
-            var result = _controller.Details(1);
+            var result = controller.Details(1);
 
-            // Assert
             Assert.IsInstanceOfType(result, typeof(ViewResult));
-            ViewResult viewResult = (ViewResult)result;
+            var viewResult = (ViewResult)result;
             Assert.IsInstanceOfType(viewResult.ViewData.Model, typeof(ExperimentoViewModel));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void EditTest_Valido()
         {
-            // Arrange
             var editExperimento = new ExperimentoViewModel
             {
                 Id = 1,
-                Nome = "Experimento 1 Editado",
-                DataInicio = DateTime.Now.ToString("dd/MM/yyyy"),
-                DataFim = DateTime.Now.AddDays(1).ToString("dd/MM/yyyy"),
+                Titulo = "Projeto Editado",
+                DataInicio = DateTime.Today,
+                DataFim = DateTime.Today.AddDays(1),
                 Cepa = "Cepa Editada",
-                Gaiolas = "Gaiola 1",
-                IdPesquisadorNavigation = "1",
-                Usoanestesicos = "Anestésico Editado"
+                IdsPesquisadores = new List<uint> { 1 }
             };
 
-            // Act
-            var result = _controller.Edit(1, editExperimento);
+            var result = controller.Edit(1, editExperimento);
 
-            // Assert
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
-            _mockService.Verify(service => service.Update(It.IsAny<Experimento>()), Times.Once);
+            mockService.Verify(service => service.Update(It.IsAny<Experimento>(), It.IsAny<IEnumerable<uint>>()), Times.Once);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void DeleteTest_Valido()
         {
-            // Act
-            var result = _controller.Delete(1);
+            var result = controller.Delete(1);
 
-            // Assert
             Assert.IsInstanceOfType(result, typeof(ViewResult));
-            ViewResult viewResult = (ViewResult)result;
+            var viewResult = (ViewResult)result;
             Assert.IsInstanceOfType(viewResult.ViewData.Model, typeof(ExperimentoViewModel));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void DeleteConfirmedTest_Valido()
         {
-            // Act
-            var result = _controller.DeleteConfirmed(1);
+            var result = controller.Delete(1, new ExperimentoViewModel { Id = 1 });
 
-            // Assert
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
-            _mockService.Verify(service => service.Delete(It.IsAny<uint>()), Times.Once);
+            mockService.Verify(service => service.Delete(It.IsAny<uint>()), Times.Once);
         }
 
-        private IEnumerable<Experimento> GetTestExperimentos()
+        private static IEnumerable<Experimento> GetTestExperimentos()
         {
             return new List<Experimento>
-        {
-            new Experimento
             {
-                Id = 1,
-                DataInicio = DateTime.Now.AddDays(-5),
-                DataFim = DateTime.Now.AddDays(5),
-                Cepa = "Cepa 1",
-                IdPesquisador = 1,
-                Gaiolas = new List<Gaiola>(), // Adicione se necessário
-                Usoanestesicos = new List<Usoanestesico>() // Adicione se necessário
-            },
-            // Adicione mais experimentos de teste se necessário
-        };
+                GetTargetExperimento()
+            };
         }
 
-        private Experimento GetTargetExperimento()
+        private static Experimento GetTargetExperimento()
         {
             return new Experimento
             {
                 Id = 1,
-                DataInicio = DateTime.Now.AddDays(-5),
-                DataFim = DateTime.Now.AddDays(5),
+                Titulo = "Projeto 1",
+                DataInicio = DateTime.Today.AddDays(-5),
+                DataFim = DateTime.Today.AddDays(5),
                 Cepa = "Cepa 1",
                 IdPesquisador = 1,
-                Gaiolas = new List<Gaiola>(), // Adicione se necessário
-                Usoanestesicos = new List<Usoanestesico>() // Adicione se necessário
+                ExperimentoPesquisadores = new List<ExperimentoPesquisador>
+                {
+                    new ExperimentoPesquisador
+                    {
+                        IdExperimento = 1,
+                        IdPesquisador = 1,
+                        IdPesquisadorNavigation = GetTargetPesquisador()
+                    }
+                },
+                Gaiolas = new List<Gaiola>(),
+                Usoanestesicos = new List<Usoanestesico>()
+            };
+        }
+
+        private static Pesquisador GetTargetPesquisador()
+        {
+            return new Pesquisador
+            {
+                Id = 1,
+                Nome = "Pesquisador 1"
+            };
+        }
+
+        private static IEnumerable<Pesquisador> GetTestPesquisadores()
+        {
+            return new List<Pesquisador>
+            {
+                GetTargetPesquisador()
             };
         }
     }

@@ -37,6 +37,7 @@ namespace Service.Tests
             {
                 new Experimento
                 {
+                    Titulo = "Projeto A",
                     DataInicio = DateTime.Now.AddDays(-10),
                     DataFim = DateTime.Now.AddDays(-5),
                     Cepa = "Cepa A",
@@ -44,6 +45,7 @@ namespace Service.Tests
                 },
                 new Experimento
                 {
+                    Titulo = "Projeto B",
                     DataInicio = DateTime.Now.AddDays(-4),
                     DataFim = DateTime.Now,
                     Cepa = "Cepa B",
@@ -60,16 +62,18 @@ namespace Service.Tests
         {
             var novaExperimento = new Experimento
             {
+                Titulo = "Projeto C",
                 DataInicio = DateTime.Now,
                 DataFim = DateTime.Now.AddDays(5),
                 Cepa = "Cepa C",
                 IdPesquisador = 3,
             };
 
-            var createdId = experimentoService.Create(novaExperimento);
+            var createdId = experimentoService.Create(novaExperimento, new[] { 3u });
             Assert.AreEqual(3, experimentoService.GetAll().Count());
             var experimento = experimentoService.Get(createdId);
             Assert.IsNotNull(experimento);
+            Assert.AreEqual("Projeto C", experimento.Titulo);
             Assert.AreEqual("Cepa C", experimento.Cepa);
         }
 
@@ -87,10 +91,12 @@ namespace Service.Tests
         {
             var experimento = experimentoService.Get(2);
             Assert.IsNotNull(experimento);
+            experimento.Titulo = "Projeto Alterado";
             experimento.Cepa = "Cepa Alterada";
-            experimentoService.Update(experimento);
+            experimentoService.Update(experimento, new[] { 2u });
             experimento = experimentoService.Get(2);
             Assert.IsNotNull(experimento);
+            Assert.AreEqual("Projeto Alterado", experimento.Titulo);
             Assert.AreEqual("Cepa Alterada", experimento.Cepa);
         }
 

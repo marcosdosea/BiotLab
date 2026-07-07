@@ -9,8 +9,8 @@ namespace BiotLabWeb.Models
         [Required(ErrorMessage = "A gaiola é obrigatória")]
         public uint IdGaiola { get; set; }
 
-        [Display(Name = "Harém")]
-        [Required(ErrorMessage = "O harém é obrigatório")]
+        [Display(Name = "Berçário")]
+        [Required(ErrorMessage = "O berçário é obrigatório")]
         public uint IdHarem { get; set; }
 
         [Display(Name = "Data de Povoamento")]
@@ -25,7 +25,7 @@ namespace BiotLabWeb.Models
         [Display(Name = "Gaiola")]
         public string? NomeGaiola { get; set; }
 
-        [Display(Name = "Harém")]
+        [Display(Name = "Berçário")]
         public string? NomeHarem { get; set; }
 
         [Display(Name = "Pesquisador")]
@@ -34,7 +34,7 @@ namespace BiotLabWeb.Models
         [Display(Name = "Código Interno da Gaiola")]
         public string? CodigoInternoGaiola { get; set; }
 
-        [Display(Name = "Código Interno do Harém")]
+        [Display(Name = "Código Interno do Berçário")]
         public string? CodigoInternoHarem { get; set; }
     }
 }

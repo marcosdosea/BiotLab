@@ -18,7 +18,7 @@ namespace Service
             var existente = context.Gaiolaharems.Find(gaiolaharem.IdGaiola, gaiolaharem.IdHarem);
             if (existente != null)
             {
-                throw new InvalidOperationException("Já existe um vínculo entre esta gaiola e este harém.");
+                throw new InvalidOperationException("Já existe um vínculo entre esta gaiola e este berçário.");
             }
 
             context.Gaiolaharems.Add(gaiolaharem);
@@ -62,7 +62,7 @@ namespace Service
 
             if (existente == null)
             {
-                throw new InvalidOperationException("Vínculo gaiola-harém não encontrado para atualização.");
+                throw new InvalidOperationException("Vínculo gaiola-berçário não encontrado para atualização.");
             }
 
             existente.DataPovoamento = gaiolaharem.DataPovoamento;

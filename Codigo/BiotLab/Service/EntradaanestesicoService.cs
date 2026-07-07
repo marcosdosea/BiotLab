@@ -1,8 +1,6 @@
 ﻿using Core;
 using Core.Service;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Service
 {
@@ -19,13 +17,23 @@ namespace Service
         {
             context.Entradaanestesicos.Add(entradaAnestesico);
             context.SaveChanges();
-            // Retornando o IdEntrada como referência
             return entradaAnestesico.IdEntrada;
         }
 
         public void Update(Entradaanestesico entradaAnestesico)
         {
-            context.Entradaanestesicos.Update(entradaAnestesico);
+            var existente = context.Entradaanestesicos.Find(entradaAnestesico.IdEntrada, entradaAnestesico.IdAnestesico);
+
+            if (existente == null)
+            {
+                throw new InvalidOperationException("Entrada de anestésico não encontrada para atualização.");
+            }
+
+            existente.Quantidade = entradaAnestesico.Quantidade;
+            existente.Lote = entradaAnestesico.Lote;
+            existente.ValorUnitario = entradaAnestesico.ValorUnitario;
+            existente.SubTotal = entradaAnestesico.SubTotal;
+
             context.SaveChanges();
         }
 
@@ -45,6 +53,8 @@ namespace Service
                 .Include(e => e.IdAnestesicoNavigation)
                 .Include(e => e.IdEntradaNavigation)
                 .AsNoTracking()
+                .OrderByDescending(e => e.IdEntradaNavigation.DataEntrada)
+                .ThenBy(e => e.IdAnestesicoNavigation.Nome)
                 .ToList();
         }
 

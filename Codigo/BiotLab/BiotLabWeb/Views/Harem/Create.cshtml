@@ -1,43 +1,85 @@
 ﻿@model BiotLabWeb.Models.HaremViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Criar Harém";
 }
 
-<h1>Criar Novo Harem</h1>
+<div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+    <div class="flex items-start gap-4">
+        <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-600/20">
+            <i data-lucide="heart-pulse" class="h-7 w-7"></i>
+        </div>
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">BiotLab</p>
+            <h1 class="mt-1 text-3xl font-extrabold tracking-tight text-slate-950">Criar Harém</h1>
+            <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Preencha os dados para cadastrar um novo registro.</p>
+        </div>
+    </div>
+    
+</div>
 
-<form asp-action="Create" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-    <div class="form-group">
-        <label asp-for="NumeroMacho" class="control-label"></label>
-        <input asp-for="NumeroMacho" class="form-control" />
-        <span asp-validation-for="NumeroMacho" class="text-danger"></span>
+<div class="rounded-3xl border border-slate-200 bg-white shadow-sm">
+    <div class="border-b border-slate-200 p-6">
+        <h2 class="text-lg font-bold text-slate-950">Dados do cadastro</h2>
+        <p class="mt-1 text-sm text-slate-500">Campos obrigatórios serão validados antes de salvar.</p>
     </div>
 
-    <div class="form-group">
-        <label asp-for="NumeroFemea" class="control-label"></label>
-        <input asp-for="NumeroFemea" class="form-control" />
-        <span asp-validation-for="NumeroFemea" class="text-danger"></span>
-    </div>
+    <form asp-action="Create" method="post" class="p-6">
+        
+        <div asp-validation-summary="ModelOnly" class="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700"></div>
 
-    <div class="form-group">
-        <label asp-for="Status" class="control-label"></label>
-        <input asp-for="Status" class="form-control" />
-        <span asp-validation-for="Status" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <input type="submit" value="Create" class="btn btn-primary" />
-    </div>
-</form>
-
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+            <div>
+    <label asp-for="CodigoInterno" class="mb-2 block text-sm font-semibold text-slate-700">Código interno</label>
+    <input asp-for="CodigoInterno" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="CodigoInterno" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
 <div>
-    <a asp-action="Index">Voltar para Lista</a>
+    <label asp-for="NumeroMachos" class="mb-2 block text-sm font-semibold text-slate-700">Machos</label>
+    <input asp-for="NumeroMachos" type="number" min="0" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="NumeroMachos" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="NumeroFemeas" class="mb-2 block text-sm font-semibold text-slate-700">Fêmeas</label>
+    <input asp-for="NumeroFemeas" type="number" min="0" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="NumeroFemeas" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="DataNascimento" class="mb-2 block text-sm font-semibold text-slate-700">Data de nascimento</label>
+    <input asp-for="DataNascimento" type="date" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="DataNascimento" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="Status" class="mb-2 block text-sm font-semibold text-slate-700">Status</label>
+    <select asp-for="Status" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50">
+        <option value="">Selecione</option>
+        <option value="A">Ativo</option>
+        <option value="I">Inativo</option>
+    </select>
+    <span asp-validation-for="Status" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="IdBioterio" class="mb-2 block text-sm font-semibold text-slate-700">Biotério</label>
+    <select asp-for="IdBioterio" asp-items="ViewBag.Bioterios" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50">
+        <option value="">Selecione um biotério</option>
+    </select>
+    <span asp-validation-for="IdBioterio" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+        </div>
+
+        <div class="mt-8 flex flex-col-reverse gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:justify-end">
+            <a asp-action="Index" class="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50">
+                <i data-lucide="arrow-left" class="h-4 w-4"></i>
+                Voltar
+            </a>
+            <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5 hover:bg-blue-700">
+                <i data-lucide="save" class="h-4 w-4"></i>
+                Salvar
+            </button>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
 }

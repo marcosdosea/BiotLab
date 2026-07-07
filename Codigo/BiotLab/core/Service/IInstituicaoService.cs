@@ -1,14 +1,13 @@
-﻿using Core;
+﻿using System.Collections.Generic;
 
 namespace Core.Service
 {
     public interface IInstituicaoService
     {
-        public uint Create(Instituicao instituicao);
-        public void Update(Instituicao instituicao);
-        public void Delete(uint id);
-        public IEnumerable<Instituicao> GetAll();
-        public Instituicao Get(uint id);
+        uint Create(Instituicao instituicao);
+        void Update(Instituicao instituicao);
+        void Delete(uint id);
+        Instituicao? Get(uint id);
+        IEnumerable<Instituicao> GetAll();
     }
 }
-

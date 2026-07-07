@@ -1,65 +1,96 @@
 ﻿@model BiotLabWeb.Models.EntradaanestesicoViewModel
 
 @{
-    ViewData["Title"] = "Editar Entrada de Anestésico";
+    ViewData["Title"] = "Editar Entrada de anestésico";
 }
 
-<h2>@ViewData["Title"]</h2>
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    <div class="form-horizontal">
-        <h4>Entrada de Anestésico</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-        @Html.HiddenFor(model => model.IdAnestesico)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.IdEntrada, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.IdEntrada, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-            </div>
+<div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+    <div class="flex items-start gap-4">
+        <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-600/20">
+            <i data-lucide="package-plus" class="h-7 w-7"></i>
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.IdAnestesico, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("IdAnestesico", null, "Selecione Anestésico", new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.IdAnestesico, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Quantidade, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Quantidade, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Quantidade, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Lote, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Lote, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Lote, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ValorUnitario, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ValorUnitario, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ValorUnitario, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Salvar" class="btn btn-primary" />
-                @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary" })
-            </div>
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">BiotLab</p>
+            <h1 class="mt-1 text-3xl font-extrabold tracking-tight text-slate-950">Editar Entrada de anestésico</h1>
+            <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Preencha os dados para atualizar as informações do registro.</p>
         </div>
     </div>
+    
+</div>
+
+<div class="rounded-3xl border border-slate-200 bg-white shadow-sm">
+    <div class="border-b border-slate-200 p-6">
+        <h2 class="text-lg font-bold text-slate-950">Dados do cadastro</h2>
+        <p class="mt-1 text-sm text-slate-500">Campos obrigatórios serão validados antes de salvar.</p>
+    </div>
+
+    <form asp-action="Edit" asp-route-idEntrada="@Model.IdEntrada" asp-route-idAnestesico="@Model.IdAnestesico" method="post" class="p-6">
+        
+        <div asp-validation-summary="ModelOnly" class="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700"></div>
+
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+            <div>
+    <label asp-for="IdEntrada" class="mb-2 block text-sm font-semibold text-slate-700">Entrada</label>
+    <input type="hidden" asp-for="IdEntrada" />
+    <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">@Model.IdEntrada</div>
+    <span asp-validation-for="IdEntrada" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="IdAnestesico" class="mb-2 block text-sm font-semibold text-slate-700">Anestésico</label>
+    <input type="hidden" asp-for="IdAnestesico" />
+    <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">@Model.IdAnestesico</div>
+    <span asp-validation-for="IdAnestesico" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="Quantidade" class="mb-2 block text-sm font-semibold text-slate-700">Quantidade</label>
+    <input asp-for="Quantidade" type="number" step="0.01" min="0" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="Quantidade" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="Lote" class="mb-2 block text-sm font-semibold text-slate-700">Lote</label>
+    <input asp-for="Lote" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="Lote" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="ValorUnitario" class="mb-2 block text-sm font-semibold text-slate-700">Valor unitário</label>
+    <input asp-for="ValorUnitario" type="number" step="0.01" min="0" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="ValorUnitario" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="SubTotal" class="mb-2 block text-sm font-semibold text-slate-700">Subtotal</label>
+    <input asp-for="SubTotal" type="number" step="0.01" min="0" readonly class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50 bg-slate-50" />
+    <span asp-validation-for="SubTotal" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+        </div>
+
+        <div class="mt-8 flex flex-col-reverse gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:justify-end">
+            <a asp-action="Index" class="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50">
+                <i data-lucide="arrow-left" class="h-4 w-4"></i>
+                Voltar
+            </a>
+            <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5 hover:bg-blue-700">
+                <i data-lucide="save" class="h-4 w-4"></i>
+                Salvar
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function calcularSubtotalEntradaAnestesico() {
+            const quantidade = Number.parseFloat(document.getElementById("Quantidade")?.value?.replace(",", ".") || "0");
+            const valor = Number.parseFloat(document.getElementById("ValorUnitario")?.value?.replace(",", ".") || "0");
+            const subtotal = quantidade * valor;
+            const campoSubtotal = document.getElementById("SubTotal");
+            if (campoSubtotal) {
+                campoSubtotal.value = Number.isFinite(subtotal) ? subtotal.toFixed(2) : "0.00";
+            }
+        }
+
+        document.getElementById("Quantidade")?.addEventListener("input", calcularSubtotalEntradaAnestesico);
+        document.getElementById("ValorUnitario")?.addEventListener("input", calcularSubtotalEntradaAnestesico);
+        calcularSubtotalEntradaAnestesico();
+    </script>
 }

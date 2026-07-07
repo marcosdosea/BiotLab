@@ -5,17 +5,17 @@ namespace BiotLabWeb.Models
 {
     public class EntradaanestesicoViewModel
     {
-        [Display(Name = "ID da Entrada")]
-        [Required(ErrorMessage = "O ID da entrada é obrigatório.")]
+        [Display(Name = "Entrada")]
+        [Required(ErrorMessage = "A entrada é obrigatória.")]
         public uint IdEntrada { get; set; }
 
-        [Display(Name = "ID do Anestésico")]
-        [Required(ErrorMessage = "O ID do anestésico é obrigatório.")]
+        [Display(Name = "Anestésico")]
+        [Required(ErrorMessage = "O anestésico é obrigatório.")]
         public uint IdAnestesico { get; set; }
 
         [Display(Name = "Quantidade")]
         [Required(ErrorMessage = "A quantidade é obrigatória.")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "A quantidade deve ser maior que zero.")]
+        [Range(typeof(decimal), "0,01", "999999999", ErrorMessage = "A quantidade deve ser maior que zero.")]
         public decimal Quantidade { get; set; }
 
         [Display(Name = "Lote")]
@@ -25,14 +25,13 @@ namespace BiotLabWeb.Models
 
         [Display(Name = "Valor Unitário")]
         [Required(ErrorMessage = "O valor unitário é obrigatório.")]
-        [DataType(DataType.Currency)]
+        [Range(typeof(decimal), "0,01", "999999999", ErrorMessage = "O valor unitário deve ser maior que zero.")]
         public decimal ValorUnitario { get; set; }
 
         [Display(Name = "Subtotal")]
-        [DataType(DataType.Currency)]
         public decimal SubTotal { get; set; }
 
-        [Display(Name = "Nome do Anestésico")]
+        [Display(Name = "Anestésico")]
         public string? NomeAnestesico { get; set; }
 
         [Display(Name = "Data da Entrada")]

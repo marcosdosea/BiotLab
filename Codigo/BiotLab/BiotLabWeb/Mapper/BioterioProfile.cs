@@ -3,7 +3,6 @@ using BiotLabWeb.Models;
 using Core;
 
 namespace BiotLabWeb.Mapper
-
 {
     public class BioterioProfile : Profile
     {

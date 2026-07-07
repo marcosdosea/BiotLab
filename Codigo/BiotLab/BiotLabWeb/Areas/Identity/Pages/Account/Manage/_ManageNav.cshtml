@@ -1,15 +1,29 @@
+@using Microsoft.AspNetCore.Identity
+@using BiotLabWeb.Areas.Identity.Data
 @inject SignInManager<UsuarioIdentity> SignInManager
+
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+
+    string ItemClass(string pageName)
+    {
+        var isActive = ViewData["ActivePage"]?.ToString() == pageName;
+        return isActive
+            ? "block rounded-xl bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-700"
+            : "block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-900";
+    }
 }
-<ul class="nav nav-pills flex-column">
-    <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a></li>
+
+<nav class="space-y-2">
+    <a class="@ItemClass(ManageNavPages.Index)" asp-page="./Index">Perfil</a>
+    <a class="@ItemClass(ManageNavPages.Email)" asp-page="./Email">E-mail</a>
+    <a class="@ItemClass(ManageNavPages.ChangePassword)" asp-page="./ChangePassword">Alterar senha</a>
+
     @if (hasExternalLogins)
     {
-        <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">External logins</a></li>
+        <a class="@ItemClass(ManageNavPages.ExternalLogins)" asp-page="./ExternalLogins">Logins externos</a>
     }
-    <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a></li>
-</ul>
+
+    <a class="@ItemClass(ManageNavPages.TwoFactorAuthentication)" asp-page="./TwoFactorAuthentication">Autenticação em dois fatores</a>
+    <a class="@ItemClass(ManageNavPages.PersonalData)" asp-page="./PersonalData">Dados pessoais</a>
+</nav>

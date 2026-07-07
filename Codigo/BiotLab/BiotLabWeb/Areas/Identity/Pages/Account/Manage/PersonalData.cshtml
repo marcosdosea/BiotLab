@@ -1,27 +1,36 @@
 ﻿@page
 @model PersonalDataModel
 @{
-    ViewData["Title"] = "Personal Data";
+    ViewData["Title"] = "Dados pessoais";
     ViewData["ActivePage"] = ManageNavPages.PersonalData;
 }
 
-<h3>@ViewData["Title"]</h3>
-
-<div class="row">
-    <div class="col-md-6">
-        <p>Your account contains personal data that you have given us. This page allows you to download or delete that data.</p>
-        <p>
-            <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
-        </p>
-        <form id="download-data" asp-page="DownloadPersonalData" method="post">
-            <button class="btn btn-primary" type="submit">Download</button>
-        </form>
-        <p>
-            <a id="delete" asp-page="DeletePersonalData" class="btn btn-danger">Delete</a>
+<div class="max-w-2xl space-y-8">
+    <div>
+        <h2 class="text-2xl font-bold text-slate-900">Dados pessoais</h2>
+        <p class="mt-2 text-sm text-slate-600">
+            Aqui você pode baixar ou excluir permanentemente os dados vinculados à sua conta.
         </p>
     </div>
-</div>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+    <div class="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-800">
+        <p class="font-semibold">Atenção</p>
+        <p class="mt-2">
+            Excluir seus dados removerá permanentemente sua conta, e essa ação não poderá ser desfeita.
+        </p>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+        <a id="download-data"
+           asp-page="./DownloadPersonalData"
+           class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
+            Baixar meus dados
+        </a>
+
+        <a id="delete"
+           asp-page="./DeletePersonalData"
+           class="inline-flex items-center justify-center rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700">
+            Excluir conta
+        </a>
+    </div>
+</div>

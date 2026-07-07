@@ -15,7 +15,7 @@ namespace Service
 
         public uint Create(Experimento experimento)
         {
-            context.Add(experimento);
+            context.Experimentos.Add(experimento);
             context.SaveChanges();
             return experimento.Id;
         }
@@ -25,24 +25,34 @@ namespace Service
             var experimento = context.Experimentos.Find(id);
             if (experimento != null)
             {
-                context.Remove(experimento);
+                context.Experimentos.Remove(experimento);
                 context.SaveChanges();
             }
         }
 
-        public Experimento Get(uint id)
+        public Experimento? Get(uint id)
         {
             return context.Experimentos.Find(id);
         }
 
         public IEnumerable<Experimento> GetAll()
         {
-            return context.Experimentos.AsNoTracking();
+            return context.Experimentos
+                .AsNoTracking()
+                .OrderByDescending(x => x.DataInicio)
+                .ToList();
         }
 
         public void Update(Experimento experimento)
         {
-            context.Update(experimento);
+            var experimentoExistente = context.Experimentos.Find(experimento.Id);
+
+            if (experimentoExistente == null)
+            {
+                throw new InvalidOperationException("Experimento não encontrado para atualização.");
+            }
+
+            context.Entry(experimentoExistente).CurrentValues.SetValues(experimento);
             context.SaveChanges();
         }
     }

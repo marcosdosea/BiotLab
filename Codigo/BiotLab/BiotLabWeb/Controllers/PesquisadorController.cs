@@ -1,11 +1,13 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BiotLabWeb.Models;
-using Core.Service;
 using Core;
+using Core.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BiotLabWeb.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     public class PesquisadorController : Controller
     {
         private readonly IPesquisadorService pesquisadorService;
@@ -54,9 +56,10 @@ namespace BiotLabWeb.Controllers
                 pesquisadorService.Create(pesquisadorDB);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ModelState.AddModelError(string.Empty, $"Não foi possível salvar o pesquisador. {ex.InnerException?.Message ?? ex.Message}");
+                return View(pesquisador);
             }
         }
 
@@ -83,9 +86,10 @@ namespace BiotLabWeb.Controllers
                 pesquisadorService.Update(pesquisadorDB);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ModelState.AddModelError(string.Empty, $"Não foi possível atualizar o pesquisador. {ex.InnerException?.Message ?? ex.Message}");
+                return View(pesquisador);
             }
         }
 
@@ -111,9 +115,17 @@ namespace BiotLabWeb.Controllers
                 pesquisadorService.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                var existente = pesquisadorService.Buscar(id);
+                if (existente == null)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+
+                var vm = mapper.Map<PesquisadorViewModel>(existente);
+                ModelState.AddModelError(string.Empty, $"Não foi possível excluir o pesquisador. {ex.InnerException?.Message ?? ex.Message}");
+                return View(vm);
             }
         }
     }

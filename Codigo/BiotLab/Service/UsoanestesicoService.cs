@@ -1,55 +1,82 @@
 ﻿using Core;
 using Core.Service;
-using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace Service
 {
     public class UsoanestesicoService : IUsoanestesicoService
     {
-        private readonly List<Usoanestesico> _usoanestesicos = new();
-        private uint _nextId = 1;
+        private readonly BiotlabContext context;
+
+        public UsoanestesicoService(BiotlabContext context)
+        {
+            this.context = context;
+        }
 
         public uint Create(Usoanestesico usoanestesico)
         {
-            usoanestesico.Id = _nextId++;
-            _usoanestesicos.Add(usoanestesico);
+            context.Usoanestesicos.Add(usoanestesico);
+            context.SaveChanges();
             return usoanestesico.Id;
         }
 
         public void Update(Usoanestesico usoanestesico)
         {
-            var existing = Get(usoanestesico.Id);
-            if (existing != null)
+            var existente = context.Usoanestesicos.Find(usoanestesico.Id);
+
+            if (existente == null)
             {
-                existing.Quantidade = usoanestesico.Quantidade;
-                existing.Procedimento = usoanestesico.Procedimento;
-                existing.Data = usoanestesico.Data;
-                existing.Cepa = usoanestesico.Cepa;
-                existing.NumeroAnimais = usoanestesico.NumeroAnimais;
-                existing.IdPesquisador = usoanestesico.IdPesquisador;
-                existing.IdExperimento = usoanestesico.IdExperimento;
-                existing.IdEntrada = usoanestesico.IdEntrada;
-                existing.IdAnestesico = usoanestesico.IdAnestesico;
+                throw new InvalidOperationException("Uso de anestésico não encontrado para atualização.");
             }
+
+            existente.Quantidade = usoanestesico.Quantidade;
+            existente.Procedimento = usoanestesico.Procedimento;
+            existente.Data = usoanestesico.Data;
+            existente.Cepa = usoanestesico.Cepa;
+            existente.NumeroAnimais = usoanestesico.NumeroAnimais;
+            existente.IdPesquisador = usoanestesico.IdPesquisador;
+            existente.IdExperimento = usoanestesico.IdExperimento;
+            existente.IdEntrada = usoanestesico.IdEntrada;
+            existente.IdAnestesico = usoanestesico.IdAnestesico;
+
+            context.SaveChanges();
         }
 
         public void Delete(uint id)
         {
-            var usoanestesico = Get(id);
+            var usoanestesico = context.Usoanestesicos.Find(id);
             if (usoanestesico != null)
             {
-                _usoanestesicos.Remove(usoanestesico);
+                context.Usoanestesicos.Remove(usoanestesico);
+                context.SaveChanges();
             }
         }
 
         public IEnumerable<Usoanestesico> GetAll()
         {
-            return _usoanestesicos;
+            return context.Usoanestesicos
+                .Include(u => u.IdPesquisadorNavigation)
+                .Include(u => u.IdExperimentoNavigation)
+                .Include(u => u.Entradaanestesico)
+                    .ThenInclude(ea => ea.IdAnestesicoNavigation)
+                .Include(u => u.Entradaanestesico)
+                    .ThenInclude(ea => ea.IdEntradaNavigation)
+                .AsNoTracking()
+                .OrderByDescending(u => u.Data)
+                .ThenBy(u => u.Id)
+                .ToList();
         }
 
-        public Usoanestesico Get(uint id)
+        public Usoanestesico? Get(uint id)
         {
-            return _usoanestesicos.Find(u => u.Id == id);
+            return context.Usoanestesicos
+                .Include(u => u.IdPesquisadorNavigation)
+                .Include(u => u.IdExperimentoNavigation)
+                .Include(u => u.Entradaanestesico)
+                    .ThenInclude(ea => ea.IdAnestesicoNavigation)
+                .Include(u => u.Entradaanestesico)
+                    .ThenInclude(ea => ea.IdEntradaNavigation)
+                .FirstOrDefault(u => u.Id == id);
         }
     }
 }

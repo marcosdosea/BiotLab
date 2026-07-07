@@ -1,84 +1,109 @@
 ﻿@model BiotLabWeb.Models.PesquisadorViewModel
 
 @{
-    ViewData["Title"] = "Edit Pesquisador";
+    ViewData["Title"] = "Editar Pesquisador";
 }
 
-<h2>Edit Pesquisador</h2>
-
-<h4>Pesquisador</h4>
-<hr />
-<div class="row">
-    <div class="col-md-12">
-        <form asp-action="Edit">
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Cpf" class="control-label"></label>
-                <input asp-for="Cpf" class="form-control" />
-                <span asp-validation-for="Cpf" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Nome" class="control-label"></label>
-                <input asp-for="Nome" class="form-control" />
-                <span asp-validation-for="Nome" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Cep" class="control-label"></label>
-                <input asp-for="Cep" class="form-control" />
-                <span asp-validation-for="Cep" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Rua" class="control-label"></label>
-                <input asp-for="Rua" class="form-control" />
-                <span asp-validation-for="Rua" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Bairro" class="control-label"></label>
-                <input asp-for="Bairro" class="form-control" />
-                <span asp-validation-for="Bairro" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Cidade" class="control-label"></label>
-                <input asp-for="Cidade" class="form-control" />
-                <span asp-validation-for="Cidade" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Numero" class="control-label"></label>
-                <input asp-for="Numero" class="form-control" />
-                <span asp-validation-for="Numero" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Complemento" class="control-label"></label>
-                <input asp-for="Complemento" class="form-control" />
-                <span asp-validation-for="Complemento" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Estado" class="control-label"></label>
-                <input asp-for="Estado" class="form-control" />
-                <span asp-validation-for="Estado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Telefone1" class="control-label"></label>
-                <input asp-for="Telefone1" class="form-control" />
-                <span asp-validation-for="Telefone1" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Telefone2" class="control-label"></label>
-                <input asp-for="Telefone2" class="form-control" />
-                <span asp-validation-for="Telefone2" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+    <div class="flex items-start gap-4">
+        <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-600/20">
+            <i data-lucide="user-round-search" class="h-7 w-7"></i>
+        </div>
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">BiotLab</p>
+            <h1 class="mt-1 text-3xl font-extrabold tracking-tight text-slate-950">Editar Pesquisador</h1>
+            <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Preencha os dados para atualizar as informações do registro.</p>
+        </div>
     </div>
+    
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="rounded-3xl border border-slate-200 bg-white shadow-sm">
+    <div class="border-b border-slate-200 p-6">
+        <h2 class="text-lg font-bold text-slate-950">Dados do cadastro</h2>
+        <p class="mt-1 text-sm text-slate-500">Campos obrigatórios serão validados antes de salvar.</p>
+    </div>
+
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post" class="p-6">
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="ModelOnly" class="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700"></div>
+
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+            <div>
+    <label asp-for="Nome" class="mb-2 block text-sm font-semibold text-slate-700">Nome</label>
+    <input asp-for="Nome" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="Nome" class="mt-1 block text-xs font-medium text-red-600"></span>
 </div>
+<div>
+    <label asp-for="Cpf" class="mb-2 block text-sm font-semibold text-slate-700">CPF</label>
+    <input asp-for="Cpf" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="Cpf" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="Cep" class="mb-2 block text-sm font-semibold text-slate-700">CEP</label>
+    <input asp-for="Cep" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="Cep" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="Rua" class="mb-2 block text-sm font-semibold text-slate-700">Rua</label>
+    <input asp-for="Rua" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="Rua" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="Bairro" class="mb-2 block text-sm font-semibold text-slate-700">Bairro</label>
+    <input asp-for="Bairro" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="Bairro" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="Cidade" class="mb-2 block text-sm font-semibold text-slate-700">Cidade</label>
+    <input asp-for="Cidade" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="Cidade" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="Numero" class="mb-2 block text-sm font-semibold text-slate-700">Número</label>
+    <input asp-for="Numero" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="Numero" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="Complemento" class="mb-2 block text-sm font-semibold text-slate-700">Complemento</label>
+    <input asp-for="Complemento" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="Complemento" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="Estado" class="mb-2 block text-sm font-semibold text-slate-700">UF</label>
+    <input asp-for="Estado" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="Estado" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="Telefone1" class="mb-2 block text-sm font-semibold text-slate-700">Telefone principal</label>
+    <input asp-for="Telefone1" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="Telefone1" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="Telefone2" class="mb-2 block text-sm font-semibold text-slate-700">Telefone alternativo</label>
+    <input asp-for="Telefone2" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="Telefone2" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div>
+    <label asp-for="Email" class="mb-2 block text-sm font-semibold text-slate-700">E-mail</label>
+    <input asp-for="Email" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50" />
+    <span asp-validation-for="Email" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+        </div>
+
+        <div class="mt-8 flex flex-col-reverse gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:justify-end">
+            <a asp-action="Index" class="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50">
+                <i data-lucide="arrow-left" class="h-4 w-4"></i>
+                Voltar
+            </a>
+            <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5 hover:bg-blue-700">
+                <i data-lucide="save" class="h-4 w-4"></i>
+                Salvar
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -4,10 +4,10 @@ namespace Core.Service
 {
     public interface IExperimentoService
     {
-        public uint Create(Experimento experimento);
-        public void Update(Experimento experimento);
-        public void Delete(uint id);
-        public IEnumerable<Experimento> GetAll();
-        public Experimento Get(uint id);
+        uint Create(Experimento experimento);
+        void Update(Experimento experimento);
+        void Delete(uint id);
+        Experimento? Get(uint id);
+        IEnumerable<Experimento> GetAll();
     }
 }

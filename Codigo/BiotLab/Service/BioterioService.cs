@@ -1,6 +1,5 @@
 ﻿using Core;
 using Core.Service;
-using Core.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace Service
@@ -16,7 +15,7 @@ namespace Service
 
         public uint Create(Bioterio bioterio)
         {
-            context.Add(bioterio);
+            context.Bioterios.Add(bioterio);
             context.SaveChanges();
             return bioterio.Id;
         }
@@ -26,15 +25,9 @@ namespace Service
             var bioterio = context.Bioterios.Find(id);
             if (bioterio != null)
             {
-                context.Remove(bioterio);
+                context.Bioterios.Remove(bioterio);
                 context.SaveChanges();
             }
-        }
-
-        public void Update(Bioterio bioterio)
-        {
-            context.Update(bioterio);
-            context.SaveChanges();
         }
 
         public Bioterio? Get(uint id)
@@ -44,23 +37,23 @@ namespace Service
 
         public IEnumerable<Bioterio> GetAll()
         {
-            return context.Bioterios.AsNoTracking();
+            return context.Bioterios
+                .AsNoTracking()
+                .OrderBy(x => x.Nome)
+                .ToList();
         }
 
-        public Bioterio get(uint id)
+        public void Update(Bioterio bioterio)
         {
-            throw new NotImplementedException();
-        }
+            var bioterioExistente = context.Bioterios.Find(bioterio.Id);
 
-        /*public IEnumerable<Bioterio> GetByNome(string nome)
-        {
-            var query = from bioterio in context.Bioterios
-                        where bioterio.Nome == StartsWith(nome)
-                        orderby bioterio.Nome
-                        select bioterio;
-            return query.AsNoTracking();
-        }
-        */
+            if (bioterioExistente == null)
+            {
+                throw new InvalidOperationException("Biotério não encontrado para atualização.");
+            }
 
+            context.Entry(bioterioExistente).CurrentValues.SetValues(bioterio);
+            context.SaveChanges();
+        }
     }
 }

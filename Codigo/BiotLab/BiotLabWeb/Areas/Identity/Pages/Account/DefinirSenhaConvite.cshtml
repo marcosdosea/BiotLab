@@ -1,0 +1,155 @@
+﻿@page
+@model BiotLabWeb.Areas.Identity.Pages.Account.DefinirSenhaConviteModel
+
+@{
+    ViewData["Title"] = "Definir senha";
+    Layout = "/Views/Shared/_AuthLayout.cshtml";
+}
+
+<div class="flex min-h-screen items-center justify-center px-4 py-10">
+    <div class="w-full max-w-3xl">
+        <div class="mb-8 text-center">
+            <h1 class="text-4xl font-extrabold tracking-tight text-blue-700">BiotLab</h1>
+            <p class="mt-2 text-sm text-slate-600">Confirme seu convite e defina sua senha</p>
+        </div>
+
+        <div class="rounded-2xl bg-white p-8 shadow-lg ring-1 ring-slate-200">
+            <h2 class="mb-2 text-2xl font-bold text-slate-900">Definir senha</h2>
+            <p class="mb-6 text-sm text-slate-600">
+                @if (Model.Input.CadastrarPesquisador)
+                {
+                    <span>Complete seus dados para que seu acesso também seja cadastrado como pesquisador no sistema.</span>
+                }
+                else
+                {
+                    <span>Complete a ativação da sua conta de administrador.</span>
+                }
+            </p>
+
+            <form method="post" class="space-y-6">
+                <div asp-validation-summary="ModelOnly"
+                     class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                </div>
+
+                <input asp-for="Input.Codigo" type="hidden" />
+                <input asp-for="Input.CadastrarPesquisador" type="hidden" />
+                <input asp-for="Input.EhEstudante" type="hidden" />
+                <input asp-for="Input.PesquisadorJaCadastrado" type="hidden" />
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label asp-for="Input.NomeCompleto" class="mb-2 block text-sm font-medium text-slate-700"></label>
+                        <input asp-for="Input.NomeCompleto" readonly
+                               class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none" />
+                    </div>
+                    <div>
+                        <label asp-for="Input.Email" class="mb-2 block text-sm font-medium text-slate-700"></label>
+                        <input asp-for="Input.Email" readonly
+                               class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none" />
+                    </div>
+                </div>
+
+                @if (Model.Input.CadastrarPesquisador)
+                {
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                        <h3 class="text-lg font-bold text-slate-900">Dados do pesquisador</h3>
+                        <p class="mt-1 text-sm text-slate-600">Essas informações serão salvas no cadastro de pesquisadores do BiotLab.</p>
+
+                        <div class="mt-5 grid gap-4 sm:grid-cols-2">
+                            <div>
+                                <label asp-for="Input.Cpf" class="mb-2 block text-sm font-medium text-slate-700"></label>
+                                <input asp-for="Input.Cpf" maxlength="14" inputmode="numeric" autocomplete="off"
+                                       class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                       placeholder="Somente números" />
+                                <span asp-validation-for="Input.Cpf" class="mt-1 block text-sm text-red-600"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.Telefone1" class="mb-2 block text-sm font-medium text-slate-700"></label>
+                                <input asp-for="Input.Telefone1" maxlength="15" inputmode="tel"
+                                       class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                       placeholder="Telefone principal" />
+                                <span asp-validation-for="Input.Telefone1" class="mt-1 block text-sm text-red-600"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.Telefone2" class="mb-2 block text-sm font-medium text-slate-700"></label>
+                                <input asp-for="Input.Telefone2" maxlength="15" inputmode="tel"
+                                       class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                       placeholder="Telefone opcional" />
+                                <span asp-validation-for="Input.Telefone2" class="mt-1 block text-sm text-red-600"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.Cep" class="mb-2 block text-sm font-medium text-slate-700"></label>
+                                <input asp-for="Input.Cep" maxlength="9" inputmode="numeric" autocomplete="postal-code"
+                                       class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                       placeholder="Somente números" />
+                                <span asp-validation-for="Input.Cep" class="mt-1 block text-sm text-red-600"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.Rua" class="mb-2 block text-sm font-medium text-slate-700"></label>
+                                <input asp-for="Input.Rua"
+                                       class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
+                                <span asp-validation-for="Input.Rua" class="mt-1 block text-sm text-red-600"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.Numero" class="mb-2 block text-sm font-medium text-slate-700"></label>
+                                <input asp-for="Input.Numero"
+                                       class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
+                                <span asp-validation-for="Input.Numero" class="mt-1 block text-sm text-red-600"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.Bairro" class="mb-2 block text-sm font-medium text-slate-700"></label>
+                                <input asp-for="Input.Bairro"
+                                       class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
+                                <span asp-validation-for="Input.Bairro" class="mt-1 block text-sm text-red-600"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.Complemento" class="mb-2 block text-sm font-medium text-slate-700"></label>
+                                <input asp-for="Input.Complemento"
+                                       class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
+                                <span asp-validation-for="Input.Complemento" class="mt-1 block text-sm text-red-600"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.Cidade" class="mb-2 block text-sm font-medium text-slate-700"></label>
+                                <input asp-for="Input.Cidade"
+                                       class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
+                                <span asp-validation-for="Input.Cidade" class="mt-1 block text-sm text-red-600"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.Estado" class="mb-2 block text-sm font-medium text-slate-700"></label>
+                                <input asp-for="Input.Estado" maxlength="2" autocomplete="address-level1"
+                                       class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm uppercase outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                       placeholder="SE" />
+                                <span asp-validation-for="Input.Estado" class="mt-1 block text-sm text-red-600"></span>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label asp-for="Input.Password" class="mb-2 block text-sm font-medium text-slate-700"></label>
+                        <input asp-for="Input.Password"
+                               class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
+                        <span asp-validation-for="Input.Password" class="mt-1 block text-sm text-red-600"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="Input.ConfirmPassword" class="mb-2 block text-sm font-medium text-slate-700"></label>
+                        <input asp-for="Input.ConfirmPassword"
+                               class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
+                        <span asp-validation-for="Input.ConfirmPassword" class="mt-1 block text-sm text-red-600"></span>
+                    </div>
+                </div>
+
+                <button type="submit"
+                        class="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700">
+                    Confirmar e definir senha
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

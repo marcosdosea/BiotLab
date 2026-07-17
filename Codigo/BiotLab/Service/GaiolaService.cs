@@ -15,6 +15,8 @@ namespace Service
 
         public uint Create(Gaiola gaiola)
         {
+            gaiola.CodigoInterno = GerarProximoCodigoInterno();
+
             context.Gaiolas.Add(gaiola);
             context.SaveChanges();
             return gaiola.Id;
@@ -52,8 +54,59 @@ namespace Service
                 throw new InvalidOperationException("Gaiola não encontrada para atualização.");
             }
 
-            context.Entry(gaiolaExistente).CurrentValues.SetValues(gaiola);
+            gaiolaExistente.NumeroMachos = gaiola.NumeroMachos;
+            gaiolaExistente.NumeroFemeas = gaiola.NumeroFemeas;
+            gaiolaExistente.Etiqueta = gaiola.Etiqueta;
+            gaiolaExistente.Localizacao = gaiola.Localizacao;
+            gaiolaExistente.Status = gaiola.Status;
+            gaiolaExistente.IdBioterio = gaiola.IdBioterio;
+            gaiolaExistente.IdExperimento = gaiola.IdExperimento;
+            gaiolaExistente.IdPesquisador = gaiola.IdPesquisador;
             context.SaveChanges();
+        }
+
+        public string GerarProximoCodigoInterno()
+        {
+            var maiorNumero = context.Gaiolas
+                .AsNoTracking()
+                .Select(g => g.CodigoInterno)
+                .ToList()
+                .Select(ExtrairNumeroCodigo)
+                .DefaultIfEmpty(0)
+                .Max();
+
+            string codigo;
+            do
+            {
+                maiorNumero++;
+                codigo = $"G{maiorNumero:0000}";
+            }
+            while (CodigoInternoExiste(codigo));
+
+            return codigo;
+        }
+
+        public bool CodigoInternoExiste(string codigoInterno, uint? ignorarId = null)
+        {
+            return context.Gaiolas.Any(g =>
+                g.CodigoInterno == codigoInterno &&
+                (!ignorarId.HasValue || g.Id != ignorarId.Value));
+        }
+
+        private static int ExtrairNumeroCodigo(string? codigoInterno)
+        {
+            if (string.IsNullOrWhiteSpace(codigoInterno))
+            {
+                return 0;
+            }
+
+            var texto = codigoInterno.Trim();
+            if (texto.StartsWith("G", StringComparison.OrdinalIgnoreCase))
+            {
+                texto = texto[1..];
+            }
+
+            return int.TryParse(texto, out var numero) ? numero : 0;
         }
     }
 }

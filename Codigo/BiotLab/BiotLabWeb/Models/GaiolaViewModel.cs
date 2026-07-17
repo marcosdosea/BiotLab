@@ -8,9 +8,8 @@ namespace BiotLabWeb.Models
         public uint Id { get; set; }
 
         [Display(Name = "Código Interno")]
-        [Required(ErrorMessage = "O código interno é obrigatório.")]
         [StringLength(50, ErrorMessage = "O código interno deve ter no máximo 50 caracteres.")]
-        public string CodigoInterno { get; set; } = null!;
+        public string? CodigoInterno { get; set; }
 
         [Display(Name = "Número de Machos")]
         [Range(0, int.MaxValue, ErrorMessage = "Informe um número válido.")]

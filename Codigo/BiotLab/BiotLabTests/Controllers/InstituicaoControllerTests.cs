@@ -11,7 +11,7 @@ namespace BiotLabWeb.Controllers.Tests
     [TestClass()]
     public class InstituicaoControllerTests
     {
-        private static InstituicaoController controller;
+        private InstituicaoController controller = null!;
 
         [TestInitialize]
         public void Initialize()
@@ -19,8 +19,7 @@ namespace BiotLabWeb.Controllers.Tests
             // Arrange
             var mockService = new Mock<IInstituicaoService>();
 
-            IMapper mapper = new MapperConfiguration(cfg =>
-                cfg.AddProfile(new InstituicaoProfile())).CreateMapper();
+            IMapper mapper = MapperTestFactory.CreateMapper(new InstituicaoProfile());
 
             mockService.Setup(service => service.GetAll())
                 .Returns(GetTestInstituicoes());
@@ -95,11 +94,8 @@ namespace BiotLabWeb.Controllers.Tests
         [TestMethod()]
         public void DeleteTest_Post_Valido()
         {
-            // Arrange
-            var instituicaoModel = GetTargetInstituicaoModel(); // Obtém o modelo para deletar
-
             // Act
-            var result = controller.Delete(1, instituicaoModel);
+            var result = controller.DeleteConfirmed(1);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
@@ -115,10 +111,10 @@ namespace BiotLabWeb.Controllers.Tests
             {
                 Id = 4,
                 Nome = "Instituição Nova",
-                Cnpj = "1234567890001",
+                Cnpj = "12345678000199",
                 Cep = "12345-678",
                 Cidade = "Cidade Nova",
-                Estado = "Estado",
+                Estado = "SP",
                 Telefone1 = "12345678",
                 Email = "email@instituicao.com"
             };
@@ -130,10 +126,10 @@ namespace BiotLabWeb.Controllers.Tests
             {
                 Id = 1,
                 Nome = "Instituição 1",
-                Cnpj = "9876543210001",
+                Cnpj = "98765432000199",
                 Cep = "12345-678",
                 Cidade = "Cidade A",
-                Estado = "Estado A",
+                Estado = "SP",
                 Telefone1 = "12345678",
                 Email = "instituicao1@email.com"
             };
@@ -145,10 +141,10 @@ namespace BiotLabWeb.Controllers.Tests
             {
                 Id = 1,
                 Nome = "Instituição 1",
-                Cnpj = "9876543210001",
+                Cnpj = "98765432000199",
                 Cep = "12345-678",
                 Cidade = "Cidade A",
-                Estado = "Estado A",
+                Estado = "SP",
                 Telefone1 = "12345678",
                 Email = "instituicao1@email.com"
             };
@@ -162,10 +158,10 @@ namespace BiotLabWeb.Controllers.Tests
                 {
                     Id = 1,
                     Nome = "Instituição 1",
-                    Cnpj = "9876543210001",
+                    Cnpj = "98765432000199",
                     Cep = "12345-678",
                     Cidade = "Cidade A",
-                    Estado = "Estado A",
+                    Estado = "SP",
                     Telefone1 = "12345678",
                     Email = "instituicao1@email.com"
                 },
@@ -173,10 +169,10 @@ namespace BiotLabWeb.Controllers.Tests
                 {
                     Id = 2,
                     Nome = "Instituição 2",
-                    Cnpj = "1234567890002",
+                    Cnpj = "12345678000188",
                     Cep = "23456-789",
                     Cidade = "Cidade B",
-                    Estado = "Estado B",
+                    Estado = "RJ",
                     Telefone1 = "87654321",
                     Email = "instituicao2@email.com"
                 },
@@ -184,10 +180,10 @@ namespace BiotLabWeb.Controllers.Tests
                 {
                     Id = 3,
                     Nome = "Instituição 3",
-                    Cnpj = "1234567890003",
+                    Cnpj = "12345678000177",
                     Cep = "34567-890",
                     Cidade = "Cidade C",
-                    Estado = "Estado C",
+                    Estado = "MG",
                     Telefone1 = "12349876",
                     Email = "instituicao3@email.com"
                 }

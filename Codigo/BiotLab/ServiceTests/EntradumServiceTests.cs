@@ -45,6 +45,8 @@ namespace Service.Tests
                 {
                     Id = 1,
                     DataEntrada = DateTime.MinValue,
+                    IdFornecedor = 1,
+                    IdInstituicao = 1,
                     IdFornecedorNavigation = fornecedor,
                     IdInstituicaoNavigation = instituicao,
                     NumeroNotaFiscal = "1"
@@ -53,6 +55,8 @@ namespace Service.Tests
                 {
                     Id = 2,
                     DataEntrada = DateTime.MaxValue,
+                    IdFornecedor = 1,
+                    IdInstituicao = 1,
                     IdFornecedorNavigation = fornecedor,
                     IdInstituicaoNavigation = instituicao,
                     NumeroNotaFiscal = "2"
@@ -61,6 +65,8 @@ namespace Service.Tests
                 {
                     Id = 3,
                     DataEntrada = DateTime.MinValue,
+                    IdFornecedor = 1,
+                    IdInstituicao = 1,
                     IdFornecedorNavigation = fornecedor,
                     IdInstituicaoNavigation = instituicao,
                     NumeroNotaFiscal = "3"
@@ -151,8 +157,8 @@ namespace Service.Tests
         public void GetAllTest()
         {
             var entradas = entradumService.GetAll().ToList();
-            Assert.AreEqual (entradas.Count, 3);
-            Assert.AreEqual(entradas.First().Id, 1u);
+            Assert.AreEqual(3, entradas.Count);
+            Assert.AreEqual(2u, entradas.First().Id);
         }
 
         [TestMethod()]

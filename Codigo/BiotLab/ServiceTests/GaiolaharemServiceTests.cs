@@ -93,6 +93,8 @@ namespace Service.Tests
                     NumeroMachos = 1,
                     NumeroFemeas = 2,
                     DataNascimento = DateTime.Now.AddMonths(-6),
+                    OrigemPai = "Origem Pai 1",
+                    OrigemMae = "Origem Mae 1",
                     Status = "A",
                     IdBioterio = 1
                 },
@@ -103,6 +105,8 @@ namespace Service.Tests
                     NumeroMachos = 2,
                     NumeroFemeas = 3,
                     DataNascimento = DateTime.Now.AddMonths(-3),
+                    OrigemPai = "Origem Pai 2",
+                    OrigemMae = "Origem Mae 2",
                     Status = "A",
                     IdBioterio = 1
                 }

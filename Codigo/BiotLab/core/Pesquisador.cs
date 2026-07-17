@@ -31,6 +31,8 @@ public partial class Pesquisador
 
     public string Email { get; set; } = null!;
 
+    public virtual ICollection<ExperimentoPesquisador> ExperimentoPesquisadores { get; set; } = new List<ExperimentoPesquisador>();
+
     public virtual ICollection<Experimento> Experimentos { get; set; } = new List<Experimento>();
 
     public virtual ICollection<Gaiolaharem> Gaiolaharems { get; set; } = new List<Gaiolaharem>();

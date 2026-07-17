@@ -25,6 +25,16 @@ namespace BiotLabWeb.Models
         [DataType(DataType.Date)]
         public DateTime DataNascimento { get; set; }
 
+        [Display(Name = "Origem do Pai")]
+        [Required(ErrorMessage = "A origem do pai é obrigatória.")]
+        [StringLength(100, ErrorMessage = "A origem do pai deve ter no máximo 100 caracteres.")]
+        public string OrigemPai { get; set; } = null!;
+
+        [Display(Name = "Origem da Mãe")]
+        [Required(ErrorMessage = "A origem da mãe é obrigatória.")]
+        [StringLength(100, ErrorMessage = "A origem da mãe deve ter no máximo 100 caracteres.")]
+        public string OrigemMae { get; set; } = null!;
+
         [Display(Name = "Status")]
         [Required(ErrorMessage = "O status é obrigatório.")]
         [StringLength(1, ErrorMessage = "O status deve ter 1 caractere.")]

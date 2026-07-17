@@ -65,6 +65,7 @@ namespace Service.Tests
                 new Experimento
                 {
                     Id = 1,
+                    Titulo = "Projeto 1",
                     DataInicio = DateTime.Now.AddDays(-10),
                     DataFim = DateTime.Now.AddDays(10),
                     Cepa = "Cepa 1",
@@ -73,6 +74,7 @@ namespace Service.Tests
                 new Experimento
                 {
                     Id = 2,
+                    Titulo = "Projeto 2",
                     DataInicio = DateTime.Now.AddDays(-20),
                     DataFim = DateTime.Now.AddDays(5),
                     Cepa = "Cepa 2",
@@ -177,7 +179,7 @@ namespace Service.Tests
             Assert.AreEqual(3, gaiolaService.GetAll().Count());
             var gaiola = gaiolaService.Get(createdId);
             Assert.IsNotNull(gaiola);
-            Assert.AreEqual("GAI003", gaiola.CodigoInterno);
+            Assert.AreEqual("G0001", gaiola.CodigoInterno);
             Assert.AreEqual("Setor C", gaiola.Localizacao);
             Assert.AreEqual("F", gaiola.Status);
         }

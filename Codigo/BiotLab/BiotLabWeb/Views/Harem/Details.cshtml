@@ -45,6 +45,14 @@
     <dd class="mt-2 break-words text-sm font-semibold text-slate-800">@Model.DataNascimento.ToString("dd/MM/yyyy")</dd>
 </div>
 <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+    <dt class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Origem do pai</dt>
+    <dd class="mt-2 break-words text-sm font-semibold text-slate-800">@Model.OrigemPai</dd>
+</div>
+<div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+    <dt class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Origem da mãe</dt>
+    <dd class="mt-2 break-words text-sm font-semibold text-slate-800">@Model.OrigemMae</dd>
+</div>
+<div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
     <dt class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Status</dt>
     <dd class="mt-2 break-words text-sm font-semibold text-slate-800">@((Model.Status ?? "") == "A" ? "Ativo" : (Model.Status ?? "") == "I" ? "Inativo" : (Model.Status ?? "") == "N" ? "Nova" : (Model.Status ?? "") == "E" ? "Em experimento" : (Model.Status ?? "") == "F" ? "Finalizada" : (Model.Status ?? "—"))</dd>
 </div>

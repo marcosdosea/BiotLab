@@ -22,7 +22,7 @@ namespace BiotLabWeb.Controllers.Tests
         public void Setup()
         {
             // Configuração do AutoMapper
-            var config = new MapperConfiguration(cfg =>
+            var config = MapperTestFactory.CreateConfiguration(cfg =>
             {
                 cfg.CreateMap<Pesquisador, PesquisadorViewModel>().ReverseMap();
             });

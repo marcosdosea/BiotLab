@@ -7,7 +7,9 @@ namespace Core.DTO
     {
         public uint Id { get; set; }
 
-        public string Nome { get; set; } = null!;
+        public string Titulo { get; set; } = null!;
+
+        public string? Cepa { get; set; }
 
         public string DataInicio { get; set; } = null!;
 

@@ -8,6 +8,8 @@ namespace Core.Service
         public void Update(Gaiola gaiola);
         public void Delete(uint id);
         public IEnumerable<Gaiola> GetAll();
-        public Gaiola Get(uint id);
+        public Gaiola? Get(uint id);
+        public string GerarProximoCodigoInterno();
+        public bool CodigoInternoExiste(string codigoInterno, uint? ignorarId = null);
     }
 }

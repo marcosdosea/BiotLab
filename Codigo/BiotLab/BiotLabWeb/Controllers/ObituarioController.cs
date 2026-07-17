@@ -5,10 +5,11 @@ using Core.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
 namespace BiotLabWeb.Controllers
 {
-    [Authorize(Roles = "Administrador,Estudante")]
+    [Authorize(Roles = "Administrador,Estudante,Aluno")]
     public class ObituarioController : Controller
     {
         private readonly IObituarioService obituarioService;
@@ -50,9 +51,68 @@ namespace BiotLabWeb.Controllers
             ViewBag.Pesquisadores = new SelectList(pesquisadores, "Id", "Descricao", idPesquisadorSelecionado);
         }
 
-        public ActionResult Index()
+        private bool DeveVincularPesquisadorLogado()
         {
-            var obituarios = obituarioService.GetAll();
+            return User?.Identity?.IsAuthenticated == true && !User.IsInRole("Administrador");
+        }
+
+        private Pesquisador? ObterPesquisadorDoUsuarioLogado()
+        {
+            var emailUsuario = User.FindFirstValue(ClaimTypes.Email) ?? User.Identity?.Name;
+            if (string.IsNullOrWhiteSpace(emailUsuario))
+            {
+                return null;
+            }
+
+            return pesquisadorService.GetAll()
+                .FirstOrDefault(p => string.Equals(p.Email, emailUsuario, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private Pesquisador? VincularPesquisadorLogado(ObituarioViewModel obituario)
+        {
+            ViewBag.PesquisadorBloqueado = false;
+
+            if (!DeveVincularPesquisadorLogado())
+            {
+                return null;
+            }
+
+            ViewBag.PesquisadorBloqueado = true;
+
+            var pesquisador = ObterPesquisadorDoUsuarioLogado();
+            if (pesquisador == null)
+            {
+                ViewBag.PesquisadorLogadoNome = "Pesquisador não encontrado para o usuário logado";
+                return null;
+            }
+
+            obituario.IdPesquisador = pesquisador.Id;
+            ViewBag.PesquisadorLogadoNome = pesquisador.Nome;
+            ModelState.Remove(nameof(obituario.IdPesquisador));
+
+            return pesquisador;
+        }
+
+        public ActionResult Index(DateTime? dataInicio = null, DateTime? dataFim = null)
+        {
+            ViewBag.DataInicio = dataInicio?.ToString("yyyy-MM-dd");
+            ViewBag.DataFim = dataFim?.ToString("yyyy-MM-dd");
+            ViewBag.FiltroAplicado = dataInicio.HasValue || dataFim.HasValue;
+
+            IEnumerable<Obituario> obituarios;
+
+            if (dataInicio.HasValue && dataFim.HasValue && dataInicio.Value.Date > dataFim.Value.Date)
+            {
+                ModelState.AddModelError(string.Empty, "A data inicial não pode ser maior que a data final.");
+                obituarios = Enumerable.Empty<Obituario>();
+            }
+            else
+            {
+                obituarios = dataInicio.HasValue || dataFim.HasValue
+                    ? obituarioService.GetByPeriodo(dataInicio, dataFim)
+                    : obituarioService.GetAll();
+            }
+
             var viewModel = mapper.Map<IEnumerable<ObituarioViewModel>>(obituarios);
             return View(viewModel);
         }
@@ -71,17 +131,27 @@ namespace BiotLabWeb.Controllers
 
         public ActionResult Create()
         {
-            CarregarCombos();
-            return View(new ObituarioViewModel
+            var vm = new ObituarioViewModel
             {
                 Data = DateTime.Today
-            });
+            };
+
+            VincularPesquisadorLogado(vm);
+            CarregarCombos(null, vm.IdPesquisador);
+            return View(vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(ObituarioViewModel obituario)
         {
+            var pesquisadorLogado = VincularPesquisadorLogado(obituario);
+
+            if (DeveVincularPesquisadorLogado() && pesquisadorLogado == null)
+            {
+                ModelState.AddModelError(nameof(obituario.IdPesquisador), "Seu usuário não está vinculado a um pesquisador.");
+            }
+
             if (!ModelState.IsValid)
             {
                 CarregarCombos(obituario.IdGaiola, obituario.IdPesquisador);
@@ -129,6 +199,7 @@ namespace BiotLabWeb.Controllers
             }
 
             var vm = mapper.Map<ObituarioViewModel>(obituario);
+            VincularPesquisadorLogado(vm);
             CarregarCombos(vm.IdGaiola, vm.IdPesquisador);
             return View(vm);
         }
@@ -137,6 +208,8 @@ namespace BiotLabWeb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(uint id, ObituarioViewModel obituario)
         {
+            var pesquisadorLogado = VincularPesquisadorLogado(obituario);
+
             if (id != obituario.Id)
             {
                 return BadRequest();
@@ -152,6 +225,11 @@ namespace BiotLabWeb.Controllers
             if (registroAtual == null)
             {
                 return NotFound();
+            }
+
+            if (DeveVincularPesquisadorLogado() && pesquisadorLogado == null)
+            {
+                ModelState.AddModelError(nameof(obituario.IdPesquisador), "Seu usuário não está vinculado a um pesquisador.");
             }
 
             var gaiola = gaiolaService.Get(obituario.IdGaiola);

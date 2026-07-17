@@ -179,8 +179,8 @@ namespace Service.Tests
         [TestMethod()]
         public void ValidarTest_NotImplemented()
         {
-            // Verificando se a exceção NotImplementedException é lançada
-            Assert.ThrowsException<NotImplementedException>(() => anestesicoService.Validar(1));
+            Assert.IsTrue(anestesicoService.Validar(1));
+            Assert.IsFalse(anestesicoService.Validar(999));
         }
     }
 }

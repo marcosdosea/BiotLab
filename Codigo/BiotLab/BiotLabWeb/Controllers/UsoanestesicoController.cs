@@ -5,10 +5,11 @@ using Core.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
 namespace BiotLabWeb.Controllers
 {
-    [Authorize(Roles = "Administrador,Estudante")]
+    [Authorize(Roles = "Administrador,Estudante,Aluno")]
     public class UsoanestesicoController : Controller
     {
         private readonly IUsoanestesicoService usoanestesicoService;
@@ -49,7 +50,7 @@ namespace BiotLabWeb.Controllers
                 .Select(e => new
                 {
                     e.Id,
-                    Nome = $"{e.Cepa} ({e.DataInicio:dd/MM/yyyy} - {e.DataFim:dd/MM/yyyy})"
+                    Nome = $"{e.Titulo} ({e.DataInicio:dd/MM/yyyy} - {e.DataFim:dd/MM/yyyy})"
                 })
                 .ToList();
 
@@ -79,6 +80,49 @@ namespace BiotLabWeb.Controllers
             ViewBag.Anestesicos = new SelectList(anestesicos, "IdAnestesico", "Texto", idAnestesicoSelecionado);
         }
 
+        private bool DeveVincularPesquisadorLogado()
+        {
+            return User?.Identity?.IsAuthenticated == true && !User.IsInRole("Administrador");
+        }
+
+        private Pesquisador? ObterPesquisadorDoUsuarioLogado()
+        {
+            var emailUsuario = User.FindFirstValue(ClaimTypes.Email) ?? User.Identity?.Name;
+            if (string.IsNullOrWhiteSpace(emailUsuario))
+            {
+                return null;
+            }
+
+            return pesquisadorService.GetAll()
+                .FirstOrDefault(p => string.Equals(p.Email, emailUsuario, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private Pesquisador? VincularPesquisadorLogado(UsoanestesicoViewModel usoanestesico)
+        {
+            ViewBag.PesquisadorBloqueado = false;
+
+            if (!DeveVincularPesquisadorLogado())
+            {
+                return null;
+            }
+
+            ViewBag.PesquisadorBloqueado = true;
+
+            var pesquisador = ObterPesquisadorDoUsuarioLogado();
+            if (pesquisador == null)
+            {
+                ViewBag.PesquisadorLogadoNome = "Pesquisador não encontrado para o usuário logado";
+                return null;
+            }
+
+            usoanestesico.IdPesquisador = pesquisador.Id;
+            usoanestesico.NomePesquisador = pesquisador.Nome;
+            ViewBag.PesquisadorLogadoNome = pesquisador.Nome;
+            ModelState.Remove(nameof(usoanestesico.IdPesquisador));
+
+            return pesquisador;
+        }
+
         public ActionResult Index()
         {
             var usoanestesicos = usoanestesicoService.GetAll();
@@ -100,20 +144,38 @@ namespace BiotLabWeb.Controllers
 
         public ActionResult Create()
         {
-            CarregarCombos();
-            return View(new UsoanestesicoViewModel
+            var usoanestesico = new UsoanestesicoViewModel
             {
                 Data = DateTime.Today
-            });
+            };
+
+            VincularPesquisadorLogado(usoanestesico);
+            CarregarCombos(usoanestesico.IdPesquisador);
+
+            return View(usoanestesico);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(UsoanestesicoViewModel usoanestesico)
         {
+            var pesquisadorLogado = VincularPesquisadorLogado(usoanestesico);
+
+            if (DeveVincularPesquisadorLogado() && pesquisadorLogado == null)
+            {
+                ModelState.AddModelError(
+                    nameof(usoanestesico.IdPesquisador),
+                    "Não foi encontrado um pesquisador cadastrado com o e-mail do usuário logado.");
+            }
+
             if (usoanestesico.Quantidade <= 0)
             {
                 ModelState.AddModelError(nameof(usoanestesico.Quantidade), "A quantidade deve ser maior que zero.");
+            }
+
+            if (DeveVincularPesquisadorLogado() && pesquisadorLogado == null)
+            {
+                ModelState.AddModelError(nameof(usoanestesico.IdPesquisador), "Seu usuário não está vinculado a um pesquisador.");
             }
 
             if (!ModelState.IsValid)
@@ -178,6 +240,7 @@ namespace BiotLabWeb.Controllers
             }
 
             var vm = mapper.Map<UsoanestesicoViewModel>(usoanestesico);
+            VincularPesquisadorLogado(vm);
             CarregarCombos(vm.IdPesquisador, vm.IdExperimento, vm.IdEntrada, vm.IdAnestesico);
             return View(vm);
         }
@@ -186,6 +249,8 @@ namespace BiotLabWeb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(uint id, UsoanestesicoViewModel usoanestesico)
         {
+            var pesquisadorLogado = VincularPesquisadorLogado(usoanestesico);
+
             if (id != usoanestesico.Id)
             {
                 return BadRequest();

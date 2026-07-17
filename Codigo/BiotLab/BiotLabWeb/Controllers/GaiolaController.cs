@@ -5,10 +5,11 @@ using Core.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
 namespace BiotLabWeb.Controllers
 {
-    [Authorize(Roles = "Administrador,Estudante")]
+    [Authorize(Roles = "Administrador,Estudante,Aluno")]
     public class GaiolaController : Controller
     {
         private readonly IGaiolaService gaiolaService;
@@ -48,7 +49,7 @@ namespace BiotLabWeb.Controllers
                 .Select(e => new
                 {
                     e.Id,
-                    Nome = $"{e.Cepa} ({e.DataInicio:dd/MM/yyyy} - {e.DataFim:dd/MM/yyyy})"
+                    Nome = $"{e.Titulo} ({e.DataInicio:dd/MM/yyyy} - {e.DataFim:dd/MM/yyyy})"
                 })
                 .ToList();
 
@@ -63,6 +64,49 @@ namespace BiotLabWeb.Controllers
             ViewBag.Bioterios = new SelectList(bioterios, "Id", "Nome", idBioterioSelecionado);
             ViewBag.Experimentos = new SelectList(experimentos, "Id", "Nome", idExperimentoSelecionado);
             ViewBag.Pesquisadores = new SelectList(pesquisadores, "Id", "Nome", idPesquisadorSelecionado);
+        }
+
+        private bool DeveVincularPesquisadorLogado()
+        {
+            return User?.Identity?.IsAuthenticated == true && !User.IsInRole("Administrador");
+        }
+
+        private Pesquisador? ObterPesquisadorDoUsuarioLogado()
+        {
+            var emailUsuario = User.FindFirstValue(ClaimTypes.Email) ?? User.Identity?.Name;
+            if (string.IsNullOrWhiteSpace(emailUsuario))
+            {
+                return null;
+            }
+
+            return pesquisadorService.GetAll()
+                .FirstOrDefault(p => string.Equals(p.Email, emailUsuario, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private Pesquisador? VincularPesquisadorLogado(GaiolaViewModel gaiola)
+        {
+            ViewBag.PesquisadorBloqueado = false;
+
+            if (!DeveVincularPesquisadorLogado())
+            {
+                return null;
+            }
+
+            ViewBag.PesquisadorBloqueado = true;
+
+            var pesquisador = ObterPesquisadorDoUsuarioLogado();
+            if (pesquisador == null)
+            {
+                ViewBag.PesquisadorLogadoNome = "Pesquisador não encontrado para o usuário logado";
+                return null;
+            }
+
+            gaiola.IdPesquisador = pesquisador.Id;
+            gaiola.NomePesquisador = pesquisador.Nome;
+            ViewBag.PesquisadorLogadoNome = pesquisador.Nome;
+            ModelState.Remove(nameof(gaiola.IdPesquisador));
+
+            return pesquisador;
         }
 
         public ActionResult Index()
@@ -86,7 +130,7 @@ namespace BiotLabWeb.Controllers
                 IdPesquisador = g.IdPesquisador,
                 NomeBioterio = bioterios.FirstOrDefault(b => b.Id == g.IdBioterio)?.Nome,
                 NomeExperimento = g.IdExperimento.HasValue
-                    ? experimentos.FirstOrDefault(e => e.Id == g.IdExperimento.Value)?.Cepa
+                    ? experimentos.FirstOrDefault(e => e.Id == g.IdExperimento.Value)?.Titulo
                     : null,
                 NomePesquisador = g.IdPesquisador.HasValue
                     ? pesquisadores.FirstOrDefault(p => p.Id == g.IdPesquisador.Value)?.Nome
@@ -107,7 +151,7 @@ namespace BiotLabWeb.Controllers
             var vm = mapper.Map<GaiolaViewModel>(gaiola);
             vm.NomeBioterio = bioterioService.Get(gaiola.IdBioterio)?.Nome;
             vm.NomeExperimento = gaiola.IdExperimento.HasValue
-                ? experimentoService.Get(gaiola.IdExperimento.Value)?.Cepa
+                ? experimentoService.Get(gaiola.IdExperimento.Value)?.Titulo
                 : null;
             vm.NomePesquisador = gaiola.IdPesquisador.HasValue
                 ? pesquisadorService.Buscar(gaiola.IdPesquisador.Value)?.Nome
@@ -118,16 +162,31 @@ namespace BiotLabWeb.Controllers
 
         public ActionResult Create()
         {
-            CarregarCombos();
-            return View(new GaiolaViewModel());
+            var vm = new GaiolaViewModel
+            {
+                CodigoInterno = gaiolaService.GerarProximoCodigoInterno()
+            };
+
+            VincularPesquisadorLogado(vm);
+            CarregarCombos(null, null, vm.IdPesquisador);
+            return View(vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(GaiolaViewModel gaiola)
         {
+            ModelState.Remove(nameof(gaiola.CodigoInterno));
+            var pesquisadorLogado = VincularPesquisadorLogado(gaiola);
+
+            if (DeveVincularPesquisadorLogado() && pesquisadorLogado == null)
+            {
+                ModelState.AddModelError(nameof(gaiola.IdPesquisador), "Seu usuário não está vinculado a um pesquisador.");
+            }
+
             if (!ModelState.IsValid)
             {
+                gaiola.CodigoInterno = gaiolaService.GerarProximoCodigoInterno();
                 CarregarCombos(gaiola.IdBioterio, gaiola.IdExperimento, gaiola.IdPesquisador);
                 return View(gaiola);
             }
@@ -149,6 +208,7 @@ namespace BiotLabWeb.Controllers
 
             if (!ModelState.IsValid)
             {
+                gaiola.CodigoInterno = gaiolaService.GerarProximoCodigoInterno();
                 CarregarCombos(gaiola.IdBioterio, gaiola.IdExperimento, gaiola.IdPesquisador);
                 return View(gaiola);
             }
@@ -162,6 +222,7 @@ namespace BiotLabWeb.Controllers
             catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, $"Não foi possível salvar a gaiola. {ex.InnerException?.Message ?? ex.Message}");
+                gaiola.CodigoInterno = gaiolaService.GerarProximoCodigoInterno();
                 CarregarCombos(gaiola.IdBioterio, gaiola.IdExperimento, gaiola.IdPesquisador);
                 return View(gaiola);
             }
@@ -176,6 +237,7 @@ namespace BiotLabWeb.Controllers
             }
 
             var vm = mapper.Map<GaiolaViewModel>(gaiola);
+            VincularPesquisadorLogado(vm);
             CarregarCombos(vm.IdBioterio, vm.IdExperimento, vm.IdPesquisador);
             return View(vm);
         }
@@ -184,21 +246,30 @@ namespace BiotLabWeb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(uint id, GaiolaViewModel gaiola)
         {
+            ModelState.Remove(nameof(gaiola.CodigoInterno));
+            var pesquisadorLogado = VincularPesquisadorLogado(gaiola);
+
             if (id != gaiola.Id)
             {
                 return BadRequest();
-            }
-
-            if (!ModelState.IsValid)
-            {
-                CarregarCombos(gaiola.IdBioterio, gaiola.IdExperimento, gaiola.IdPesquisador);
-                return View(gaiola);
             }
 
             var atual = gaiolaService.Get(id);
             if (atual == null)
             {
                 return NotFound();
+            }
+
+            if (DeveVincularPesquisadorLogado() && pesquisadorLogado == null)
+            {
+                ModelState.AddModelError(nameof(gaiola.IdPesquisador), "Seu usuário não está vinculado a um pesquisador.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                gaiola.CodigoInterno = atual.CodigoInterno;
+                CarregarCombos(gaiola.IdBioterio, gaiola.IdExperimento, gaiola.IdPesquisador);
+                return View(gaiola);
             }
 
             if (bioterioService.Get(gaiola.IdBioterio) == null)
@@ -218,12 +289,14 @@ namespace BiotLabWeb.Controllers
 
             if (!ModelState.IsValid)
             {
+                gaiola.CodigoInterno = atual.CodigoInterno;
                 CarregarCombos(gaiola.IdBioterio, gaiola.IdExperimento, gaiola.IdPesquisador);
                 return View(gaiola);
             }
 
             try
             {
+                gaiola.CodigoInterno = atual.CodigoInterno;
                 var gaiolaDB = mapper.Map<Gaiola>(gaiola);
                 gaiolaService.Update(gaiolaDB);
                 return RedirectToAction(nameof(Index));
@@ -231,6 +304,7 @@ namespace BiotLabWeb.Controllers
             catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, $"Não foi possível atualizar a gaiola. {ex.InnerException?.Message ?? ex.Message}");
+                gaiola.CodigoInterno = atual.CodigoInterno;
                 CarregarCombos(gaiola.IdBioterio, gaiola.IdExperimento, gaiola.IdPesquisador);
                 return View(gaiola);
             }
@@ -247,7 +321,7 @@ namespace BiotLabWeb.Controllers
             var vm = mapper.Map<GaiolaViewModel>(gaiola);
             vm.NomeBioterio = bioterioService.Get(gaiola.IdBioterio)?.Nome;
             vm.NomeExperimento = gaiola.IdExperimento.HasValue
-                ? experimentoService.Get(gaiola.IdExperimento.Value)?.Cepa
+                ? experimentoService.Get(gaiola.IdExperimento.Value)?.Titulo
                 : null;
             vm.NomePesquisador = gaiola.IdPesquisador.HasValue
                 ? pesquisadorService.Buscar(gaiola.IdPesquisador.Value)?.Nome
@@ -276,7 +350,7 @@ namespace BiotLabWeb.Controllers
                 var vm = mapper.Map<GaiolaViewModel>(existente);
                 vm.NomeBioterio = bioterioService.Get(existente.IdBioterio)?.Nome;
                 vm.NomeExperimento = existente.IdExperimento.HasValue
-                    ? experimentoService.Get(existente.IdExperimento.Value)?.Cepa
+                    ? experimentoService.Get(existente.IdExperimento.Value)?.Titulo
                     : null;
                 vm.NomePesquisador = existente.IdPesquisador.HasValue
                     ? pesquisadorService.Buscar(existente.IdPesquisador.Value)?.Nome

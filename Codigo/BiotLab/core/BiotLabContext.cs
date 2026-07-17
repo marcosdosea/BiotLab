@@ -25,6 +25,8 @@ public partial class BiotlabContext : DbContext
 
     public virtual DbSet<Experimento> Experimentos { get; set; }
 
+    public virtual DbSet<ExperimentoPesquisador> ExperimentoPesquisadores { get; set; }
+
     public virtual DbSet<Fornecedor> Fornecedors { get; set; }
 
     public virtual DbSet<Gaiola> Gaiolas { get; set; }
@@ -195,8 +197,12 @@ public partial class BiotlabContext : DbContext
             entity.HasIndex(e => e.IdPesquisador, "fk_Experimento_Pesquisador1_idx");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Titulo)
+                .HasMaxLength(100)
+                .HasColumnName("titulo");
             entity.Property(e => e.Cepa)
                 .HasMaxLength(50)
+                .IsRequired(false)
                 .HasColumnName("cepa");
             entity.Property(e => e.DataFim)
                 .HasColumnType("date")
@@ -210,6 +216,27 @@ public partial class BiotlabContext : DbContext
                 .HasForeignKey(d => d.IdPesquisador)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("fk_Experimento_Pesquisador1");
+        });
+
+        modelBuilder.Entity<ExperimentoPesquisador>(entity =>
+        {
+            entity.HasKey(e => new { e.IdExperimento, e.IdPesquisador }).HasName("PRIMARY");
+
+            entity.ToTable("experimentoPesquisador");
+
+            entity.HasIndex(e => e.IdPesquisador, "fk_ExperimentoPesquisador_Pesquisador1_idx");
+
+            entity.Property(e => e.IdExperimento).HasColumnName("idExperimento");
+            entity.Property(e => e.IdPesquisador).HasColumnName("idPesquisador");
+
+            entity.HasOne(d => d.IdExperimentoNavigation).WithMany(p => p.ExperimentoPesquisadores)
+                .HasForeignKey(d => d.IdExperimento)
+                .HasConstraintName("fk_ExperimentoPesquisador_Experimento1");
+
+            entity.HasOne(d => d.IdPesquisadorNavigation).WithMany(p => p.ExperimentoPesquisadores)
+                .HasForeignKey(d => d.IdPesquisador)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_ExperimentoPesquisador_Pesquisador1");
         });
 
         modelBuilder.Entity<Fornecedor>(entity =>
@@ -368,6 +395,12 @@ public partial class BiotlabContext : DbContext
             entity.Property(e => e.IdBioterio).HasColumnName("idBioterio");
             entity.Property(e => e.NumeroFemeas).HasColumnName("numeroFemeas");
             entity.Property(e => e.NumeroMachos).HasColumnName("numeroMachos");
+            entity.Property(e => e.OrigemMae)
+                .HasMaxLength(100)
+                .HasColumnName("origemMae");
+            entity.Property(e => e.OrigemPai)
+                .HasMaxLength(100)
+                .HasColumnName("origemPai");
             entity.Property(e => e.Status)
                 .HasComment("A - ATIVO\nI - INATIVO")
                 .HasColumnType("enum('A','I')")

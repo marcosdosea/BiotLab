@@ -15,6 +15,10 @@ public partial class Harem
 
     public DateTime DataNascimento { get; set; }
 
+    public string OrigemPai { get; set; } = null!;
+
+    public string OrigemMae { get; set; } = null!;
+
     /// <summary>
     /// A - ATIVO
     /// I - INATIVO

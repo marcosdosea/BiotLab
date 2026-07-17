@@ -1,0 +1,233 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+
+\geometry{top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm}
+\graphicspath{{TestResults/SeleniumScreenshots/}}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  urlcolor=blue!60!black,
+  pdftitle={Relatório de Testes Selenium --- BiotLab},
+  pdfauthor={Equipe BiotLab}
+}
+
+\definecolor{biotblue}{HTML}{2563EB}
+\definecolor{successgreen}{HTML}{15803D}
+\definecolor{lightgray}{HTML}{F3F4F6}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textbf{BiotLab}}
+\rhead{Relatório de Testes Selenium}
+\cfoot{\thepage}
+\setlength{\headheight}{15pt}
+
+\newcommand{\aprovado}{\textcolor{successgreen}{\textbf{Aprovado}}}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering
+  \vspace*{2.5cm}
+  {\color{biotblue}\rule{\textwidth}{2pt}\par}
+  \vspace{1.2cm}
+  {\Huge\bfseries Relatório de Testes Selenium\par}
+  \vspace{0.5cm}
+  {\LARGE Sistema BiotLab\par}
+  \vspace{1.5cm}
+  {\large Testes funcionais automatizados de interface\par}
+  \vfill
+  \begin{tabular}{rl}
+    \textbf{Data da execução:} & 17 de julho de 2026 \\
+    \textbf{Aplicação:} & BiotLab Web \\
+    \textbf{Tecnologia:} & ASP.NET Core .NET 8 \\
+    \textbf{Ferramenta:} & Selenium WebDriver 4.46.0 \\
+    \textbf{Navegador:} & Google Chrome, modo headless \\
+    \textbf{Banco de dados:} & MySQL local \\
+  \end{tabular}
+  \vfill
+  {\color{biotblue}\rule{\textwidth}{2pt}\par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Resumo executivo}
+
+Foram executados três testes funcionais automatizados sobre a interface web do
+BiotLab. Todos os cenários foram aprovados, incluindo a apresentação da tela de
+login, a proteção de uma rota contra acesso anônimo e a autenticação de um
+administrador com acesso posterior ao dashboard.
+
+\begin{center}
+  \setlength{\tabcolsep}{12pt}
+  \renewcommand{\arraystretch}{1.4}
+  \begin{tabular}{>{\bfseries}l c}
+    \toprule
+    Indicador & Resultado \\
+    \midrule
+    Testes executados & 3 \\
+    Testes aprovados & \textcolor{successgreen}{\textbf{3}} \\
+    Testes com falha & 0 \\
+    Testes ignorados & 0 \\
+    Duração aproximada & 13 segundos \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+
+\section{Objetivo e escopo}
+
+O objetivo desta execução foi validar os fluxos essenciais de acesso ao sistema
+por meio de um navegador real automatizado. O escopo contemplou:
+
+\begin{enumerate}[label=\arabic*.]
+  \item carregamento da página de autenticação;
+  \item presença dos campos e controles obrigatórios;
+  \item bloqueio de acesso anônimo a um módulo protegido;
+  \item redirecionamento para a página de login;
+  \item autenticação administrativa;
+  \item apresentação do dashboard após o login.
+\end{enumerate}
+
+\section{Resultados}
+
+\renewcommand{\arraystretch}{1.35}
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabular}{p{4.2cm} p{2.2cm} p{7.2cm}}
+    \toprule
+    \textbf{Cenário} & \textbf{Resultado} & \textbf{Evidência validada} \\
+    \midrule
+    Carregamento da página de login
+      & \aprovado
+      & Formulário, campo de e-mail, campo de senha e botão de entrada visíveis e habilitados. \\
+    Proteção de módulo para usuário anônimo
+      & \aprovado
+      & O acesso a \texttt{/Instituicao} foi redirecionado ao login com parâmetro \texttt{ReturnUrl}. \\
+    Login administrativo
+      & \aprovado
+      & As credenciais foram aceitas, a página de login foi encerrada e o dashboard do BiotLab foi exibido. \\
+    \bottomrule
+  \end{tabular}
+  \caption{Resumo dos cenários executados pelo Selenium.}
+\end{table}
+
+O resultado estruturado da execução também foi armazenado no arquivo
+\path{BiotLabTests/TestResults/selenium-results.trx}.
+
+\section{Evidências visuais}
+
+\subsection{Página de login}
+
+A Figura~\ref{fig:login} demonstra a apresentação da página de autenticação
+com os controles exigidos pelo cenário de teste.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{01-pagina-login.png}
+  \caption{Página de login carregada pelo Selenium.}
+  \label{fig:login}
+\end{figure}
+
+\subsection{Redirecionamento de acesso anônimo}
+
+A Figura~\ref{fig:redirect} registra o resultado da tentativa de acesso anônimo
+a um módulo protegido. O sistema encaminhou o navegador para a autenticação.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{02-redirecionamento-login.png}
+  \caption{Redirecionamento de usuário anônimo para o login.}
+  \label{fig:redirect}
+\end{figure}
+
+\subsection{Dashboard administrativo}
+
+A Figura~\ref{fig:dashboard} comprova que o administrador autenticado chegou
+ao dashboard e recebeu os módulos correspondentes ao seu perfil.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{03-dashboard-administrador.png}
+  \caption{Dashboard apresentado após autenticação administrativa.}
+  \label{fig:dashboard}
+\end{figure}
+
+\section{Avaliação}
+
+Os resultados demonstram que os fluxos essenciais cobertos estão funcionando:
+
+\begin{itemize}
+  \item a página de autenticação oferece os controles necessários;
+  \item rotas protegidas impedem o acesso de usuários anônimos;
+  \item um administrador válido consegue autenticar-se;
+  \item o sistema apresenta o dashboard após a autenticação;
+  \item os testes podem produzir evidências visuais e um resultado TRX.
+\end{itemize}
+
+\section{Limitações}
+
+Esta execução representa uma verificação inicial de fumaça e ainda não cobre:
+
+\begin{itemize}
+  \item logout, expiração e reutilização de sessão;
+  \item bloqueio após repetidas tentativas inválidas;
+  \item recuperação e redefinição de senha;
+  \item permissões específicas do perfil de estudante;
+  \item fluxos de cadastro, consulta, alteração e exclusão;
+  \item mensagens e validações dos formulários;
+  \item navegadores, dispositivos e resoluções adicionais;
+  \item acessibilidade, desempenho e carga.
+\end{itemize}
+
+\section{Risco de segurança identificado}
+
+Durante a preparação do ambiente foram observadas credenciais armazenadas
+diretamente em arquivos \texttt{appsettings}. Nenhuma credencial é reproduzida
+neste relatório.
+
+Recomenda-se:
+
+\begin{enumerate}[label=\arabic*.]
+  \item revogar ou rotacionar imediatamente as credenciais expostas;
+  \item remover senhas dos arquivos versionados;
+  \item utilizar variáveis de ambiente ou .NET User Secrets;
+  \item empregar uma conta exclusiva e de privilégio mínimo para automação;
+  \item impedir que capturas, logs e relatórios registrem informações sensíveis.
+\end{enumerate}
+
+\section{Próximos testes recomendados}
+
+\begin{enumerate}[label=\arabic*.]
+  \item validar login inválido e bloqueio de conta;
+  \item validar logout e impossibilidade de reutilizar a sessão;
+  \item verificar autorização para cada perfil;
+  \item automatizar os fluxos CRUD dos módulos administrativos;
+  \item capturar automaticamente telas e HTML quando um cenário falhar;
+  \item integrar os testes a uma rotina de integração contínua;
+  \item acompanhar os resultados por execução usando TRX e relatório HTML.
+\end{enumerate}
+
+\section{Conclusão}
+
+Os três cenários executados foram aprovados, sem falhas ou testes ignorados.
+Dentro do escopo avaliado, o BiotLab apresentou corretamente a interface de
+login, o controle de acesso anônimo e o dashboard administrativo. A ampliação
+da suíte para operações de negócio e controles de segurança permitirá uma
+avaliação funcional mais abrangente.
+
+\end{document}

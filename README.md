@@ -267,7 +267,7 @@
 </p>
 
 <p>
-  <a href="https://docs.google.com/document/d/1i6_IjwYee5jAxyF43Akke-AgiD80b6samx5Qj8KxgZw/edit?tab=t.0#heading=h.22m2czr403dw" target="_blank">
+  <a href="https://docs.google.com/document/d/1l29CZnmfKLUCU2HY0SV4n96pnU2cZXW8TyMLCicN3TQ/edit?usp=sharing" target="_blank">
     2 - Manual de uso
   </a>
 </p>

@@ -261,7 +261,7 @@
 <h2 id="linksuteis">10. Links Úteis :link:</h2>
 
 <p>
-  <a href="https://www.youtube.com/watch?v=VTavPwydjJQ" target="_blank">
+  <a href="https://www.youtube.com/watch?v=0JTTKtgrr5s" target="_blank">
     1 - Vídeo de apresentação
   </a>
 </p>

@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace BiotLabWeb.Controllers
 {
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "PesquisadorSenior")]
     public class FornecedorController : Controller
     {
         private readonly IFornecedorService fornecedorService;

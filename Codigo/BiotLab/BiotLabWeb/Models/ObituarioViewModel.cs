@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace BiotLabWeb.Models
@@ -20,5 +20,12 @@ namespace BiotLabWeb.Models
         [Display(Name = "Pesquisador")]
         [Required(ErrorMessage = "O pesquisador é obrigatório.")]
         public uint IdPesquisador { get; set; }
+
+        [Display(Name = "Pesquisador")]
+        public string? NomePesquisador { get; set; }
+
+        [Display(Name = "Observações")]
+        [StringLength(1000, ErrorMessage = "As observações devem ter no máximo 1000 caracteres.")]
+        public string? Observacoes { get; set; }
     }
 }

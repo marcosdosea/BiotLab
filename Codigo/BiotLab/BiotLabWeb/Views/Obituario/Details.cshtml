@@ -1,4 +1,4 @@
-﻿@model BiotLabWeb.Models.ObituarioViewModel
+@model BiotLabWeb.Models.ObituarioViewModel
 
 @{
     ViewData["Title"] = "Detalhes - Registro de óbito";
@@ -38,7 +38,11 @@
 </div>
 <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
     <dt class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Pesquisador</dt>
-    <dd class="mt-2 break-words text-sm font-semibold text-slate-800">@Model.IdPesquisador</dd>
+    <dd class="mt-2 break-words text-sm font-semibold text-slate-800">@(Model.NomePesquisador ?? "Pesquisador não encontrado")</dd>
+</div>
+<div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 md:col-span-2">
+    <dt class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Observações</dt>
+    <dd class="mt-2 whitespace-pre-wrap break-words text-sm font-semibold text-slate-800">@(string.IsNullOrWhiteSpace(Model.Observacoes) ? "Nenhuma observação informada." : Model.Observacoes)</dd>
 </div>
     </dl>
     <div class="flex flex-col-reverse gap-3 border-t border-slate-200 p-6 sm:flex-row sm:justify-end">

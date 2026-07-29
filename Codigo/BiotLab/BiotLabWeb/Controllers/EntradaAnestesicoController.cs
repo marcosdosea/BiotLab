@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BiotLabWeb.Controllers
 {
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "PesquisadorSenior")]
     public class EntradaanestesicoController : Controller
     {
         private readonly IEntradaanestesicoService entradaAnestesicoService;

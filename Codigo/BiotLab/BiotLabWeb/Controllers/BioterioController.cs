@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 
 namespace BiotLabWeb.Controllers
 {
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "PesquisadorSenior")]
     public class BioterioController : Controller
     {
         private readonly IBioterioService bioterioService;

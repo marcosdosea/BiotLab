@@ -1,5 +1,6 @@
 using Core;
 using Core.Service;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,9 @@ namespace Service
 
         public Obituario? Buscar(uint id)
         {
-            return context.Obituarios.Find(id);
+            return context.Obituarios
+                .Include(x => x.IdPesquisadorNavigation)
+                .FirstOrDefault(x => x.Id == id);
         }
 
         public uint Create(Obituario obituario)
@@ -46,13 +49,16 @@ namespace Service
         public IEnumerable<Obituario> GetAll()
         {
             return context.Obituarios
+                .Include(x => x.IdPesquisadorNavigation)
                 .OrderByDescending(x => x.Data)
                 .ToList();
         }
 
         public IEnumerable<Obituario> GetByPeriodo(DateTime? dataInicio, DateTime? dataFim)
         {
-            var query = context.Obituarios.AsQueryable();
+            var query = context.Obituarios
+                .Include(x => x.IdPesquisadorNavigation)
+                .AsQueryable();
 
             if (dataInicio.HasValue)
             {

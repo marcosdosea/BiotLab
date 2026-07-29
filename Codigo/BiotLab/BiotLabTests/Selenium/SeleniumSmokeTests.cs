@@ -11,7 +11,7 @@ namespace BiotLabTests.Selenium;
 public sealed class SeleniumSmokeTests
 {
     private static Process? _applicationProcess;
-    private static string _baseUrl = "https://localhost:7257";
+    private static string _baseUrl = "http://localhost:5217";
     private static string? _webProjectDirectory;
     private IWebDriver? _driver;
     private WebDriverWait? _wait;
@@ -46,7 +46,8 @@ public sealed class SeleniumSmokeTests
         startInfo.ArgumentList.Add(projectFile);
         startInfo.ArgumentList.Add("--no-build");
         startInfo.ArgumentList.Add("--launch-profile");
-        startInfo.ArgumentList.Add("https");
+        startInfo.ArgumentList.Add("http");
+        startInfo.Environment["BIOTLAB_E2E_MODE"] = "1";
 
         _applicationProcess = Process.Start(startInfo)
             ?? throw new InvalidOperationException("Não foi possível iniciar a aplicação BiotLab.");
@@ -76,6 +77,10 @@ public sealed class SeleniumSmokeTests
         options.AddArgument("--ignore-certificate-errors");
         options.AddArgument("--allow-insecure-localhost");
         options.AddArgument("--disable-search-engine-choice-screen");
+        options.AddArgument("--no-sandbox");
+        options.AddArgument("--disable-dev-shm-usage");
+        options.AddArgument("--disable-gpu");
+        options.AddArgument($"--user-data-dir={Path.Combine(Path.GetTempPath(), $"biotlab-chrome-{Guid.NewGuid():N}")}");
 
         var driverDirectory = Path.GetDirectoryName(typeof(SeleniumSmokeTests).Assembly.Location)
             ?? AppContext.BaseDirectory;
@@ -140,6 +145,109 @@ public sealed class SeleniumSmokeTests
         Wait.Until(driver => !driver.Url.Contains("/Identity/Account/Login", StringComparison.OrdinalIgnoreCase));
         Assert.IsTrue(Driver.PageSource.Contains("Dashboard BiotLab", StringComparison.Ordinal));
         CaptureScreenshot("03-dashboard-administrador");
+    }
+
+    [TestMethod]
+    public void InvalidCredentials_KeepUserOnLoginPage()
+    {
+        Driver.Navigate().GoToUrl($"{BaseUrl}/Identity/Account/Login");
+        Wait.Until(driver => driver.FindElement(By.Id("Input_Email")))
+            .SendKeys($"usuario-inexistente-{Guid.NewGuid():N}@example.invalid");
+        Driver.FindElement(By.Id("Input_Password")).SendKeys("SenhaInvalida123");
+        Driver.FindElement(By.Id("login-submit")).Click();
+
+        Wait.Until(driver => driver.Url.Contains("/Identity/Account/Login", StringComparison.OrdinalIgnoreCase));
+        Assert.IsTrue(
+            Driver.PageSource.Contains("tentativa de login", StringComparison.OrdinalIgnoreCase) ||
+            Driver.PageSource.Contains("Invalid login attempt", StringComparison.OrdinalIgnoreCase));
+        CaptureScreenshot("04-login-invalido");
+    }
+
+    [DataTestMethod]
+    [DataRow("/Instituicao")]
+    [DataRow("/Bioterio")]
+    [DataRow("/Fornecedor")]
+    [DataRow("/Pesquisador")]
+    [DataRow("/Anestesico")]
+    [DataRow("/Entradum")]
+    [DataRow("/Entradaanestesico")]
+    [DataRow("/Experimento")]
+    [DataRow("/Gaiola")]
+    [DataRow("/Harem")]
+    [DataRow("/Gaiolaharem")]
+    [DataRow("/Usoanestesico")]
+    [DataRow("/Obituario")]
+    [DataRow("/AdminUsuarios")]
+    public void Administrator_CanOpenProtectedModule(string route)
+    {
+        LoginAsAdministrator();
+        Driver.Navigate().GoToUrl($"{BaseUrl}{route}");
+
+        Wait.Until(driver =>
+            !driver.Url.Contains("/Identity/Account/Login", StringComparison.OrdinalIgnoreCase));
+        Assert.IsFalse(
+            Driver.PageSource.Contains("Internal Server Error", StringComparison.OrdinalIgnoreCase));
+        Assert.IsFalse(
+            Driver.PageSource.Contains("Access Denied", StringComparison.OrdinalIgnoreCase));
+        Assert.IsTrue(Driver.FindElements(By.TagName("main")).Count > 0);
+    }
+
+    [DataTestMethod]
+    [DataRow("/Instituicao/Create")]
+    [DataRow("/Bioterio/Create")]
+    [DataRow("/Fornecedor/Create")]
+    [DataRow("/Pesquisador/Create")]
+    [DataRow("/Anestesico/Create")]
+    [DataRow("/Entradum/Create")]
+    [DataRow("/Entradaanestesico/Create")]
+    [DataRow("/Experimento/Create")]
+    [DataRow("/Gaiola/Create")]
+    [DataRow("/Harem/Create")]
+    [DataRow("/Gaiolaharem/Create")]
+    [DataRow("/Usoanestesico/Create")]
+    [DataRow("/Obituario/Create")]
+    public void Administrator_CanOpenCreateForm(string route)
+    {
+        LoginAsAdministrator();
+        Driver.Navigate().GoToUrl($"{BaseUrl}{route}");
+
+        Wait.Until(driver => driver.FindElement(By.TagName("form")));
+        Assert.IsFalse(
+            Driver.Url.Contains("/Identity/Account/Login", StringComparison.OrdinalIgnoreCase));
+        Assert.IsTrue(Driver.FindElements(By.CssSelector("input, select, textarea")).Count > 0);
+    }
+
+    [TestMethod]
+    public void Administrator_CanLogout()
+    {
+        LoginAsAdministrator();
+        var logoutForm = Wait.Until(driver =>
+            driver.FindElements(By.CssSelector("form[action*='/Identity/Account/Logout']")).FirstOrDefault());
+
+        Assert.IsNotNull(logoutForm);
+        logoutForm.Submit();
+
+        Driver.Navigate().GoToUrl($"{BaseUrl}/Instituicao");
+        Wait.Until(driver => driver.Url.Contains("/Identity/Account/Login", StringComparison.OrdinalIgnoreCase));
+        CaptureScreenshot("05-logout");
+    }
+
+    private void LoginAsAdministrator()
+    {
+        var email = Environment.GetEnvironmentVariable("BIOTLAB_E2E_EMAIL");
+        var password = Environment.GetEnvironmentVariable("BIOTLAB_E2E_PASSWORD");
+
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        {
+            Assert.Inconclusive(
+                "Defina BIOTLAB_E2E_EMAIL e BIOTLAB_E2E_PASSWORD para executar os cenários autenticados.");
+        }
+
+        Driver.Navigate().GoToUrl($"{BaseUrl}/Identity/Account/Login");
+        Wait.Until(driver => driver.FindElement(By.Id("Input_Email"))).SendKeys(email);
+        Driver.FindElement(By.Id("Input_Password")).SendKeys(password);
+        Driver.FindElement(By.Id("login-submit")).Click();
+        Wait.Until(driver => !driver.Url.Contains("/Identity/Account/Login", StringComparison.OrdinalIgnoreCase));
     }
 
     private void CaptureScreenshot(string name)

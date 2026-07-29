@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Core;
@@ -12,6 +12,8 @@ public partial class Obituario
     public uint IdGaiola { get; set; }
 
     public uint IdPesquisador { get; set; }
+
+    public string? Observacoes { get; set; }
 
     public virtual Gaiola IdGaiolaNavigation { get; set; } = null!;
 

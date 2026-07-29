@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
+using System.Security.Claims;
+
 namespace BiotLabWeb.Areas.Identity.Data
 {
     public static class IdentitySeed
@@ -10,7 +12,7 @@ namespace BiotLabWeb.Areas.Identity.Data
             var userManager = serviceProvider.GetRequiredService<UserManager<UsuarioIdentity>>();
 
             // 1. Criar roles
-            string[] roles = { "Administrador", "Estudante" };
+            string[] roles = { "PesquisadorSenior", "Administrador", "Estudante" };
 
             foreach (var role in roles)
             {
@@ -23,6 +25,66 @@ namespace BiotLabWeb.Areas.Identity.Data
                         throw new Exception(
                             $"Erro ao criar role '{role}': {string.Join(" | ", result.Errors.Select(e => e.Description))}");
                     }
+                }
+            }
+
+            // Separar, uma única vez, a antiga role Administrador (que representava
+            // PesquisadorSenior) da nova role Administrador com acesso limitado.
+            const string migrationClaimType = "BiotLabMigration";
+            const string migrationClaimValue = "SepararAdministradorEPesquisadorSeniorV1";
+            var pesquisadorSeniorRole = await roleManager.FindByNameAsync("PesquisadorSenior")
+                ?? throw new Exception("Role PesquisadorSenior nao encontrada.");
+            var migrationClaims = await roleManager.GetClaimsAsync(pesquisadorSeniorRole);
+
+            if (!migrationClaims.Any(c =>
+                    c.Type == migrationClaimType &&
+                    c.Value == migrationClaimValue))
+            {
+                var antigosAdministradores = await userManager.GetUsersInRoleAsync("Administrador");
+
+                foreach (var usuario in antigosAdministradores)
+                {
+                    if (!await userManager.IsInRoleAsync(usuario, "PesquisadorSenior"))
+                    {
+                        var addResult = await userManager.AddToRoleAsync(usuario, "PesquisadorSenior");
+                        if (!addResult.Succeeded)
+                        {
+                            throw new Exception(
+                                $"Erro ao migrar usuario para PesquisadorSenior: {string.Join(" | ", addResult.Errors.Select(e => e.Description))}");
+                        }
+                    }
+
+                    var removeResult = await userManager.RemoveFromRoleAsync(usuario, "Administrador");
+                    if (!removeResult.Succeeded)
+                    {
+                        throw new Exception(
+                            $"Erro ao remover role Administrador antiga: {string.Join(" | ", removeResult.Errors.Select(e => e.Description))}");
+                    }
+
+                    usuario.TipoUsuario = "PesquisadorSenior";
+                    var updateResult = await userManager.UpdateAsync(usuario);
+                    if (!updateResult.Succeeded)
+                    {
+                        throw new Exception(
+                            $"Erro ao atualizar perfil migrado: {string.Join(" | ", updateResult.Errors.Select(e => e.Description))}");
+                    }
+
+                    var stampResult = await userManager.UpdateSecurityStampAsync(usuario);
+                    if (!stampResult.Succeeded)
+                    {
+                        throw new Exception(
+                            $"Erro ao invalidar sessao do perfil migrado: {string.Join(" | ", stampResult.Errors.Select(e => e.Description))}");
+                    }
+                }
+
+                var claimResult = await roleManager.AddClaimAsync(
+                    pesquisadorSeniorRole,
+                    new Claim(migrationClaimType, migrationClaimValue));
+
+                if (!claimResult.Succeeded)
+                {
+                    throw new Exception(
+                        $"Erro ao registrar migracao de roles: {string.Join(" | ", claimResult.Errors.Select(e => e.Description))}");
                 }
             }
 
@@ -49,7 +111,7 @@ namespace BiotLabWeb.Areas.Identity.Data
                     Email = adminEmail,
                     EmailConfirmed = true,
                     NomeCompleto = adminNome,
-                    TipoUsuario = "Administrador"
+                    TipoUsuario = "PesquisadorSenior"
                 };
 
                 var createResult = await userManager.CreateAsync(adminUser, adminPassword);
@@ -70,13 +132,15 @@ namespace BiotLabWeb.Areas.Identity.Data
                     precisaAtualizar = true;
                 }
 
-                if (adminUser.TipoUsuario != "Administrador")
+                if (adminUser.TipoUsuario != "PesquisadorSenior")
                 {
-                    adminUser.TipoUsuario = "Administrador";
+                    adminUser.TipoUsuario = "PesquisadorSenior";
                     precisaAtualizar = true;
                 }
 
-                if (string.IsNullOrWhiteSpace(adminUser.NomeCompleto))
+                if (string.IsNullOrWhiteSpace(adminUser.NomeCompleto) ||
+                    adminUser.NomeCompleto == "PesquisadorSenior" ||
+                    adminUser.NomeCompleto == "Administrador BiotLab")
                 {
                     adminUser.NomeCompleto = adminNome;
                     precisaAtualizar = true;
@@ -93,15 +157,25 @@ namespace BiotLabWeb.Areas.Identity.Data
                 }
             }
 
-            // 4. Garantir role Administrador
-            var isAdmin = await userManager.IsInRoleAsync(adminUser, "Administrador");
-            if (!isAdmin)
+            // 4. Garantir role PesquisadorSenior no usuário inicial
+            var isPesquisadorSenior = await userManager.IsInRoleAsync(adminUser, "PesquisadorSenior");
+            if (!isPesquisadorSenior)
             {
-                var addRoleResult = await userManager.AddToRoleAsync(adminUser, "Administrador");
+                var addRoleResult = await userManager.AddToRoleAsync(adminUser, "PesquisadorSenior");
                 if (!addRoleResult.Succeeded)
                 {
                     throw new Exception(
-                        $"Erro ao vincular role Administrador ao admin inicial: {string.Join(" | ", addRoleResult.Errors.Select(e => e.Description))}");
+                        $"Erro ao vincular role PesquisadorSenior ao usuario inicial: {string.Join(" | ", addRoleResult.Errors.Select(e => e.Description))}");
+                }
+            }
+
+            if (await userManager.IsInRoleAsync(adminUser, "Administrador"))
+            {
+                var removeRoleResult = await userManager.RemoveFromRoleAsync(adminUser, "Administrador");
+                if (!removeRoleResult.Succeeded)
+                {
+                    throw new Exception(
+                        $"Erro ao remover role Administrador do usuario inicial: {string.Join(" | ", removeRoleResult.Errors.Select(e => e.Description))}");
                 }
             }
         }

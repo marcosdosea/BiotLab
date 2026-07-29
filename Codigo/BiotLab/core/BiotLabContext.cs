@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -474,6 +474,9 @@ public partial class BiotlabContext : DbContext
                 .HasColumnName("data");
             entity.Property(e => e.IdGaiola).HasColumnName("idGaiola");
             entity.Property(e => e.IdPesquisador).HasColumnName("idPesquisador");
+            entity.Property(e => e.Observacoes)
+                .HasMaxLength(1000)
+                .HasColumnName("observacoes");
 
             entity.HasOne(d => d.IdGaiolaNavigation).WithMany(p => p.Obituarios)
                 .HasForeignKey(d => d.IdGaiola)

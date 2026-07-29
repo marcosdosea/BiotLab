@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace BiotLabWeb.Controllers
 {
-    [Authorize(Roles = "Administrador,Estudante,Aluno")]
+    [Authorize(Roles = "PesquisadorSenior,Estudante,Aluno")]
     public class ExperimentoController : Controller
     {
         private readonly IExperimentoService experimentoService;
@@ -43,7 +43,7 @@ namespace BiotLabWeb.Controllers
 
         private bool DeveVincularPesquisadorLogado()
         {
-            return User?.Identity?.IsAuthenticated == true && !User.IsInRole("Administrador");
+            return User?.Identity?.IsAuthenticated == true && !User.IsInRole("PesquisadorSenior");
         }
 
         private Pesquisador? ObterPesquisadorDoUsuarioLogado()

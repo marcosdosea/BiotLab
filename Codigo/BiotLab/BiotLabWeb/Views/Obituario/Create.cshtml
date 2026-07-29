@@ -1,4 +1,4 @@
-﻿@model BiotLabWeb.Models.ObituarioViewModel
+@model BiotLabWeb.Models.ObituarioViewModel
 
 @{
     ViewData["Title"] = "Criar Registro de óbito";
@@ -57,6 +57,14 @@
         </select>
     }
     <span asp-validation-for="IdPesquisador" class="mt-1 block text-xs font-medium text-red-600"></span>
+</div>
+<div class="md:col-span-2">
+    <label asp-for="Observacoes" class="mb-2 block text-sm font-semibold text-slate-700">Observações</label>
+    <textarea asp-for="Observacoes" rows="5" maxlength="1000" placeholder="Adicione informações complementares sobre o registro de óbito..." class="w-full resize-y rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"></textarea>
+    <div class="mt-1 flex items-start justify-between gap-4">
+        <span asp-validation-for="Observacoes" class="block text-xs font-medium text-red-600"></span>
+        <span class="shrink-0 text-xs text-slate-400">Máximo de 1000 caracteres</span>
+    </div>
 </div>
         </div>
 

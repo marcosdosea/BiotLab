@@ -9,7 +9,7 @@ using System.Text.Encodings.Web;
 
 namespace BiotLabWeb.Controllers
 {
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "PesquisadorSenior,Administrador")]
     public class AdminUsuariosController : Controller
     {
         private readonly UserManager<UsuarioIdentity> _userManager;
@@ -47,7 +47,8 @@ namespace BiotLabWeb.Controllers
                     Email = usuario.Email ?? "",
                     EmailConfirmado = usuario.EmailConfirmed,
                     Status = usuario.EmailConfirmed ? "Aceito" : "Pendente",
-                    Perfil = roles.Contains("Administrador") ? "Administrador"
+                    Perfil = roles.Contains("PesquisadorSenior") ? "PesquisadorSenior"
+                           : roles.Contains("Administrador") ? "Administrador"
                            : roles.Contains("Estudante") ? "Estudante"
                            : "Sem perfil",
                     Bloqueado = usuario.LockoutEnd.HasValue && usuario.LockoutEnd.Value > DateTimeOffset.UtcNow,
@@ -89,7 +90,8 @@ namespace BiotLabWeb.Controllers
             }
 
             var ordenado = lista
-                .OrderByDescending(x => x.Perfil == "Administrador")
+                .OrderByDescending(x => x.Perfil == "PesquisadorSenior")
+                .ThenByDescending(x => x.Perfil == "Administrador")
                 .ThenBy(x => x.Status == "Pendente" ? 0 : 1)
                 .ThenBy(x => x.NomeCompleto)
                 .ToList();
@@ -109,16 +111,18 @@ namespace BiotLabWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> NovoAdministrador(CriarUsuarioConviteViewModel model)
         {
-            return await EnviarConviteUsuarioAsync(model, "Administrador", nameof(NovoAdministrador));
+            return await EnviarConviteUsuarioAsync(model, "PesquisadorSenior", nameof(NovoAdministrador));
         }
 
         [HttpGet]
+        [Authorize(Roles = "PesquisadorSenior")]
         public IActionResult NovoEstudante()
         {
             return View(new CriarUsuarioConviteViewModel());
         }
 
         [HttpPost]
+        [Authorize(Roles = "PesquisadorSenior")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> NovoEstudante(CriarUsuarioConviteViewModel model)
         {
@@ -194,7 +198,8 @@ namespace BiotLabWeb.Controllers
                     },
                     protocol: Request.Scheme);
 
-            var perfilMinusculo = perfil.ToLowerInvariant();
+            var perfilExibido = perfil == "PesquisadorSenior" ? "Pesquisador" : perfil;
+            var perfilMinusculo = perfilExibido.ToLowerInvariant();
 
             try
             {
@@ -205,7 +210,7 @@ namespace BiotLabWeb.Controllers
                     <div style='font-family: Arial, sans-serif; line-height:1.6;'>
                         <h2>Convite para {perfilMinusculo} do BiotLab</h2>
                         <p>Ola, {HtmlEncoder.Default.Encode(nome)}.</p>
-                        <p>Voce foi convidado para acessar o BiotLab como <strong>{HtmlEncoder.Default.Encode(perfil)}</strong>.</p>
+                        <p>Voce foi convidado para acessar o BiotLab como <strong>{HtmlEncoder.Default.Encode(perfilExibido)}</strong>.</p>
                         <p>Clique no botao abaixo para preencher seus dados e definir sua senha:</p>
                         <p>
                             <a href='{HtmlEncoder.Default.Encode(callbackUrl!)}'
@@ -222,7 +227,7 @@ namespace BiotLabWeb.Controllers
                 return View(viewName, model);
             }
 
-            return RedirectToAction(nameof(ConviteEnviado), new { email, perfil });
+            return RedirectToAction(nameof(ConviteEnviado), new { email, perfil = perfilExibido });
         }
 
         [HttpGet]
@@ -234,6 +239,7 @@ namespace BiotLabWeb.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "PesquisadorSenior")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Bloquear(string id)
         {
@@ -258,6 +264,13 @@ namespace BiotLabWeb.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            var roles = await _userManager.GetRolesAsync(usuario);
+            if (roles.Contains("PesquisadorSenior") || roles.Contains("Administrador"))
+            {
+                TempData["Erro"] = "Contas de Pesquisador e Administrador nao podem ser bloqueadas.";
+                return RedirectToAction(nameof(Index));
+            }
+
             usuario.LockoutEnabled = true;
             usuario.LockoutEnd = DateTimeOffset.UtcNow.AddYears(100);
 
@@ -273,6 +286,7 @@ namespace BiotLabWeb.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "PesquisadorSenior")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Desbloquear(string id)
         {
@@ -304,6 +318,7 @@ namespace BiotLabWeb.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "PesquisadorSenior")]
         public async Task<IActionResult> Delete(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -348,6 +363,12 @@ namespace BiotLabWeb.Controllers
             var usuarioLogadoId = _userManager.GetUserId(User);
             var roles = await _userManager.GetRolesAsync(usuario);
 
+            if (roles.Contains("Administrador"))
+            {
+                TempData["Erro"] = "Uma conta Administrador nao pode ser excluida.";
+                return RedirectToAction(nameof(Index));
+            }
+
             var model = new UsuarioListagemViewModel
             {
                 Id = usuario.Id,
@@ -355,7 +376,8 @@ namespace BiotLabWeb.Controllers
                 Email = usuario.Email ?? "",
                 EmailConfirmado = usuario.EmailConfirmed,
                 Status = usuario.EmailConfirmed ? "Aceito" : "Pendente",
-                Perfil = roles.Contains("Administrador") ? "Administrador"
+                Perfil = roles.Contains("PesquisadorSenior") ? "PesquisadorSenior"
+                       : roles.Contains("Administrador") ? "Administrador"
                        : roles.Contains("Estudante") ? "Estudante"
                        : "Sem perfil",
                 Bloqueado = usuario.LockoutEnd.HasValue && usuario.LockoutEnd.Value > DateTimeOffset.UtcNow,
@@ -368,6 +390,7 @@ namespace BiotLabWeb.Controllers
 
         [HttpPost]
         [ActionName("Delete")]
+        [Authorize(Roles = "PesquisadorSenior")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
@@ -411,10 +434,16 @@ namespace BiotLabWeb.Controllers
             var roles = await _userManager.GetRolesAsync(usuario);
             if (roles.Contains("Administrador"))
             {
-                var administradores = await _userManager.GetUsersInRoleAsync("Administrador");
-                if (administradores.Count <= 1)
+                TempData["Erro"] = "Uma conta Administrador nao pode ser excluida.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (roles.Contains("PesquisadorSenior"))
+            {
+                var pesquisadoresSenior = await _userManager.GetUsersInRoleAsync("PesquisadorSenior");
+                if (pesquisadoresSenior.Count <= 1)
                 {
-                    TempData["Erro"] = "Nao e possivel excluir o unico administrador do sistema.";
+                    TempData["Erro"] = "Nao e possivel excluir o unico Pesquisador do sistema.";
                     return RedirectToAction(nameof(Index));
                 }
             }

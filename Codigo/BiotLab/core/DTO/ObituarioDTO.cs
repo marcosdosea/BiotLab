@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,5 +15,7 @@ namespace Core.DTO
         public uint IdGaiola { get; set; }
 
         public uint IdPesquisador { get; set; }
+
+        public string? Observacoes { get; set; }
     }
 }

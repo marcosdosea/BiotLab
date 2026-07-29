@@ -3,6 +3,7 @@ using BiotLabWeb.Helpers;
 using Core;
 using Core.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +17,22 @@ namespace BiotLabWeb
         {
             var builder = WebApplication.CreateBuilder(args);
             var applyingSchemaPatches = args.Contains("--apply-schema-patches");
+            var runningEndToEndTests =
+                string.Equals(
+                    Environment.GetEnvironmentVariable("BIOTLAB_E2E_MODE"),
+                    "1",
+                    StringComparison.Ordinal);
 
-            if (applyingSchemaPatches)
+            if (applyingSchemaPatches || runningEndToEndTests)
             {
                 builder.Logging.ClearProviders();
                 builder.Logging.AddConsole();
+            }
+
+            if (runningEndToEndTests)
+            {
+                builder.Services.AddDataProtection()
+                    .UseEphemeralDataProtectionProvider();
             }
 
             // MVC + Razor Pages
@@ -91,6 +103,12 @@ namespace BiotLabWeb
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
 
+            // Garante que mudanças de role sejam aplicadas já na próxima requisição.
+            builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                options.ValidationInterval = TimeSpan.Zero;
+            });
+
             // Cookie de autenticação
             builder.Services.ConfigureApplicationCookie(options =>
             {
@@ -141,6 +159,30 @@ namespace BiotLabWeb
             app.UseRouting();
 
             app.UseAuthentication();
+
+            // Encerra imediatamente a sessão de qualquer usuário bloqueado.
+            app.Use(async (context, next) =>
+            {
+                if (context.User.Identity?.IsAuthenticated == true)
+                {
+                    var userManager = context.RequestServices
+                        .GetRequiredService<UserManager<UsuarioIdentity>>();
+                    var usuario = await userManager.GetUserAsync(context.User);
+
+                    if (usuario != null && await userManager.IsLockedOutAsync(usuario))
+                    {
+                        var signInManager = context.RequestServices
+                            .GetRequiredService<SignInManager<UsuarioIdentity>>();
+
+                        await signInManager.SignOutAsync();
+                        context.Response.Redirect("/Identity/Account/Lockout");
+                        return;
+                    }
+                }
+
+                await next();
+            });
+
             app.UseAuthorization();
 
             app.MapRazorPages();

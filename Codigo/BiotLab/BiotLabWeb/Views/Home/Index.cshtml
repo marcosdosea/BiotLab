@@ -25,19 +25,27 @@
         </div>
 
         <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-            @if (User.IsInRole("Administrador"))
+            @if (User.IsInRole("Administrador") || User.IsInRole("PesquisadorSenior"))
             {
-                <a asp-controller="Instituicao" asp-action="Index" class="module-card"><i data-lucide="building-2"></i><span><strong>Instituições</strong><small>Cadastro e dados institucionais.</small></span></a>
+                <a asp-controller="Instituicao" asp-action="Index" class="module-card"><i data-lucide="building-2"></i><span><strong>Instituições</strong><small>@(User.IsInRole("Administrador") ? "Cadastro e dados institucionais." : "Consulta de dados institucionais.")</small></span></a>
+            }
+
+            @if (User.IsInRole("PesquisadorSenior"))
+            {
                 <a asp-controller="Bioterio" asp-action="Index" class="module-card"><i data-lucide="warehouse"></i><span><strong>Biotérios</strong><small>Unidades, contatos e localização.</small></span></a>
                 <a asp-controller="Pesquisador" asp-action="Index" class="module-card"><i data-lucide="user-round-search"></i><span><strong>Pesquisadores</strong><small>Responsáveis e dados de contato.</small></span></a>
                 <a asp-controller="Fornecedor" asp-action="Index" class="module-card"><i data-lucide="truck"></i><span><strong>Fornecedores</strong><small>Fornecedores e vínculos.</small></span></a>
                 <a asp-controller="Entradum" asp-action="Index" class="module-card"><i data-lucide="file-input"></i><span><strong>Entradas</strong><small>Notas fiscais e estoque.</small></span></a>
                 <a asp-controller="Anestesico" asp-action="Index" class="module-card"><i data-lucide="flask-conical"></i><span><strong>Anestésicos</strong><small>Marcas, concentração e instituição.</small></span></a>
                 <a asp-controller="Entradaanestesico" asp-action="Index" class="module-card"><i data-lucide="package-plus"></i><span><strong>Entrada anestésico</strong><small>Lotes, quantidades e valores.</small></span></a>
-                <a asp-controller="AdminUsuarios" asp-action="Index" class="module-card"><i data-lucide="users"></i><span><strong>Usuários</strong><small>Convites, perfis e acesso.</small></span></a>
             }
 
-            @if (User.IsInRole("Administrador") || User.IsInRole("Estudante"))
+            @if (User.IsInRole("Administrador") || User.IsInRole("PesquisadorSenior"))
+            {
+                <a asp-controller="AdminUsuarios" asp-action="Index" class="module-card"><i data-lucide="users"></i><span><strong>Convidar Pesquisador</strong><small>Envie convites para novos pesquisadores.</small></span></a>
+            }
+
+            @if (User.IsInRole("PesquisadorSenior") || User.IsInRole("Estudante"))
             {
                 <a asp-controller="Experimento" asp-action="Index" class="module-card"><i data-lucide="microscope"></i><span><strong>Experimentos</strong><small>Estudos e períodos.</small></span></a>
                 <a asp-controller="Gaiola" asp-action="Index" class="module-card"><i data-lucide="box"></i><span><strong>Gaiolas</strong><small>Localização, status e população.</small></span></a>

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BiotLabWeb.Controllers
 {
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "PesquisadorSenior")]
     public class PesquisadorController : Controller
     {
         private readonly IPesquisadorService pesquisadorService;

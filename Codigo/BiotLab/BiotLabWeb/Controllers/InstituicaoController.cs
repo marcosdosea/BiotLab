@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BiotLabWeb.Controllers
 {
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "Administrador,PesquisadorSenior")]
     public class InstituicaoController : Controller
     {
     
@@ -83,12 +83,14 @@ namespace BiotLabWeb.Controllers
             return View(vm);
         }
 
+        [Authorize(Roles = "Administrador")]
         public ActionResult Create()
         {
             return View(new InstituicaoViewModel());
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrador")]
         [ValidateAntiForgeryToken]
         public ActionResult Create(InstituicaoViewModel instituicao)
         {
@@ -111,6 +113,7 @@ namespace BiotLabWeb.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         public ActionResult Edit(uint id)
         {
             var instituicao = instituicaoService.Get(id);
@@ -122,6 +125,7 @@ namespace BiotLabWeb.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrador")]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(uint id, InstituicaoViewModel instituicao)
         {
@@ -151,6 +155,7 @@ namespace BiotLabWeb.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         public ActionResult Delete(uint id)
         {
             var instituicao = instituicaoService.Get(id);
@@ -163,6 +168,7 @@ namespace BiotLabWeb.Controllers
 
         [HttpPost]
         [ActionName("Delete")]
+        [Authorize(Roles = "Administrador")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(uint id)
         {

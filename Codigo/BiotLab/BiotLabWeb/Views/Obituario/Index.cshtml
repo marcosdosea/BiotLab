@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BiotLabWeb.Models.ObituarioViewModel>
+@model IEnumerable<BiotLabWeb.Models.ObituarioViewModel>
 @using System.Linq
 
 @{
@@ -98,7 +98,7 @@
                         <tr class="transition hover:bg-blue-50/40">
                             <td class="px-6 py-4 text-sm text-slate-700">@item.Data.ToString("dd/MM/yyyy")</td>
 <td class="px-6 py-4 text-sm text-slate-700">@item.IdGaiola</td>
-<td class="px-6 py-4 text-sm text-slate-700">@item.IdPesquisador</td>
+<td class="px-6 py-4 text-sm font-semibold text-slate-700">@(item.NomePesquisador ?? "Pesquisador não encontrado")</td>
                             <td class="px-6 py-4 text-right text-sm font-semibold">
                                 <div class="flex flex-wrap justify-end gap-2">
                                     <a asp-action="Details" asp-route-id="@item.Id" class="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-700 transition hover:border-blue-200 hover:text-blue-700">

@@ -303,6 +303,7 @@ CREATE TABLE IF NOT EXISTS `BiotLab`.`obituario` (
   `data` DATETIME NOT NULL,
   `idGaiola` INT UNSIGNED NOT NULL,
   `idPesquisador` INT UNSIGNED NOT NULL,
+  `observacoes` VARCHAR(1000) NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_obituario_Gaiola1_idx` (`idGaiola` ASC) VISIBLE,
   INDEX `fk_obituario_Pesquisador1_idx` (`idPesquisador` ASC) VISIBLE,
